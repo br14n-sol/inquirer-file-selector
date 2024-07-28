@@ -77,7 +77,9 @@ export default createPrompt(
 
       for (const item of contents) {
         item.disabled =
-          !item.isDir && !extensions.some(ext => item.value.endsWith(ext))
+          !item.isDir &&
+          extensions.length > 0 &&
+          !extensions.some(ext => item.value.endsWith(ext))
       }
 
       return contents.length > 0
