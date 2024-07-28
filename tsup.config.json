@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/tsup/schema.json",
+  "name": "Build",
+  "entry": ["./src/index.ts"],
+  "outDir": "./dist",
+  "format": ["esm"],
+  "dts": true,
+  "clean": true,
+  "platform": "node",
+  "bundle": true,
+  "minify": true,
+  "tsconfig": "./tsconfig.json"
+}

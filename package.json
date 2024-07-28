@@ -1,0 +1,46 @@
+{
+  "name": "inquirer-file-selector",
+  "author": "Brian Fernandez",
+  "description": "Inquerer file selector prompt.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "./dist"
+  ],
+  "scripts": {
+    "lint": "biome lint",
+    "lint:fix": "biome check --write",
+    "prebuild": "npm run lint",
+    "build": "tsup --config ./tsup.config.json"
+  },
+  "dependencies": {
+    "@inquirer/core": "^9.0.5",
+    "@inquirer/figures": "^1.0.5",
+    "ansi-escapes": "^7.0.0",
+    "yoctocolors": "^2.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "tsup": "8.2.3",
+    "typescript": "5.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/br14n-sol/inquirer-file-selector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/br14n-sol/inquirer-file-selector/issues"
+  },
+  "homepage": "https://github.com/br14n-sol/inquirer-file-selector#readme",
+  "keywords": [
+    "inquirer",
+    "file",
+    "selector"
+  ]
+}
