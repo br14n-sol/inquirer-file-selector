@@ -17,7 +17,7 @@
     "build": "tsup --config ./tsup.config.json"
   },
   "dependencies": {
-    "@inquirer/core": "^9.0.5",
+    "@inquirer/core": "^9.0.6",
     "@inquirer/figures": "^1.0.5",
     "ansi-escapes": "^7.0.0",
     "yoctocolors": "^2.1.1"
