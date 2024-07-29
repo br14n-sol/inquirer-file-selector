@@ -16,23 +16,7 @@ import {
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
-
-type Choice = {
-  value: string
-  path: string
-  isDir: boolean
-  disabled?: boolean
-}
-
-type FileSelectorConfig = {
-  message: string
-  /** The path to the directory where it will be started. Default: process.cwd() */
-  path?: string
-  /** The maximum number of items to display in the list. Default: 10 */
-  pageSize?: number
-  /** The extensions to filter the files. Default: [] */
-  extensions?: string[]
-}
+import type { Choice, FileSelectorConfig } from './types.js'
 
 const CURSOR_HIDE = '\x1B[?25l'
 
