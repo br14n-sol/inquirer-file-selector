@@ -35,7 +35,8 @@
       },
       "suspicious": {
         "noEmptyBlockStatements": "warn",
-        "useAwait": "warn"
+        "useAwait": "warn",
+        "noControlCharactersInRegex": "off"
       }
     }
   },
@@ -46,7 +47,6 @@
     "defaultBranch": "main"
   },
   "files": {
-    "include": ["src/**/*.ts", "*.json"],
-    "ignore": ["package-lock.json"]
+    "include": ["**/*.ts", "**/*.json"]
   }
 }
