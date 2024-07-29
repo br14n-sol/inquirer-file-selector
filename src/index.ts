@@ -1,8 +1,5 @@
-import fs from 'node:fs'
 import path from 'node:path'
-
 import {
-  type KeypressEvent,
   createPrompt,
   isDownKey,
   isEnterKey,
@@ -16,35 +13,9 @@ import {
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
+
 import type { Choice, FileSelectorConfig } from './types.js'
-
-const CURSOR_HIDE = '\x1B[?25l'
-
-function isEscapeKey(key: KeypressEvent): boolean {
-  return key.name === 'escape'
-}
-
-function getDirContents(dir: string): Choice[] {
-  return fs
-    .readdirSync(dir, { withFileTypes: true })
-    .map(dirent => ({
-      value: dirent.name,
-      path: path.join(dirent.parentPath, dirent.name),
-      isDir: dirent.isDirectory()
-    }))
-    .sort((a, b) => {
-      if (a.isDir && !b.isDir) {
-        return -1 // a is dir, should come first
-      }
-
-      if (!a.isDir && b.isDir) {
-        return 1 // b is dir, should come first
-      }
-
-      // both are files or both are dirs - sort by name
-      return a.value.localeCompare(b.value)
-    })
-}
+import { CURSOR_HIDE, getDirContents, isEscapeKey } from './utils.js'
 
 export default createPrompt(
   (config: FileSelectorConfig, done: (value: string) => void) => {
