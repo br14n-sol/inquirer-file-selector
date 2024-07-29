@@ -15,7 +15,6 @@ import {
   useState
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
-import ansiEscapes from 'ansi-escapes'
 import colors from 'yoctocolors'
 
 type Choice = {
@@ -34,6 +33,8 @@ type FileSelectorConfig = {
   /** The extensions to filter the files. Default: [] */
   extensions?: string[]
 }
+
+const CURSOR_HIDE = '\x1B[?25l'
 
 function isEscapeKey(key: KeypressEvent): boolean {
   return key.name === 'escape'
@@ -163,6 +164,6 @@ export default createPrompt(
       '\n\n(Use ↑ ↓ to navigate through the list)\n(Press <esc> to navigate to the parent directory)\n(Press <enter> to select a file or navigate to a directory)'
     )
 
-    return `${[prefix, message, helpTipTop].filter(Boolean).join(' ')}\n${page}${helpTipBottom}${ansiEscapes.cursorHide}`
+    return `${[prefix, message, helpTipTop].filter(Boolean).join(' ')}\n${page}${helpTipBottom}${CURSOR_HIDE}`
   }
 )
