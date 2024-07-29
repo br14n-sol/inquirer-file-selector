@@ -15,7 +15,7 @@ import {
   useState
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
-import colors from 'yoctocolors'
+import chalk from 'chalk'
 
 type Choice = {
   value: string
@@ -139,7 +139,7 @@ export default createPrompt(
       active,
       renderItem({ item, isActive }) {
         if (item.disabled) {
-          return colors.dim(item.value)
+          return chalk.dim(item.value)
         }
 
         const color = isActive ? theme.style.highlight : (x: string) => x
@@ -157,12 +157,9 @@ export default createPrompt(
       return `${prefix} ${message} ${theme.style.answer(selectedContent.path)}`
     }
 
-    const helpTipTop =
-      colors.bold('\nCurrent directory: ') +
-      theme.style.highlight(`${currentDir}\n`)
-    const helpTipBottom = colors.bold(
+    const helpTipTop = `\nCurrent directory: ${theme.style.highlight(`${currentDir}\n`)}`
+    const helpTipBottom =
       '\n\n(Use ↑ ↓ to navigate through the list)\n(Press <esc> to navigate to the parent directory)\n(Press <enter> to select a file or navigate to a directory)'
-    )
 
     return `${[prefix, message, helpTipTop].filter(Boolean).join(' ')}\n${page}${helpTipBottom}${CURSOR_HIDE}`
   }
