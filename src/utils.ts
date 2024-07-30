@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import type { KeypressEvent } from '@inquirer/core'
 
-import type { Choice } from './types.js'
+import type { Item } from './types.js'
 
 /**
  * ANSI escape code to hide the cursor
@@ -43,7 +43,7 @@ export function getMaxLength(arr: string[]): number {
 /**
  * Get content of a directory
  */
-export function getDirContents(dir: string): Choice[] {
+export function getDirContents(dir: string): Item[] {
   return fs
     .readdirSync(dir, { withFileTypes: true })
     .map(dirent => ({

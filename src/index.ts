@@ -14,19 +14,49 @@ import {
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
 
-import type { Choice, FileSelectorConfig } from './types.js'
-import { CURSOR_HIDE, getDirContents, isEscapeKey } from './utils.js'
+import type { FileSelectorConfig, FileSelectorTheme } from './types.js'
+import {
+  CURSOR_HIDE,
+  ensureTrailingSlash,
+  getDirContents,
+  getMaxLength,
+  isEscapeKey
+} from './utils.js'
+
+const fileSelectorTheme: FileSelectorTheme = {
+  icon: {
+    linePrefix: (isLast: boolean) => {
+      return isLast
+        ? `${figures.lineUpRight}${figures.line.repeat(2)} `
+        : `${figures.lineUpDownRight}${figures.line.repeat(2)} `
+    }
+  },
+  style: {
+    disabled: (text: string) => chalk.dim(text),
+    active: (text: string) => chalk.cyan(text),
+    noFilesFound: (text: string) => chalk.red(text),
+    directory: (text: string) => chalk.yellow(text),
+    file: (text: string) => chalk.white(text),
+    currentDir: (text: string) => chalk.magenta(text),
+    help: (text: string) => chalk.white(text),
+    key: (text: string) => chalk.cyan(text)
+  }
+}
 
 export default createPrompt(
   (config: FileSelectorConfig, done: (value: string) => void) => {
-    const { pageSize = 10, extensions = [] } = config
-
-    const theme = makeTheme()
-    const prefix = usePrefix({ theme })
+    const {
+      pageSize = 10,
+      extensions = [],
+      disabledLabel = ' (not allowed)',
+      noFilesFound = 'No files found'
+    } = config
     const [status, setStatus] = useState('pending')
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.path || '.')
     )
+    const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
+    const prefix = usePrefix({ theme })
 
     const items = useMemo(() => {
       const contents = getDirContents(currentDir)
@@ -38,9 +68,7 @@ export default createPrompt(
           !extensions.some(ext => item.value.endsWith(ext))
       }
 
-      return contents.length > 0
-        ? contents
-        : contents.concat({ value: 'No files found', disabled: true } as Choice)
+      return contents
     }, [currentDir])
 
     const bounds = useMemo(() => {
@@ -56,16 +84,16 @@ export default createPrompt(
 
     const [active, setActive] = useState(bounds.first)
 
-    const selectedContent = items[active]
+    const activeItem = items[active]
 
     useKeypress((key, rl) => {
       if (isEnterKey(key)) {
-        if (selectedContent.isDir) {
-          setCurrentDir(selectedContent.path)
+        if (activeItem.isDir) {
+          setCurrentDir(activeItem.path)
           setActive(bounds.first)
-        } else if (!selectedContent.disabled) {
+        } else if (!activeItem.disabled) {
           setStatus('done')
-          done(selectedContent.path)
+          done(activeItem.path)
         }
       } else if (isUpKey(key) || isDownKey(key)) {
         rl.clearLine(0)
@@ -92,15 +120,24 @@ export default createPrompt(
     const page = usePagination({
       items,
       active,
-      renderItem({ item, isActive }) {
+      renderItem({ item, index, isActive }) {
+        const isLast = index === items.length - 1
+        const linePrefix = theme.icon.linePrefix(isLast)
+
         if (item.disabled) {
-          return chalk.dim(item.value)
+          return theme.style.disabled(
+            `${linePrefix}${item.value}${disabledLabel}`
+          )
         }
 
-        const color = isActive ? theme.style.highlight : (x: string) => x
-        const cursor = item.isDir ? `${figures.arrowRight} ` : ''
+        const baseColor = item.isDir ? theme.style.directory : theme.style.file
+        const color = isActive ? theme.style.active : baseColor
 
-        return color(`${cursor}${item.value}`)
+        const line = item.isDir
+          ? `${linePrefix}${ensureTrailingSlash(item.value)}`
+          : `${linePrefix}${item.value}`
+
+        return color(line)
       },
       pageSize,
       loop: false
@@ -109,13 +146,28 @@ export default createPrompt(
     const message = theme.style.message(config.message)
 
     if (status === 'done') {
-      return `${prefix} ${message} ${theme.style.answer(selectedContent.path)}`
+      return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
     }
 
-    const helpTipTop = `\nCurrent directory: ${theme.style.highlight(`${currentDir}\n`)}`
-    const helpTipBottom =
-      '\n\n(Use ↑ ↓ to navigate through the list)\n(Press <esc> to navigate to the parent directory)\n(Press <enter> to select a file or navigate to a directory)'
+    const header = theme.style.currentDir(ensureTrailingSlash(currentDir))
+    const helpTip = useMemo(() => {
+      const helpTipLines = [
+        theme.style.help(
+          `Use ${theme.style.key(figures.arrowUp + figures.arrowDown)} to navigate through the list`
+        ),
+        theme.style.help(
+          `Press ${theme.style.key('<esc>')} to navigate to the parent directory`
+        ),
+        theme.style.help(
+          `Press ${theme.style.key('<enter>')} to select a file or navigate to a directory`
+        )
+      ]
+      const helpTipMaxLength = getMaxLength(helpTipLines)
+      const delimiter = figures.lineBold.repeat(helpTipMaxLength)
 
-    return `${[prefix, message, helpTipTop].filter(Boolean).join(' ')}\n${page}${helpTipBottom}${CURSOR_HIDE}`
+      return `${delimiter}\n${helpTipLines.join('\n')}`
+    }, [])
+
+    return `${prefix} ${message}\n${header}\n${page.length > 0 ? page : theme.style.noFilesFound(noFilesFound)}\n${helpTip}${CURSOR_HIDE}`
   }
 )
