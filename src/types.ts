@@ -88,7 +88,7 @@ export type FileSelectorConfig = {
    * The extensions to filter the files.
    * @default []
    */
-  extensions?: string[]
+  extensions?: string[] | Function;
   /**
    * The label to display when a file is disabled.
    * @default ' (not allowed)'

@@ -60,11 +60,20 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const items = useMemo(() => {
     const contents = getDirContents(currentDir)
 
+    function extensionCheck(extensions, item) {
+      if (Array.isArray(extensions)) {
+        return extensions.length > 0
+          ? extensions.some((ext) => item.value.endsWith(ext))
+          : true;
+      } else if (typeof extensions === "function") {
+        return extensions(item);
+      } else {
+        return true;
+      }
+    }
+
     for (const item of contents) {
-      item.disabled =
-        !item.isDir &&
-        extensions.length > 0 &&
-        !extensions.some(ext => item.value.endsWith(ext))
+      item.disabled = !item.isDir && !extensionCheck(extensions, item);
     }
 
     return contents
