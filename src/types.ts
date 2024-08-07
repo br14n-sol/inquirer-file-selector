@@ -90,6 +90,11 @@ export type FileSelectorConfig = {
    */
   extensions?: string[]
   /**
+   * If true, the list will be filtered to only show files that match the extensions.
+   * @default false
+   */
+  hideNonMatch?: boolean
+  /**
    * The label to display when a file is disabled.
    * @default ' (not allowed)'
    */

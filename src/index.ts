@@ -47,6 +47,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
     pageSize = 10,
     extensions = [],
+    hideNonMatch = false,
     disabledLabel = ' (not allowed)',
     noFilesFound = 'No files found'
   } = config
@@ -67,7 +68,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
         !extensions.some(ext => item.value.endsWith(ext))
     }
 
-    return contents
+    return hideNonMatch ? contents.filter(item => !item.disabled) : contents
   }, [currentDir])
 
   const bounds = useMemo(() => {
