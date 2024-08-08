@@ -18,6 +18,7 @@ import type { FileSelectorConfig, FileSelectorTheme } from './types.js'
 import {
   CURSOR_HIDE,
   ensureTrailingSlash,
+  extensionCheck,
   getDirItems,
   getMaxLength,
   isEscapeKey
@@ -46,7 +47,6 @@ const fileSelectorTheme: FileSelectorTheme = {
 export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
     pageSize = 10,
-    extensions = [],
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
     noFilesFound = 'No files found'
@@ -64,9 +64,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
     for (const item of _items) {
       item.isDisabled =
-        !item.isDir &&
-        !!extensions.length &&
-        !extensions.some(ext => item.name.endsWith(ext))
+        !item.isDir && !extensionCheck(item, config.match || config.extensions)
     }
 
     return hideNonMatch ? _items.filter(item => !item.isDisabled) : _items

@@ -41,6 +41,24 @@ export function getMaxLength(arr: string[]): number {
 }
 
 /**
+ * Check if the given item matches the given match function or extensions.
+ */
+export function extensionCheck(
+  item: Item,
+  match?: string[] | ((item: Item) => boolean)
+): boolean {
+  if (Array.isArray(match)) {
+    return match.some(ext => item.name.endsWith(ext))
+  }
+
+  if (typeof match === 'function') {
+    return match(item)
+  }
+
+  return true
+}
+
+/**
  * Get items of a directory
  */
 export function getDirItems(dir: string): Item[] {
@@ -49,8 +67,7 @@ export function getDirItems(dir: string): Item[] {
     .map(dirent => ({
       name: dirent.name,
       path: path.join(dirent.parentPath, dirent.name),
-      isDir: dirent.isDirectory(),
-      isDisabled: false
+      isDir: dirent.isDirectory()
     }))
     .sort((a, b) => {
       if (a.isDir && !b.isDir) {
