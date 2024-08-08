@@ -41,15 +41,16 @@ export function getMaxLength(arr: string[]): number {
 }
 
 /**
- * Get content of a directory
+ * Get items of a directory
  */
-export function getDirContents(dir: string): Item[] {
+export function getDirItems(dir: string): Item[] {
   return fs
     .readdirSync(dir, { withFileTypes: true })
     .map(dirent => ({
-      value: dirent.name,
+      name: dirent.name,
       path: path.join(dirent.parentPath, dirent.name),
-      isDir: dirent.isDirectory()
+      isDir: dirent.isDirectory(),
+      isDisabled: false
     }))
     .sort((a, b) => {
       if (a.isDir && !b.isDir) {
@@ -61,6 +62,6 @@ export function getDirContents(dir: string): Item[] {
       }
 
       // both are files or both are dirs - sort by name
-      return a.value.localeCompare(b.value)
+      return a.name.localeCompare(b.name)
     })
 }

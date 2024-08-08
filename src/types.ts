@@ -55,9 +55,9 @@ export type FileSelectorTheme = {
 
 export type Item = {
   /**
-   * The value of the item.
+   * The name of the item.
    */
-  value: string
+  name: string
   /**
    * The path to the item.
    */
@@ -69,7 +69,7 @@ export type Item = {
   /**
    * If the item is disabled. Used when a list of extensions is provided.
    */
-  disabled?: boolean
+  isDisabled: boolean
 }
 
 export type FileSelectorConfig = {

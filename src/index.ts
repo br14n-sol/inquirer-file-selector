@@ -18,7 +18,7 @@ import type { FileSelectorConfig, FileSelectorTheme } from './types.js'
 import {
   CURSOR_HIDE,
   ensureTrailingSlash,
-  getDirContents,
+  getDirItems,
   getMaxLength,
   isEscapeKey
 } from './utils.js'
@@ -52,28 +52,29 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     noFilesFound = 'No files found'
   } = config
   const [status, setStatus] = useState('pending')
-  const [currentDir, setCurrentDir] = useState(
-    path.resolve(process.cwd(), config.path || '.')
-  )
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
   const prefix = usePrefix({ theme })
 
-  const items = useMemo(() => {
-    const contents = getDirContents(currentDir)
+  const [currentDir, setCurrentDir] = useState(
+    path.resolve(process.cwd(), config.path || '.')
+  )
 
-    for (const item of contents) {
-      item.disabled =
+  const items = useMemo(() => {
+    const _items = getDirItems(currentDir)
+
+    for (const item of _items) {
+      item.isDisabled =
         !item.isDir &&
-        extensions.length > 0 &&
-        !extensions.some(ext => item.value.endsWith(ext))
+        !!extensions.length &&
+        !extensions.some(ext => item.name.endsWith(ext))
     }
 
-    return hideNonMatch ? contents.filter(item => !item.disabled) : contents
+    return hideNonMatch ? _items.filter(item => !item.isDisabled) : _items
   }, [currentDir])
 
   const bounds = useMemo(() => {
-    const first = items.findIndex(item => !item.disabled)
-    const last = items.findLastIndex(item => !item.disabled)
+    const first = items.findIndex(item => !item.isDisabled)
+    const last = items.findLastIndex(item => !item.isDisabled)
 
     if (first === -1) {
       return { first: 0, last: 0 }
@@ -83,7 +84,6 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   }, [items])
 
   const [active, setActive] = useState(bounds.first)
-
   const activeItem = items[active]
 
   useKeypress((key, rl) => {
@@ -91,7 +91,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       if (activeItem.isDir) {
         setCurrentDir(activeItem.path)
         setActive(bounds.first)
-      } else if (!activeItem.disabled) {
+      } else if (!activeItem.isDisabled) {
         setStatus('done')
         done(activeItem.path)
       }
@@ -107,7 +107,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
         do {
           next = (next + offset + items.length) % items.length
-        } while (items[next].disabled)
+        } while (items[next].isDisabled)
 
         setActive(next)
       }
@@ -124,18 +124,16 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       const isLast = index === items.length - 1
       const linePrefix = theme.icon.linePrefix(isLast)
 
-      if (item.disabled) {
-        return theme.style.disabled(
-          `${linePrefix}${item.value}${disabledLabel}`
-        )
+      if (item.isDisabled) {
+        return theme.style.disabled(`${linePrefix}${item.name}${disabledLabel}`)
       }
 
       const baseColor = item.isDir ? theme.style.directory : theme.style.file
       const color = isActive ? theme.style.active : baseColor
 
       const line = item.isDir
-        ? `${linePrefix}${ensureTrailingSlash(item.value)}`
-        : `${linePrefix}${item.value}`
+        ? `${linePrefix}${ensureTrailingSlash(item.name)}`
+        : `${linePrefix}${item.name}`
 
       return color(line)
     },
@@ -168,5 +166,5 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     return `${delimiter}\n${helpTipLines.join('\n')}`
   }, [])
 
-  return `${prefix} ${message}\n${header}\n${page.length > 0 ? page : theme.style.noFilesFound(noFilesFound)}\n${helpTip}${CURSOR_HIDE}`
+  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.noFilesFound(noFilesFound) : page}\n${helpTip}${CURSOR_HIDE}`
 })
