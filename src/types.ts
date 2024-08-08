@@ -67,9 +67,11 @@ export type Item = {
    */
   isDir: boolean
   /**
-   * If the item is disabled. Used when a list of extensions is provided.
+   * If the item is disabled.
+   *
+   * Used when a list of extensions is provided or when the `match` function returns `false`.
    */
-  isDisabled: boolean
+  isDisabled?: boolean
 }
 
 export type FileSelectorConfig = {
@@ -86,9 +88,15 @@ export type FileSelectorConfig = {
   pageSize?: number
   /**
    * The extensions to filter the files.
-   * @default []
+   * @deprecated Use `match` instead. Will be removed in v0.4.0.
    */
   extensions?: string[]
+  /**
+   * The function to use to filter the files. Return `true` to include the file in the list.
+   *
+   * If not provided, all files will be included.
+   */
+  match?: (file: Item) => boolean
   /**
    * If true, the list will be filtered to only show files that match the extensions.
    * @default false
