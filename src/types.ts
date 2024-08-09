@@ -108,6 +108,16 @@ export type FileSelectorConfig = {
    */
   disabledLabel?: string
   /**
+   * If true, the prompt will allow the user to cancel the selection.
+   * @default false
+   */
+  allowCancel?: boolean
+  /**
+   * The label to display when the user cancels the selection.
+   * @default 'Canceled'
+   */
+  canceledLabel?: string
+  /**
    * The message to display when no files are found.
    * @default 'No files found'
    */
