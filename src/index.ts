@@ -1,6 +1,7 @@
 import path from 'node:path'
 import {
   createPrompt,
+  isBackspaceKey,
   isDownKey,
   isEnterKey,
   isUpKey,
@@ -49,6 +50,8 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     pageSize = 10,
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
+    allowCancel = false,
+    canceledLabel = 'Canceled',
     noFilesFound = 'No files found'
   } = config
   const [status, setStatus] = useState('pending')
@@ -109,9 +112,12 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
         setActive(next)
       }
-    } else if (isEscapeKey(key)) {
+    } else if (isBackspaceKey(key)) {
       setCurrentDir(path.resolve(currentDir, '..'))
       setActive(bounds.first)
+    } else if (isEscapeKey(key) && allowCancel) {
+      setStatus('canceled')
+      done('canceled')
     }
   })
 
@@ -141,6 +147,10 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
   const message = theme.style.message(config.message)
 
+  if (status === 'canceled') {
+    return `${prefix} ${message} ${theme.style.error(canceledLabel)}`
+  }
+
   if (status === 'done') {
     return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
   }
@@ -152,12 +162,21 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
         `Use ${theme.style.key(figures.arrowUp + figures.arrowDown)} to navigate through the list`
       ),
       theme.style.help(
-        `Press ${theme.style.key('<esc>')} to navigate to the parent directory`
+        `Press ${theme.style.key('<backspace>')} to navigate to the parent directory`
       ),
       theme.style.help(
         `Press ${theme.style.key('<enter>')} to select a file or navigate to a directory`
       )
     ]
+
+    if (allowCancel) {
+      helpTipLines.push(
+        theme.style.help(
+          `Press ${theme.style.key('<enter>')} to cancel the selection`
+        )
+      )
+    }
+
     const helpTipMaxLength = getMaxLength(helpTipLines)
     const delimiter = figures.lineBold.repeat(helpTipMaxLength)
 
