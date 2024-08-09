@@ -2,7 +2,7 @@
   "name": "inquirer-file-selector",
   "author": "Brian Fernandez",
   "description": "Inquerer file selector prompt.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
