@@ -172,7 +172,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     if (allowCancel) {
       helpTipLines.push(
         theme.style.help(
-          `Press ${theme.style.key('<enter>')} to cancel the selection`
+          `Press ${theme.style.key('<esc>')} to cancel the selection`
         )
       )
     }
