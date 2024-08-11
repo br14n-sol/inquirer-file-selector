@@ -62,23 +62,41 @@ export function extensionCheck(
  * Get items of a directory
  */
 export function getDirItems(dir: string): Item[] {
-  return fs
-    .readdirSync(dir, { withFileTypes: true })
-    .map(dirent => ({
-      name: dirent.name,
-      path: path.join(dirent.parentPath, dirent.name),
-      isDir: dirent.isDirectory()
-    }))
+  return fs.readdirSync(dir, { withFileTypes: true }).map(dirent => ({
+    name: dirent.name,
+    path: path.join(dirent.parentPath, dirent.name),
+    isDir: dirent.isDirectory()
+  }))
+}
+
+/**
+ * Sort items, optionally filtering out disabled items if hideNonMatch is true
+ */
+export function sortItems(items: Item[], hideNonMatch: boolean): Item[] {
+  return items
     .sort((a, b) => {
+      // a is disabled, should come last
+      if (a.isDisabled && !b.isDisabled) {
+        return 1
+      }
+
+      // b is disabled, should come last
+      if (!a.isDisabled && b.isDisabled) {
+        return -1
+      }
+
+      // a is dir, should come first
       if (a.isDir && !b.isDir) {
-        return -1 // a is dir, should come first
+        return -1
       }
 
+      // b is dir, should come first
       if (!a.isDir && b.isDir) {
-        return 1 // b is dir, should come first
+        return 1
       }
 
-      // both are files or both are dirs - sort by name
+      // both are files or dirs, regardless of whether they are disabled - sort by name
       return a.name.localeCompare(b.name)
     })
+    .filter(item => !hideNonMatch || !item.isDisabled)
 }

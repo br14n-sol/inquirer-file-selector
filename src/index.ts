@@ -22,7 +22,8 @@ import {
   extensionCheck,
   getDirItems,
   getMaxLength,
-  isEscapeKey
+  isEscapeKey,
+  sortItems
 } from './utils.js'
 
 const fileSelectorTheme: FileSelectorTheme = {
@@ -70,7 +71,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
         !item.isDir && !extensionCheck(item, config.match || config.extensions)
     }
 
-    return hideNonMatch ? _items.filter(item => !item.isDisabled) : _items
+    return sortItems(_items, hideNonMatch)
   }, [currentDir])
 
   const bounds = useMemo(() => {
