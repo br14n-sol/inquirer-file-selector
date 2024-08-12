@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  <b>An file selector prompt implementation for <a href="https://github.com/SBoudrias/Inquirer.js">Inquirer.js</a>.</b>
+  An file selector prompt implementation for <a href="https://github.com/SBoudrias/Inquirer.js">Inquirer.js</a>.
 </p>
 
 <div align="center">
@@ -14,9 +14,9 @@
   ![unpacked-size](https://img.shields.io/npm/unpacked-size/inquirer-file-selector)
   ![downloads](https://img.shields.io/npm/dt/inquirer-file-selector.svg)
 
-</div>
+  ![preview](https://github.com/br14n-sol/inquirer-file-selector/blob/main/preview.gif?raw=true)
 
-![preview](https://github.com/br14n-sol/inquirer-file-selector/blob/main/preview.gif?raw=true)
+</div>
 
 ## Installation
 
@@ -39,17 +39,17 @@ const filePath = await fileSelector({
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
-| message | `string` | ✔ | The message to display in the prompt. |
-| path | `string` | | The path to the directory where it will be started.<br/> **Default**: `process.cwd()` |
-| pageSize | `number` | | The maximum number of items to display in the list.<br/> **Default**: `10` |
-| match | `(file: Item) => boolean` | | A function to filter the files.<br/> If not provided, all files will be included. |
-| hideNonMatch | `boolean` | | If true, the list will be filtered to only show files that match the extensions.<br/> **Default**: `false` |
-| disabledLabel | `string` | | The label to display when a file is disabled.<br/> **Default**: ` (not allowed)` |
-| allowCancel | `boolean` | | If true, the prompt will allow the user to cancel the selection.<br/> **Default**: `false` |
-| canceledLabel | `string` | | The label to display when the prompt is canceled.<br/> **Default**: `Canceled` |
-| noFilesFound | `string` | | The message to display when no files are found.<br/> **Default**: `No files found` |
-| theme | [See Theming](#theming) | | The theme to use for the file selector. |
-| ~~extensions~~ | ~~`string[]`~~ | | ~~The extensions to filter the files.~~<br/>(Deprecated in favor of `match` option) |
+| `message` | `string` | ✔ | The message to display in the prompt. |
+| `path` | `string` | | The path to the directory where it will be started.<br/> **Default**: `process.cwd()` |
+| `pageSize` | `number` | | The maximum number of items to display in the list.<br/> **Default**: `10` |
+| `match` | `(file: Item) => boolean` | | A function to filter the files.<br/> If not provided, all files will be included. |
+| `hideNonMatch` | `boolean` | | If true, the list will be filtered to only show files that match the extensions.<br/> **Default**: `false` |
+| `disabledLabel` | `string` | | The label to display when a file is disabled.<br/> **Default**: ` (not allowed)` |
+| `allowCancel` | `boolean` | | If true, the prompt will allow the user to cancel the selection.<br/> **Default**: `false` |
+| `canceledLabel` | `string` | | The label to display when the prompt is canceled.<br/> **Default**: `Canceled` |
+| `noFilesFound` | `string` | | The message to display when no files are found.<br/> **Default**: `No files found` |
+| `theme` | [See Theming](#theming) | | The theme to use for the file selector. |
+| ~~`extensions`~~ | ~~`string[]`~~ | | ~~The extensions to filter the files.~~<br/>(Deprecated in favor of `match` option) |
 
 ## Theming
 
@@ -108,6 +108,26 @@ type FileSelectorTheme = {
   }
 }
 ```
+
+## Examples
+
+For examples look in the examples/ directory. You can execute the examples using node.
+
+```shell
+cd examples/
+node <example-name>.js
+```
+
+## Contributing
+
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am "feat: my new feature"`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
+
+> [!NOTE]
+> The commit message should follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
 
 ## Copyright & License
 
