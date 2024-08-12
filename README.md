@@ -118,6 +118,9 @@ cd examples/
 node <example-name>.js
 ```
 
+> [!NOTE]
+> Before running the examples, make sure you have installed the dependencies with `npm install` and compiled the project with `npm run build`.
+
 ## Contributing
 
 1. Fork it!
