@@ -43,13 +43,12 @@ const filePath = await fileSelector({
 | `path` | `string` | | The path to the directory where it will be started.<br/> **Default**: `process.cwd()` |
 | `pageSize` | `number` | | The maximum number of items to display in the list.<br/> **Default**: `10` |
 | `match` | `(file: Item) => boolean` | | A function to filter the files.<br/> If not provided, all files will be included. |
-| `hideNonMatch` | `boolean` | | If true, the list will be filtered to only show files that match the extensions.<br/> **Default**: `false` |
+| `hideNonMatch` | `boolean` | | If true, the list will be filtered to show only files that match the `match` function.<br/> **Default**: `false` |
 | `disabledLabel` | `string` | | The label to display when a file is disabled.<br/> **Default**: ` (not allowed)` |
 | `allowCancel` | `boolean` | | If true, the prompt will allow the user to cancel the selection.<br/> **Default**: `false` |
 | `canceledLabel` | `string` | | The label to display when the prompt is canceled.<br/> **Default**: `Canceled` |
 | `noFilesFound` | `string` | | The message to display when no files are found.<br/> **Default**: `No files found` |
 | `theme` | [See Theming](#theming) | | The theme to use for the file selector. |
-| ~~`extensions`~~ | ~~`string[]`~~ | | ~~The extensions to filter the files.~~<br/>(Deprecated in favor of `match` option) |
 
 ## Theming
 
