@@ -67,9 +67,9 @@ export type Item = {
    */
   isDir: boolean
   /**
-   * If the item is disabled.
+   * If the item is disabled, it will be displayed in the list with the `disabledLabel` property.
    *
-   * Used when a list of extensions is provided or when the `match` function returns `false`.
+   * Set to `true` if the `match` function returns `false`.
    */
   isDisabled?: boolean
 }
@@ -87,18 +87,13 @@ export type FileSelectorConfig = {
    */
   pageSize?: number
   /**
-   * The extensions to filter the files.
-   * @deprecated Use `match` instead. Will be removed in v0.4.0.
-   */
-  extensions?: string[]
-  /**
-   * The function to use to filter the files. Return `true` to include the file in the list.
+   * The function to use to filter the files. Returns `true` to include the file in the list.
    *
    * If not provided, all files will be included.
    */
   match?: (file: Item) => boolean
   /**
-   * If true, the list will be filtered to only show files that match the extensions.
+   * If true, the list will be filtered to show only files that match the `match` function.
    * @default false
    */
   hideNonMatch?: boolean

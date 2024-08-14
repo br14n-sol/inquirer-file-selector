@@ -41,21 +41,13 @@ export function getMaxLength(arr: string[]): number {
 }
 
 /**
- * Check if the given item matches the given match function or extensions.
+ * Check if the given item matches the given match function.
  */
-export function extensionCheck(
+export function matchCheck(
   item: Item,
-  match?: string[] | ((item: Item) => boolean)
+  match?: (item: Item) => boolean
 ): boolean {
-  if (Array.isArray(match)) {
-    return match.some(ext => item.name.endsWith(ext))
-  }
-
-  if (typeof match === 'function') {
-    return match(item)
-  }
-
-  return true
+  return !match || match(item)
 }
 
 /**

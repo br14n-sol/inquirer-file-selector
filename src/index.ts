@@ -19,10 +19,10 @@ import type { FileSelectorConfig, FileSelectorTheme } from './types.js'
 import {
   CURSOR_HIDE,
   ensureTrailingSlash,
-  extensionCheck,
   getDirItems,
   getMaxLength,
   isEscapeKey,
+  matchCheck,
   sortItems
 } from './utils.js'
 
@@ -67,8 +67,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     const _items = getDirItems(currentDir)
 
     for (const item of _items) {
-      item.isDisabled =
-        !item.isDir && !extensionCheck(item, config.match || config.extensions)
+      item.isDisabled = !item.isDir && !matchCheck(item, config.match)
     }
 
     return sortItems(_items, hideNonMatch)
