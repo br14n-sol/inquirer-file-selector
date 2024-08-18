@@ -37,7 +37,8 @@ const fileSelectorTheme: FileSelectorTheme = {
   style: {
     disabled: (text: string) => chalk.dim(text),
     active: (text: string) => chalk.cyan(text),
-    noFilesFound: (text: string) => chalk.red(text),
+    cancelText: (text: string) => chalk.red(text),
+    emptyText: (text: string) => chalk.red(text),
     directory: (text: string) => chalk.yellow(text),
     file: (text: string) => chalk.white(text),
     currentDir: (text: string) => chalk.magenta(text),
@@ -51,10 +52,16 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     pageSize = 10,
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
-    allowCancel = false,
-    canceledLabel = 'Canceled',
-    noFilesFound = 'No files found'
+    allowCancel = false
   } = config
+  const cancelText = config.cancelText || config.canceledLabel || 'Canceled.'
+  const emptyText =
+    config.emptyText || config.noFilesFound || 'Directory is empty.'
+
+  if (config.theme?.style?.noFilesFound) {
+    config.theme.style.emptyText ??= config.theme.style.noFilesFound
+  }
+
   const [status, setStatus] = useState('pending')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
   const prefix = usePrefix({ theme })
@@ -148,7 +155,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const message = theme.style.message(config.message)
 
   if (status === 'canceled') {
-    return `${prefix} ${message} ${theme.style.error(canceledLabel)}`
+    return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`
   }
 
   if (status === 'done') {
@@ -183,5 +190,5 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     return `${delimiter}\n${helpTipLines.join('\n')}`
   }, [])
 
-  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.noFilesFound(noFilesFound) : page}\n${helpTip}${CURSOR_HIDE}`
+  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}\n${helpTip}${CURSOR_HIDE}`
 })

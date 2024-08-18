@@ -46,9 +46,11 @@ const filePath = await fileSelector({
 | `hideNonMatch` | `boolean` | | If true, the list will be filtered to show only files that match the `match` function.<br/> **Default**: `false` |
 | `disabledLabel` | `string` | | The label to display when a file is disabled.<br/> **Default**: ` (not allowed)` |
 | `allowCancel` | `boolean` | | If true, the prompt will allow the user to cancel the selection.<br/> **Default**: `false` |
-| `canceledLabel` | `string` | | The label to display when the prompt is canceled.<br/> **Default**: `Canceled` |
-| `noFilesFound` | `string` | | The message to display when no files are found.<br/> **Default**: `No files found` |
+| `cancelText` | `string` | | The message to display when the user cancels the selection.<br/> **Default**: `Canceled.` |
+| `emptyText` | `string` | | The message that will be displayed when the directory is empty.<br/> **Default**: `Directory is empty.` |
 | `theme` | [See Theming](#theming) | | The theme to use for the file selector. |
+| ~~`canceledLabel`~~ | ~~`string`~~ | | **Deprecated**: Use `cancelText` instead. Will be removed in the next major version. |
+| ~~`noFilesFound`~~ | ~~`string`~~ | | **Deprecated**: Use `emptyText` instead. Will be removed in the next major version. |
 
 ## Theming
 
@@ -75,10 +77,20 @@ type FileSelectorTheme = {
      */
     active: (text: string) => string
     /**
-     * The style to use for the no files found message.
+     * The style to use for the cancel text.
      * @default chalk.red
      */
-    noFilesFound: (text: string) => string
+    cancelText: (text: string) => string
+    /**
+     * Alias for `emptyText`.
+     * @deprecated Use `emptyText` instead. Will be removed in the next major version.
+     */
+    noFilesFound?: (text: string) => string
+    /**
+     * The style to use for the empty text.
+     * @default chalk.red
+     */
+    emptyText: (text: string) => string
     /**
      * The style to use for items of type directory.
      * @default chalk.yellow

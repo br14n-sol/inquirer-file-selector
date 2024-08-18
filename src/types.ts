@@ -21,10 +21,20 @@ export type FileSelectorTheme = {
      */
     active: (text: string) => string
     /**
-     * The style to use for the no files found message.
+     * The style to use for the cancel text.
      * @default chalk.red
      */
-    noFilesFound: (text: string) => string
+    cancelText: (text: string) => string
+    /**
+     * Alias for `emptyText`.
+     * @deprecated Use `emptyText` instead. Will be removed in the next major version.
+     */
+    noFilesFound?: (text: string) => string
+    /**
+     * The style to use for the empty text.
+     * @default chalk.red
+     */
+    emptyText: (text: string) => string
     /**
      * The style to use for items of type directory.
      * @default chalk.yellow
@@ -108,15 +118,25 @@ export type FileSelectorConfig = {
    */
   allowCancel?: boolean
   /**
-   * The label to display when the user cancels the selection.
-   * @default 'Canceled'
+   * Alias for `cancelText`.
+   * @deprecated Use `cancelText` instead. Will be removed in the next major version.
    */
   canceledLabel?: string
   /**
-   * The message to display when no files are found.
-   * @default 'No files found'
+   * The message to display when the user cancels the selection.
+   * @default 'Canceled.'
+   */
+  cancelText?: string
+  /**
+   * Alias for `emptyText`.
+   * @deprecated Use `emptyText` instead. Will be removed in the next major version.
    */
   noFilesFound?: string
+  /**
+   * The message that will be displayed when the directory is empty.
+   * @default 'Directory is empty.'
+   */
+  emptyText?: string
   /**
    * The theme to use for the file selector.
    */
