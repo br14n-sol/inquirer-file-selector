@@ -21,6 +21,11 @@ export type FileSelectorTheme = {
      */
     active: (text: string) => string
     /**
+     * The style to use for the cancel text.
+     * @default chalk.red
+     */
+    cancelText: (text: string) => string
+    /**
      * Alias for `emptyText`.
      * @deprecated Use `emptyText` instead. Will be removed in the next major version.
      */

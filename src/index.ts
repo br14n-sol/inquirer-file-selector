@@ -37,6 +37,7 @@ const fileSelectorTheme: FileSelectorTheme = {
   style: {
     disabled: (text: string) => chalk.dim(text),
     active: (text: string) => chalk.cyan(text),
+    cancelText: (text: string) => chalk.red(text),
     emptyText: (text: string) => chalk.red(text),
     directory: (text: string) => chalk.yellow(text),
     file: (text: string) => chalk.white(text),
@@ -154,7 +155,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const message = theme.style.message(config.message)
 
   if (status === 'canceled') {
-    return `${prefix} ${message} ${theme.style.error(cancelText)}`
+    return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`
   }
 
   if (status === 'done') {
