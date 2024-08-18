@@ -21,10 +21,15 @@ export type FileSelectorTheme = {
      */
     active: (text: string) => string
     /**
-     * The style to use for the no files found message.
+     * Alias for `emptyText`.
+     * @deprecated Use `emptyText` instead. Will be removed in the next major version.
+     */
+    noFilesFound?: (text: string) => string
+    /**
+     * The style to use for the empty text.
      * @default chalk.red
      */
-    noFilesFound: (text: string) => string
+    emptyText: (text: string) => string
     /**
      * The style to use for items of type directory.
      * @default chalk.yellow

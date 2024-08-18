@@ -37,7 +37,7 @@ const fileSelectorTheme: FileSelectorTheme = {
   style: {
     disabled: (text: string) => chalk.dim(text),
     active: (text: string) => chalk.cyan(text),
-    noFilesFound: (text: string) => chalk.red(text),
+    emptyText: (text: string) => chalk.red(text),
     directory: (text: string) => chalk.yellow(text),
     file: (text: string) => chalk.white(text),
     currentDir: (text: string) => chalk.magenta(text),
@@ -56,6 +56,10 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   } = config
   const emptyText =
     config.emptyText || config.noFilesFound || 'Directory is empty.'
+
+  if (config.theme?.style?.noFilesFound) {
+    config.theme.style.emptyText ??= config.theme.style.noFilesFound
+  }
 
   const [status, setStatus] = useState('pending')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
@@ -185,5 +189,5 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     return `${delimiter}\n${helpTipLines.join('\n')}`
   }, [])
 
-  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.noFilesFound(emptyText) : page}\n${helpTip}${CURSOR_HIDE}`
+  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}\n${helpTip}${CURSOR_HIDE}`
 })
