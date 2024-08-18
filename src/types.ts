@@ -113,10 +113,15 @@ export type FileSelectorConfig = {
    */
   canceledLabel?: string
   /**
-   * The message to display when no files are found.
-   * @default 'No files found'
+   * Alias for `emptyText`.
+   * @deprecated Use `emptyText` instead. Will be removed in the next major version.
    */
   noFilesFound?: string
+  /**
+   * The message that will be displayed when the directory is empty.
+   * @default 'Directory is empty.'
+   */
+  emptyText?: string
   /**
    * The theme to use for the file selector.
    */

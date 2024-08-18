@@ -52,9 +52,11 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
     allowCancel = false,
-    canceledLabel = 'Canceled',
-    noFilesFound = 'No files found'
+    canceledLabel = 'Canceled'
   } = config
+  const emptyText =
+    config.emptyText || config.noFilesFound || 'Directory is empty.'
+
   const [status, setStatus] = useState('pending')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
   const prefix = usePrefix({ theme })
@@ -183,5 +185,5 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     return `${delimiter}\n${helpTipLines.join('\n')}`
   }, [])
 
-  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.noFilesFound(noFilesFound) : page}\n${helpTip}${CURSOR_HIDE}`
+  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.noFilesFound(emptyText) : page}\n${helpTip}${CURSOR_HIDE}`
 })
