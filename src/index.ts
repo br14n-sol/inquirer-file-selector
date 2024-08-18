@@ -51,9 +51,9 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     pageSize = 10,
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
-    allowCancel = false,
-    canceledLabel = 'Canceled'
+    allowCancel = false
   } = config
+  const cancelText = config.cancelText || config.canceledLabel || 'Canceled.'
   const emptyText =
     config.emptyText || config.noFilesFound || 'Directory is empty.'
 
@@ -154,7 +154,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const message = theme.style.message(config.message)
 
   if (status === 'canceled') {
-    return `${prefix} ${message} ${theme.style.error(canceledLabel)}`
+    return `${prefix} ${message} ${theme.style.error(cancelText)}`
   }
 
   if (status === 'done') {

@@ -113,10 +113,15 @@ export type FileSelectorConfig = {
    */
   allowCancel?: boolean
   /**
-   * The label to display when the user cancels the selection.
-   * @default 'Canceled'
+   * Alias for `cancelText`.
+   * @deprecated Use `cancelText` instead. Will be removed in the next major version.
    */
   canceledLabel?: string
+  /**
+   * The message to display when the user cancels the selection.
+   * @default 'Canceled.'
+   */
+  cancelText?: string
   /**
    * Alias for `emptyText`.
    * @deprecated Use `emptyText` instead. Will be removed in the next major version.
