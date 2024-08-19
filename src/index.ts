@@ -165,24 +165,9 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const header = theme.style.currentDir(ensureTrailingSlash(currentDir))
   const helpTip = useMemo(() => {
     const helpTipLines = [
-      theme.style.help(
-        `Use ${theme.style.key(figures.arrowUp + figures.arrowDown)} to navigate through the list`
-      ),
-      theme.style.help(
-        `Press ${theme.style.key('<backspace>')} to navigate to the parent directory`
-      ),
-      theme.style.help(
-        `Press ${theme.style.key('<enter>')} to select a file or navigate to a directory`
-      )
+      `${theme.style.key(figures.arrowUp + figures.arrowDown)} navigate, ${theme.style.key('<enter>')} select or open directory`,
+      `${theme.style.key('<backspace>')} go back${allowCancel ? `, ${theme.style.key('<esc>')} cancel` : ''}`
     ]
-
-    if (allowCancel) {
-      helpTipLines.push(
-        theme.style.help(
-          `Press ${theme.style.key('<esc>')} to cancel the selection`
-        )
-      )
-    }
 
     const helpTipMaxLength = getMaxLength(helpTipLines)
     const delimiter = figures.lineBold.repeat(helpTipMaxLength)
