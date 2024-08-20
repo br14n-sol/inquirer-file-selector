@@ -87,10 +87,15 @@ export type Item = {
 export type FileSelectorConfig = {
   message: string
   /**
+   * Alias for `basePath`.
+   * @deprecated Use `basePath` instead. Will be removed in the next major version.
+   */
+  path?: string
+  /**
    * The path to the directory where it will be started.
    * @default process.cwd()
    */
-  path?: string
+  basePath?: string
   /**
    * The maximum number of items to display in the list.
    * @default 10

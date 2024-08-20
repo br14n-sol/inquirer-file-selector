@@ -40,7 +40,7 @@ const filePath = await fileSelector({
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
 | `message` | `string` | ✔ | The message to display in the prompt. |
-| `path` | `string` | | The path to the directory where it will be started.<br/> **Default**: `process.cwd()` |
+| `basePath` | `string` | | The path to the directory where it will be started.<br/> **Default**: `process.cwd()` |
 | `pageSize` | `number` | | The maximum number of items to display in the list.<br/> **Default**: `10` |
 | `match` | `(file: Item) => boolean` | | A function to filter the files.<br/> If not provided, all files will be included. |
 | `hideNonMatch` | `boolean` | | If true, the list will be filtered to show only files that match the `match` function.<br/> **Default**: `false` |
@@ -49,6 +49,7 @@ const filePath = await fileSelector({
 | `cancelText` | `string` | | The message to display when the user cancels the selection.<br/> **Default**: `Canceled.` |
 | `emptyText` | `string` | | The message that will be displayed when the directory is empty.<br/> **Default**: `Directory is empty.` |
 | `theme` | [See Theming](#theming) | | The theme to use for the file selector. |
+| ~~`path`~~ | ~~`string`~~ | | **Deprecated**: Use `basePath` instead. Will be removed in the next major version. |
 | ~~`canceledLabel`~~ | ~~`string`~~ | | **Deprecated**: Use `cancelText` instead. Will be removed in the next major version. |
 | ~~`noFilesFound`~~ | ~~`string`~~ | | **Deprecated**: Use `emptyText` instead. Will be removed in the next major version. |
 
