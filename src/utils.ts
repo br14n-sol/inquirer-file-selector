@@ -56,7 +56,7 @@ export function matchCheck(
 export function getDirItems(dir: string): Item[] {
   return fs.readdirSync(dir, { withFileTypes: true }).map(dirent => ({
     name: dirent.name,
-    path: path.join(dirent.parentPath, dirent.name),
+    path: path.join(dir, dirent.name),
     isDir: dirent.isDirectory()
   }))
 }
