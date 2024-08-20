@@ -61,6 +61,15 @@ export type FileSelectorTheme = {
      */
     key: (text: string) => string
   }
+  /**
+   * The help mode to use.
+   *
+   * If set to `always`, the help will always be displayed.
+   *
+   * If set to `never`, the help will not be displayed.
+   * @default 'always'
+   */
+  helpMode: 'always' | 'never'
 }
 
 export type Item = {

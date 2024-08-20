@@ -44,7 +44,8 @@ const fileSelectorTheme: FileSelectorTheme = {
     currentDir: (text: string) => chalk.magenta(text),
     help: (text: string) => chalk.white(text),
     key: (text: string) => chalk.cyan(text)
-  }
+  },
+  helpMode: 'always'
 }
 
 export default createPrompt<string, FileSelectorConfig>((config, done) => {
@@ -164,6 +165,10 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
   const header = theme.style.currentDir(ensureTrailingSlash(currentDir))
   const helpTip = useMemo(() => {
+    if (theme.helpMode !== 'always') {
+      return ''
+    }
+
     const helpTipLines = [
       `${theme.style.key(figures.arrowUp + figures.arrowDown)} navigate, ${theme.style.key('<enter>')} select or open directory`,
       `${theme.style.key('<backspace>')} go back${allowCancel ? `, ${theme.style.key('<esc>')} cancel` : ''}`
