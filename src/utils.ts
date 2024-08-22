@@ -54,11 +54,17 @@ export function matchCheck(
  * Get items of a directory
  */
 export function getDirItems(dir: string): Item[] {
-  return fs.readdirSync(dir, { withFileTypes: true }).map(dirent => ({
+  const dirItems = fs.readdirSync(dir, { withFileTypes: true }).map(dirent => ({
     name: dirent.name,
     path: path.join(dir, dirent.name),
     isDir: dirent.isDirectory()
   }))
+  const curItem = {
+    name: '.',
+    path: dir,
+    isDir: true
+  }
+ return [curItem, ...dirItems];
 }
 
 /**

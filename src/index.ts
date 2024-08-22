@@ -97,8 +97,13 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   useKeypress((key, rl) => {
     if (isEnterKey(key)) {
       if (activeItem.isDir) {
-        setCurrentDir(activeItem.path)
-        setActive(bounds.first)
+        if (activeItem.name === '.') {
+          setStatus('done')
+          done(activeItem.path)
+        } else {
+          setCurrentDir(activeItem.path)
+          setActive(bounds.first)
+        }
       } else if (!activeItem.isDisabled) {
         setStatus('done')
         done(activeItem.path)
