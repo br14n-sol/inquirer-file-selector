@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import type { KeypressEvent } from '@inquirer/core'
 
-import type { Item } from './types.js'
+import type {ExpectOption, Item} from './types.js'
 
 /**
  * ANSI escape code to hide the cursor
@@ -53,12 +53,21 @@ export function matchCheck(
 /**
  * Get items of a directory
  */
-export function getDirItems(dir: string): Item[] {
-  return fs.readdirSync(dir, { withFileTypes: true }).map(dirent => ({
-    name: dirent.name,
-    path: path.join(dir, dirent.name),
-    isDir: dirent.isDirectory()
-  }))
+export function getDirItems(dir: string, expect: ExpectOption): Item[] {
+    const dirItems = fs.readdirSync(dir, {withFileTypes: true}).map(dirent => ({
+        name: dirent.name,
+        path: path.join(dir, dirent.name),
+        isDir: dirent.isDirectory()
+    }))
+    if (['directory', 'both'].includes(expect)) {
+        const curItem = {
+            name: '.',
+            path: dir,
+            isDir: true
+        }
+        return [curItem, ...dirItems];
+    }
+    return dirItems;
 }
 
 /**

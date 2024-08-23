@@ -84,6 +84,8 @@ export type Item = {
   isDisabled?: boolean
 }
 
+export type ExpectOption = 'file' | 'directory' | 'both';
+
 export type FileSelectorConfig = {
   message: string
   /**
@@ -122,6 +124,11 @@ export type FileSelectorConfig = {
    * @default false
    */
   allowCancel?: boolean
+  /**
+   * Configuration selection file or directory, or both
+   * @default 'file'
+   */
+  expect?: ExpectOption
   /**
    * Alias for `cancelText`.
    * @deprecated Use `cancelText` instead. Will be removed in the next major version.

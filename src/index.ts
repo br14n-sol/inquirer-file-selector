@@ -52,7 +52,8 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     pageSize = 10,
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
-    allowCancel = false
+    allowCancel = false,
+    expect = 'file',
   } = config
   const cancelText = config.cancelText || config.canceledLabel || 'Canceled.'
   const emptyText =
@@ -71,10 +72,12 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   )
 
   const items = useMemo(() => {
-    const _items = getDirItems(currentDir)
+    const _items = getDirItems(currentDir, expect)
 
     for (const item of _items) {
-      item.isDisabled = !item.isDir && !matchCheck(item, config.match)
+      item.isDisabled = !item.isDir &&
+          (config.expect === 'directory' ||
+          !matchCheck(item, config.match))
     }
 
     return sortItems(_items, hideNonMatch)
@@ -97,8 +100,13 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   useKeypress((key, rl) => {
     if (isEnterKey(key)) {
       if (activeItem.isDir) {
-        setCurrentDir(activeItem.path)
-        setActive(bounds.first)
+        if (['directory', 'both'].includes(expect) && activeItem.name === '.') {
+          setStatus('done')
+          done(activeItem.path)
+        } else {
+          setCurrentDir(activeItem.path)
+          setActive(bounds.first)
+        }
       } else if (!activeItem.isDisabled) {
         setStatus('done')
         done(activeItem.path)
