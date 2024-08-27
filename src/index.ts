@@ -62,7 +62,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const prefix = usePrefix({ theme })
 
   const [currentDir, setCurrentDir] = useState(
-    path.resolve(process.cwd(), config.basePath || config.path || '.')
+    path.resolve(process.cwd(), config.basePath || '.')
   )
 
   const items = useMemo(() => {
