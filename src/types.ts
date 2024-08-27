@@ -92,6 +92,11 @@ export type FileSelectorConfig = {
    */
   pageSize?: number
   /**
+   * The types of elements that are valid selection options.
+   * @default 'file'
+   */
+  type?: 'file' | 'directory' | 'file+directory'
+  /**
    * The function to use to filter the files. Returns `true` to include the file in the list.
    *
    * If not provided, all files will be included.

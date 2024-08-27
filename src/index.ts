@@ -4,6 +4,7 @@ import {
   isBackspaceKey,
   isDownKey,
   isEnterKey,
+  isSpaceKey,
   isUpKey,
   makeTheme,
   useKeypress,
@@ -50,6 +51,7 @@ const fileSelectorTheme: FileSelectorTheme = {
 export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
     pageSize = 10,
+    type = 'file',
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
     allowCancel = false,
@@ -91,13 +93,23 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
   useKeypress((key, rl) => {
     if (isEnterKey(key)) {
-      if (activeItem.isDir) {
-        setCurrentDir(activeItem.path)
-        setActive(bounds.first)
-      } else if (!activeItem.isDisabled) {
-        setStatus('done')
-        done(activeItem.path)
+      if (
+        activeItem.isDisabled ||
+        (type === 'file' && activeItem.isDir) ||
+        (type === 'directory' && !activeItem.isDir)
+      ) {
+        return
       }
+
+      setStatus('done')
+      done(activeItem.path)
+    } else if (isSpaceKey(key)) {
+      if (!activeItem.isDir) {
+        return
+      }
+
+      setCurrentDir(activeItem.path)
+      setActive(bounds.first)
     } else if (isUpKey(key) || isDownKey(key)) {
       rl.clearLine(0)
 
@@ -160,8 +172,8 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const header = theme.style.currentDir(ensureTrailingSlash(currentDir))
   const helpTip = useMemo(() => {
     const helpTipLines = [
-      `${theme.style.key(figures.arrowUp + figures.arrowDown)} navigate, ${theme.style.key('<enter>')} select or open directory`,
-      `${theme.style.key('<backspace>')} go back${allowCancel ? `, ${theme.style.key('<esc>')} cancel` : ''}`
+      `${theme.style.key(figures.arrowUp + figures.arrowDown)} navigate, ${theme.style.key('<enter>')} select${allowCancel ? `, ${theme.style.key('<esc>')} cancel` : ''}`,
+      `${theme.style.key('<space>')} open directory, ${theme.style.key('<backspace>')} go back`
     ]
 
     const helpTipMaxLength = getMaxLength(helpTipLines)
