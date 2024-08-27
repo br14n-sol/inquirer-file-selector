@@ -53,9 +53,9 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
     allowCancel = false,
+    cancelText = 'Canceled.',
     emptyText = 'Directory is empty.'
   } = config
-  const cancelText = config.cancelText || config.canceledLabel || 'Canceled.'
 
   const [status, setStatus] = useState('pending')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
