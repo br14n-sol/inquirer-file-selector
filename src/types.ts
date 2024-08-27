@@ -26,11 +26,6 @@ export type FileSelectorTheme = {
      */
     cancelText: (text: string) => string
     /**
-     * Alias for `emptyText`.
-     * @deprecated Use `emptyText` instead. Will be removed in the next major version.
-     */
-    noFilesFound?: (text: string) => string
-    /**
      * The style to use for the empty text.
      * @default chalk.red
      */
@@ -132,11 +127,6 @@ export type FileSelectorConfig = {
    * @default 'Canceled.'
    */
   cancelText?: string
-  /**
-   * Alias for `emptyText`.
-   * @deprecated Use `emptyText` instead. Will be removed in the next major version.
-   */
-  noFilesFound?: string
   /**
    * The message that will be displayed when the directory is empty.
    * @default 'Directory is empty.'

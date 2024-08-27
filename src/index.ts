@@ -52,15 +52,10 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     pageSize = 10,
     hideNonMatch = false,
     disabledLabel = ' (not allowed)',
-    allowCancel = false
+    allowCancel = false,
+    emptyText = 'Directory is empty.'
   } = config
   const cancelText = config.cancelText || config.canceledLabel || 'Canceled.'
-  const emptyText =
-    config.emptyText || config.noFilesFound || 'Directory is empty.'
-
-  if (config.theme?.style?.noFilesFound) {
-    config.theme.style.emptyText ??= config.theme.style.noFilesFound
-  }
 
   const [status, setStatus] = useState('pending')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
