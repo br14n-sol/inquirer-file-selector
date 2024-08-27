@@ -26,11 +26,6 @@ export type FileSelectorTheme = {
      */
     cancelText: (text: string) => string
     /**
-     * Alias for `emptyText`.
-     * @deprecated Use `emptyText` instead. Will be removed in the next major version.
-     */
-    noFilesFound?: (text: string) => string
-    /**
      * The style to use for the empty text.
      * @default chalk.red
      */
@@ -87,11 +82,6 @@ export type Item = {
 export type FileSelectorConfig = {
   message: string
   /**
-   * Alias for `basePath`.
-   * @deprecated Use `basePath` instead. Will be removed in the next major version.
-   */
-  path?: string
-  /**
    * The path to the directory where it will be started.
    * @default process.cwd()
    */
@@ -123,20 +113,10 @@ export type FileSelectorConfig = {
    */
   allowCancel?: boolean
   /**
-   * Alias for `cancelText`.
-   * @deprecated Use `cancelText` instead. Will be removed in the next major version.
-   */
-  canceledLabel?: string
-  /**
    * The message to display when the user cancels the selection.
    * @default 'Canceled.'
    */
   cancelText?: string
-  /**
-   * Alias for `emptyText`.
-   * @deprecated Use `emptyText` instead. Will be removed in the next major version.
-   */
-  noFilesFound?: string
   /**
    * The message that will be displayed when the directory is empty.
    * @default 'Directory is empty.'

@@ -49,9 +49,6 @@ const filePath = await fileSelector({
 | `cancelText` | `string` | | The message to display when the user cancels the selection.<br/> **Default**: `Canceled.` |
 | `emptyText` | `string` | | The message that will be displayed when the directory is empty.<br/> **Default**: `Directory is empty.` |
 | `theme` | [See Theming](#theming) | | The theme to use for the file selector. |
-| ~~`path`~~ | ~~`string`~~ | | **Deprecated**: Use `basePath` instead. Will be removed in the next major version. |
-| ~~`canceledLabel`~~ | ~~`string`~~ | | **Deprecated**: Use `cancelText` instead. Will be removed in the next major version. |
-| ~~`noFilesFound`~~ | ~~`string`~~ | | **Deprecated**: Use `emptyText` instead. Will be removed in the next major version. |
 
 ## Theming
 
@@ -82,11 +79,6 @@ type FileSelectorTheme = {
      * @default chalk.red
      */
     cancelText: (text: string) => string
-    /**
-     * Alias for `emptyText`.
-     * @deprecated Use `emptyText` instead. Will be removed in the next major version.
-     */
-    noFilesFound?: (text: string) => string
     /**
      * The style to use for the empty text.
      * @default chalk.red
