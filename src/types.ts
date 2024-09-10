@@ -1,3 +1,4 @@
+import type { Stats } from 'node:fs'
 import type { Theme } from '@inquirer/core'
 import type { PartialDeep } from '@inquirer/type'
 
@@ -58,25 +59,21 @@ export type FileSelectorTheme = {
   }
 }
 
-export type Item = {
+export type FileStats = Stats & {
   /**
-   * The name of the item.
+   * The name of the file or directory.
    */
   name: string
   /**
-   * The path to the item.
+   * The path to the file or directory.
    */
   path: string
   /**
-   * If the item is a directory.
-   */
-  isDir: boolean
-  /**
-   * If the item is disabled, it will be displayed in the list with the `disabledLabel` property.
+   * If the file or directory is disabled, it will be displayed in the list with the `disabledLabel` property.
    *
-   * Set to `true` if the `match` function returns `false`.
+   * Set to `true` if the `filter` function returns `false`.
    */
-  isDisabled?: boolean
+  isDisabled: boolean
 }
 
 export type FileSelectorConfig = {
@@ -92,14 +89,27 @@ export type FileSelectorConfig = {
    */
   pageSize?: number
   /**
+   * A function to filter files and directories. It returns `true` to include the file or directory in the list,
+   * and `false` to exclude it.
+   *
+   * If not provided, all files and directories will be included by default.
+   */
+  filter?: (file: FileStats) => boolean
+  /**
    * The function to use to filter the files. Returns `true` to include the file in the list.
    *
    * If not provided, all files will be included.
+   * @deprecated Use `filter` instead. This option will be removed in the 0.6.0 release.
    */
-  match?: (file: Item) => boolean
+  match?: (file: FileStats) => boolean
   /**
-   * If true, the list will be filtered to show only files that match the `match` function.
+   * If `true`, the list will include files and directories that are excluded by the `filter` function.
    * @default false
+   */
+  showExcluded?: boolean
+  /**
+   * If `false`, the list will include files and directories that are excluded by the `match` function.
+   * @deprecated Use `showExcluded` instead. This option will be removed in the 0.6.0 release.
    */
   hideNonMatch?: boolean
   /**
