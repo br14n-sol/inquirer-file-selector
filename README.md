@@ -42,13 +42,15 @@ const filePath = await fileSelector({
 | `message` | `string` | ✔ | The message to display in the prompt. |
 | `basePath` | `string` | | The path to the directory where it will be started.<br/> **Default**: `process.cwd()` |
 | `pageSize` | `number` | | The maximum number of items to display in the list.<br/> **Default**: `10` |
-| `match` | `(file: Item) => boolean` | | A function to filter the files.<br/> If not provided, all files will be included. |
-| `hideNonMatch` | `boolean` | | If true, the list will be filtered to show only files that match the `match` function.<br/> **Default**: `false` |
+| `filter` | `(file: FileStats) => boolean` | | A function to filter files and directories.<br/> If not provided, all files and directories will be included by default. |
+| `showExcluded` | `boolean` | | If `true`, the list will include files and directories that are excluded by the `filter` function.<br/> **Default**: `false` |
 | `disabledLabel` | `string` | | The label to display when a file is disabled.<br/> **Default**: ` (not allowed)` |
 | `allowCancel` | `boolean` | | If true, the prompt will allow the user to cancel the selection.<br/> **Default**: `false` |
 | `cancelText` | `string` | | The message to display when the user cancels the selection.<br/> **Default**: `Canceled.` |
 | `emptyText` | `string` | | The message that will be displayed when the directory is empty.<br/> **Default**: `Directory is empty.` |
 | `theme` | [See Theming](#theming) | | The theme to use for the file selector. |
+| ~~`match`~~ | ~~`(file: FileStats) => boolean`~~ | | **Deprecated**: Use `filter` instead. |
+| ~~`hideNonMatch`~~ | ~~`boolean`~~ | | **Deprecated**: Use `showExcluded` instead. |
 
 ## Theming
 
