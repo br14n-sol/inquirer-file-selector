@@ -19,11 +19,11 @@ import type { FileSelectorConfig, FileSelectorTheme } from './types.js'
 import {
   CURSOR_HIDE,
   ensureTrailingSlash,
-  getDirItems,
+  filterCheck,
+  getDirFiles,
   getMaxLength,
   isEscapeKey,
-  matchCheck,
-  sortItems
+  sortFiles
 } from './utils.js'
 
 const fileSelectorTheme: FileSelectorTheme = {
@@ -50,7 +50,6 @@ const fileSelectorTheme: FileSelectorTheme = {
 export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
     pageSize = 10,
-    hideNonMatch = false,
     disabledLabel = ' (not allowed)',
     allowCancel = false,
     cancelText = 'Canceled.',
@@ -66,13 +65,18 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   )
 
   const items = useMemo(() => {
-    const _items = getDirItems(currentDir)
+    const files = getDirFiles(currentDir)
 
-    for (const item of _items) {
-      item.isDisabled = !item.isDir && !matchCheck(item, config.match)
+    for (const file of files) {
+      if (config.filter) {
+        file.isDisabled = !filterCheck(file, config.filter)
+      } else {
+        file.isDisabled = !file.isDirectory() && !filterCheck(file, config.match)
+      }
     }
 
-    return sortItems(_items, hideNonMatch)
+    const showExcluded = config.showExcluded ?? (config.hideNonMatch === false)
+    return sortFiles(files, showExcluded)
   }, [currentDir])
 
   const bounds = useMemo(() => {
@@ -91,7 +95,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
   useKeypress((key, rl) => {
     if (isEnterKey(key)) {
-      if (activeItem.isDir) {
+      if (activeItem.isDirectory()) {
         setCurrentDir(activeItem.path)
         setActive(bounds.first)
       } else if (!activeItem.isDisabled) {
@@ -130,16 +134,18 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       const isLast = index === items.length - 1
       const linePrefix = theme.icon.linePrefix(isLast)
 
-      if (item.isDisabled) {
-        return theme.style.disabled(`${linePrefix}${item.name}${disabledLabel}`)
-      }
-
-      const baseColor = item.isDir ? theme.style.directory : theme.style.file
-      const color = isActive ? theme.style.active : baseColor
-
-      const line = item.isDir
+      const line = item.isDirectory()
         ? `${linePrefix}${ensureTrailingSlash(item.name)}`
         : `${linePrefix}${item.name}`
+
+      if (item.isDisabled) {
+        return theme.style.disabled(`${line}${disabledLabel}`)
+      }
+
+      const baseColor = item.isDirectory()
+        ? theme.style.directory
+        : theme.style.file
+      const color = isActive ? theme.style.active : baseColor
 
       return color(line)
     },

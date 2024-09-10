@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import type { KeypressEvent } from '@inquirer/core'
 
-import type { Item } from './types.js'
+import type { FileStats } from './types.js'
 
 /**
  * ANSI escape code to hide the cursor
@@ -41,31 +41,39 @@ export function getMaxLength(arr: string[]): number {
 }
 
 /**
- * Check if the given item matches the given match function.
+ * Check if the given file matches the given filter function.
  */
-export function matchCheck(
-  item: Item,
-  match?: (item: Item) => boolean
+export function filterCheck(
+  file: FileStats,
+  filter?: (file: FileStats) => boolean
 ): boolean {
-  return !match || match(item)
+  return !filter || filter(file)
 }
 
 /**
- * Get items of a directory
+ * Get files of a directory
  */
-export function getDirItems(dir: string): Item[] {
-  return fs.readdirSync(dir, { withFileTypes: true }).map(dirent => ({
-    name: dirent.name,
-    path: path.join(dir, dirent.name),
-    isDir: dirent.isDirectory()
-  }))
+export function getDirFiles(dir: string): FileStats[] {
+  return fs.readdirSync(dir).map(filename => {
+    const filepath = path.join(dir, filename)
+    const fileStat = fs.statSync(filepath)
+
+    return Object.assign(fileStat, {
+      name: filename,
+      path: filepath,
+      isDisabled: false
+    })
+  })
 }
 
 /**
- * Sort items, optionally filtering out disabled items if hideNonMatch is true
+ * Sort files, optionally filtering out disabled files if `showExcluded` is `false`
  */
-export function sortItems(items: Item[], hideNonMatch: boolean): Item[] {
-  return items
+export function sortFiles(
+  files: FileStats[],
+  showExcluded: boolean
+): FileStats[] {
+  return files
     .sort((a, b) => {
       // a is disabled, should come last
       if (a.isDisabled && !b.isDisabled) {
@@ -78,17 +86,17 @@ export function sortItems(items: Item[], hideNonMatch: boolean): Item[] {
       }
 
       // a is dir, should come first
-      if (a.isDir && !b.isDir) {
+      if (a.isDirectory() && !b.isDirectory()) {
         return -1
       }
 
       // b is dir, should come first
-      if (!a.isDir && b.isDir) {
+      if (!a.isDirectory() && b.isDirectory()) {
         return 1
       }
 
       // both are files or dirs, regardless of whether they are disabled - sort by name
       return a.name.localeCompare(b.name)
     })
-    .filter(item => !hideNonMatch || !item.isDisabled)
+    .filter(file => showExcluded || !file.isDisabled)
 }
