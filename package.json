@@ -17,7 +17,7 @@
     "build": "tsup --config ./tsup.config.json"
   },
   "dependencies": {
-    "@inquirer/core": "^9.1.0",
+    "@inquirer/core": "^9.2.1",
     "@inquirer/figures": "^1.0.6",
     "chalk": "^5.3.0"
   },
