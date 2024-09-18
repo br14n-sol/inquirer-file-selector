@@ -17,17 +17,17 @@
     "build": "tsup --config ./tsup.config.json"
   },
   "dependencies": {
-    "@inquirer/core": "^9.1.0",
-    "@inquirer/figures": "^1.0.5",
+    "@inquirer/core": "^9.2.1",
+    "@inquirer/figures": "^1.0.6",
     "chalk": "^5.3.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "1.9.1",
     "@inquirer/select": "2.5.0",
-    "@inquirer/type": "1.5.3",
+    "@inquirer/type": "2.0.0",
     "@tsconfig/node18": "18.2.4",
-    "tsup": "8.2.4",
-    "typescript": "5.2.2"
+    "tsup": "8.3.0",
+    "typescript": "5.6.2"
   },
   "engines": {
     "node": ">=18"
