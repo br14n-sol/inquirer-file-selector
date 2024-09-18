@@ -26,7 +26,7 @@
     "@inquirer/select": "2.5.0",
     "@inquirer/type": "1.5.3",
     "@tsconfig/node18": "18.2.4",
-    "tsup": "8.2.4",
+    "tsup": "8.3.0",
     "typescript": "5.6.2"
   },
   "engines": {
