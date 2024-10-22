@@ -42,6 +42,7 @@ const filePath = await fileSelector({
 | `message` | `string` | ✔ | The message to display in the prompt. |
 | `basePath` | `string` | | The path to the directory where it will be started.<br/> **Default**: `process.cwd()` |
 | `pageSize` | `number` | | The maximum number of items to display in the list.<br/> **Default**: `10` |
+| `loop` | `boolean` | | If `true`, the list will loop from the last item to the first item and vice versa.<br/> **Default**: `false` |
 | `filter` | `(file: FileStats) => boolean` | | A function to filter files and directories.<br/> If not provided, all files and directories will be included by default. |
 | `showExcluded` | `boolean` | | If `true`, the list will include files and directories that are excluded by the `filter` function.<br/> **Default**: `false` |
 | `disabledLabel` | `string` | | The label to display when a file is disabled.<br/> **Default**: ` (not allowed)` |
@@ -58,62 +59,31 @@ You can theme a prompt by passing a `theme` object option. The theme object only
 
 ```ts
 type FileSelectorTheme = {
+  prefix: {
+    idle: string
+    done: string
+    canceled: string
+  }
   icon: {
-    /**
-     * The prefix to use for the line.
-     * @default isLast => isLast ? └── : ├──
-     */
     linePrefix: (isLast: boolean) => string
   }
   style: {
-    /**
-     * The style to use for the disabled items.
-     * @default chalk.dim
-     */
     disabled: (text: string) => string
-    /**
-     * The style to use for the active item.
-     * @default chalk.cyan
-     */
     active: (text: string) => string
-    /**
-     * The style to use for the cancel text.
-     * @default chalk.red
-     */
     cancelText: (text: string) => string
-    /**
-     * The style to use for the empty text.
-     * @default chalk.red
-     */
     emptyText: (text: string) => string
-    /**
-     * The style to use for items of type directory.
-     * @default chalk.yellow
-     */
     directory: (text: string) => string
-    /**
-     * The style to use for items of type file.
-     * @default chalk.white
-     */
     file: (text: string) => string
-    /**
-     * The style to use for the current directory header.
-     * @default chalk.magenta
-     */
     currentDir: (text: string) => string
-    /**
-     * The style to use for the key bindings help.
-     * @default chalk.white
-     */
+    message: (text: string, status: 'idle' | 'done' | 'canceled') => string
     help: (text: string) => string
-    /**
-     * The style to use for the keys in the key bindings help.
-     * @default chalk.cyan
-     */
     key: (text: string) => string
   }
 }
 ```
+
+> [!NOTE]
+> To see the default theme used by the prompt, look at the [fileSelectorTheme](src/index.ts#L30) constant and the [FileSelectorTheme](src/types.ts#L5) type.
 
 ## Examples
 
