@@ -3,6 +3,23 @@ import type { Theme } from '@inquirer/core'
 import type { PartialDeep } from '@inquirer/type'
 
 export type FileSelectorTheme = {
+  prefix: {
+    /**
+     * The prefix to use for the idle status.
+     * @default chalk.cyan('?')
+     */
+    idle: string
+    /**
+     * The prefix to use for the done status.
+     * @default chalk.green(figures.tick)
+     */
+    done: string
+    /**
+     * The prefix to use for the canceled status.
+     * @default chalk.red(figures.cross)
+     */
+    canceled: string
+  }
   icon: {
     /**
      * The prefix to use for the line.

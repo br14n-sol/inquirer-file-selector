@@ -28,6 +28,11 @@ import {
 } from './utils.js'
 
 const fileSelectorTheme: FileSelectorTheme = {
+  prefix: {
+    idle: chalk.cyan('?'),
+    done: chalk.green(figures.tick),
+    canceled: chalk.red(figures.cross)
+  },
   icon: {
     linePrefix: (isLast: boolean) => {
       return isLast
@@ -59,7 +64,10 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
   const [status, setStatus] = useState<Status>('idle')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
-  const prefix = usePrefix({ theme })
+  const prefix = usePrefix({
+    status: status as InquirerStatus, // TODO: remove this cast when resolved: https://github.com/SBoudrias/Inquirer.js/issues/1582
+    theme
+  })
 
   const [currentDir, setCurrentDir] = useState(
     path.resolve(process.cwd(), config.basePath || '.')
