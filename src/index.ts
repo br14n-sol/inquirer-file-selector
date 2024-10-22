@@ -57,6 +57,7 @@ const fileSelectorTheme: FileSelectorTheme = {
 export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
     pageSize = 10,
+    loop = false,
     disabledLabel = ' (not allowed)',
     allowCancel = false,
     cancelText = 'Canceled.',
@@ -117,6 +118,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       rl.clearLine(0)
 
       if (
+        loop ||
         (isUpKey(key) && active !== bounds.first) ||
         (isDownKey(key) && active !== bounds.last)
       ) {
@@ -161,7 +163,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       return color(line)
     },
     pageSize,
-    loop: false
+    loop
   })
 
   const message = theme.style.message(config.message, status)
