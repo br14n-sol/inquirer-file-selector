@@ -1,5 +1,6 @@
 import path from 'node:path'
 import {
+  type Status as InquirerStatus,
   createPrompt,
   isBackspaceKey,
   isDownKey,
@@ -15,7 +16,7 @@ import {
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
 
-import type { FileSelectorConfig, FileSelectorTheme } from './types.js'
+import type { FileSelectorConfig, FileSelectorTheme, Status } from './types.js'
 import {
   CURSOR_HIDE,
   ensureTrailingSlash,
@@ -27,6 +28,11 @@ import {
 } from './utils.js'
 
 const fileSelectorTheme: FileSelectorTheme = {
+  prefix: {
+    idle: chalk.cyan('?'),
+    done: chalk.green(figures.tick),
+    canceled: chalk.red(figures.cross)
+  },
   icon: {
     linePrefix: (isLast: boolean) => {
       return isLast
@@ -42,6 +48,7 @@ const fileSelectorTheme: FileSelectorTheme = {
     directory: (text: string) => chalk.yellow(text),
     file: (text: string) => chalk.white(text),
     currentDir: (text: string) => chalk.magenta(text),
+    message: (text: string, _status: Status) => chalk.bold(text),
     help: (text: string) => chalk.white(text),
     key: (text: string) => chalk.cyan(text)
   }
@@ -56,9 +63,12 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     emptyText = 'Directory is empty.'
   } = config
 
-  const [status, setStatus] = useState('pending')
+  const [status, setStatus] = useState<Status>('idle')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
-  const prefix = usePrefix({ theme })
+  const prefix = usePrefix({
+    status: status as InquirerStatus, // TODO: remove this cast when resolved: https://github.com/SBoudrias/Inquirer.js/issues/1582
+    theme
+  })
 
   const [currentDir, setCurrentDir] = useState(
     path.resolve(process.cwd(), config.basePath || '.')
@@ -71,11 +81,12 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       if (config.filter) {
         file.isDisabled = !filterCheck(file, config.filter)
       } else {
-        file.isDisabled = !file.isDirectory() && !filterCheck(file, config.match)
+        file.isDisabled =
+          !file.isDirectory() && !filterCheck(file, config.match)
       }
     }
 
-    const showExcluded = config.showExcluded ?? (config.hideNonMatch === false)
+    const showExcluded = config.showExcluded ?? config.hideNonMatch === false
     return sortFiles(files, showExcluded)
   }, [currentDir])
 
@@ -153,7 +164,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     loop: false
   })
 
-  const message = theme.style.message(config.message)
+  const message = theme.style.message(config.message, status)
 
   if (status === 'canceled') {
     return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`
