@@ -141,3 +141,9 @@ export type FileSelectorConfig = {
    */
   theme?: PartialDeep<Theme<FileSelectorTheme>>
 }
+
+/**
+ * Internal types
+ */
+
+export type Status = 'idle' | 'done' | 'canceled'

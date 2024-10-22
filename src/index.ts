@@ -1,5 +1,6 @@
 import path from 'node:path'
 import {
+  type Status as InquirerStatus,
   createPrompt,
   isBackspaceKey,
   isDownKey,
@@ -15,7 +16,7 @@ import {
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
 
-import type { FileSelectorConfig, FileSelectorTheme } from './types.js'
+import type { FileSelectorConfig, FileSelectorTheme, Status } from './types.js'
 import {
   CURSOR_HIDE,
   ensureTrailingSlash,
@@ -56,7 +57,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     emptyText = 'Directory is empty.'
   } = config
 
-  const [status, setStatus] = useState('pending')
+  const [status, setStatus] = useState<Status>('idle')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
   const prefix = usePrefix({ theme })
 
@@ -71,11 +72,12 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       if (config.filter) {
         file.isDisabled = !filterCheck(file, config.filter)
       } else {
-        file.isDisabled = !file.isDirectory() && !filterCheck(file, config.match)
+        file.isDisabled =
+          !file.isDirectory() && !filterCheck(file, config.match)
       }
     }
 
-    const showExcluded = config.showExcluded ?? (config.hideNonMatch === false)
+    const showExcluded = config.showExcluded ?? config.hideNonMatch === false
     return sortFiles(files, showExcluded)
   }, [currentDir])
 
@@ -153,7 +155,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     loop: false
   })
 
-  const message = theme.style.message(config.message)
+  const message = theme.style.message(config.message, status as InquirerStatus) // TODO: remove this cast when resolved: https://github.com/SBoudrias/Inquirer.js/issues/1582
 
   if (status === 'canceled') {
     return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`
