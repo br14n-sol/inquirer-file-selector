@@ -115,6 +115,11 @@ export type FileSelectorConfig = {
    */
   pageSize?: number
   /**
+   * If `true`, the list will loop from the last item to the first item and vice versa.
+   * @default false
+   */
+  loop?: boolean
+  /**
    * A function to filter files and directories. It returns `true` to include the file or directory in the list,
    * and `false` to exclude it.
    *
