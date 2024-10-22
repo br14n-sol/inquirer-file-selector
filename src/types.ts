@@ -69,6 +69,10 @@ export type FileStats = Stats & {
    */
   path: string
   /**
+   * @deprecated Use `isDirectory()` instead. This property will be removed in the 0.6.0 release.
+   */
+  isDir: boolean
+  /**
    * If the file or directory is disabled, it will be displayed in the list with the `disabledLabel` property.
    *
    * Set to `true` if the `filter` function returns `false`.
