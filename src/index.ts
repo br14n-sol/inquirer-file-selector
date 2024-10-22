@@ -48,6 +48,7 @@ const fileSelectorTheme: FileSelectorTheme = {
     directory: (text: string) => chalk.yellow(text),
     file: (text: string) => chalk.white(text),
     currentDir: (text: string) => chalk.magenta(text),
+    message: (text: string, _status: Status) => chalk.bold(text),
     help: (text: string) => chalk.white(text),
     key: (text: string) => chalk.cyan(text)
   }
@@ -163,7 +164,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     loop: false
   })
 
-  const message = theme.style.message(config.message, status as InquirerStatus) // TODO: remove this cast when resolved: https://github.com/SBoudrias/Inquirer.js/issues/1582
+  const message = theme.style.message(config.message, status)
 
   if (status === 'canceled') {
     return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`

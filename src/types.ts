@@ -64,6 +64,11 @@ export type FileSelectorTheme = {
      */
     currentDir: (text: string) => string
     /**
+     * The style to use for the message.
+     * @default chalk.bold
+     */
+    message: (text: string, status: Status) => string
+    /**
      * The style to use for the key bindings help.
      * @default chalk.white
      */
