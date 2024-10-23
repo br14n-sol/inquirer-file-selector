@@ -91,10 +91,6 @@ export type FileStats = Stats & {
    */
   path: string
   /**
-   * @deprecated Use `isDirectory()` instead. This property will be removed in the 0.6.0 release.
-   */
-  isDir: boolean
-  /**
    * If the file or directory is disabled, it will be displayed in the list with the `disabledLabel` property.
    *
    * Set to `true` if the `filter` function returns `false`.
@@ -127,22 +123,10 @@ export type FileSelectorConfig = {
    */
   filter?: (file: FileStats) => boolean
   /**
-   * The function to use to filter the files. Returns `true` to include the file in the list.
-   *
-   * If not provided, all files will be included.
-   * @deprecated Use `filter` instead. This option will be removed in the 0.6.0 release.
-   */
-  match?: (file: FileStats) => boolean
-  /**
    * If `true`, the list will include files and directories that are excluded by the `filter` function.
    * @default false
    */
   showExcluded?: boolean
-  /**
-   * If `false`, the list will include files and directories that are excluded by the `match` function.
-   * @deprecated Use `showExcluded` instead. This option will be removed in the 0.6.0 release.
-   */
-  hideNonMatch?: boolean
   /**
    * The label to display when a file is disabled.
    * @default ' (not allowed)'

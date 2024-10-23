@@ -20,7 +20,6 @@ import type { FileSelectorConfig, FileSelectorTheme, Status } from './types.js'
 import {
   CURSOR_HIDE,
   ensureTrailingSlash,
-  filterCheck,
   getDirFiles,
   getMaxLength,
   isEscapeKey,
@@ -58,6 +57,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
     pageSize = 10,
     loop = false,
+    showExcluded = false,
     disabledLabel = ' (not allowed)',
     allowCancel = false,
     cancelText = 'Canceled.',
@@ -79,15 +79,9 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     const files = getDirFiles(currentDir)
 
     for (const file of files) {
-      if (config.filter) {
-        file.isDisabled = !filterCheck(file, config.filter)
-      } else {
-        file.isDisabled =
-          !file.isDirectory() && !filterCheck(file, config.match)
-      }
+      file.isDisabled = config.filter ? !config.filter(file) : false
     }
 
-    const showExcluded = config.showExcluded ?? config.hideNonMatch === false
     return sortFiles(files, showExcluded)
   }, [currentDir])
 
