@@ -61,7 +61,6 @@ export function getDirFiles(dir: string): FileStats[] {
     return Object.assign(fileStat, {
       name: filename,
       path: filepath,
-      isDir: fileStat.isDirectory(),
       isDisabled: false
     })
   })
