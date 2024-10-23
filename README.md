@@ -50,7 +50,6 @@ const filePath = await fileSelector({
 | `cancelText` | `string` | | The message to display when the user cancels the selection.<br/> **Default**: `Canceled.` |
 | `emptyText` | `string` | | The message that will be displayed when the directory is empty.<br/> **Default**: `Directory is empty.` |
 | `theme` | [See Theming](#theming) | | The theme to use for the file selector. |
-| ~~`match`~~ | ~~`(file: FileStats) => boolean`~~ | | **Deprecated**: Use `filter` instead. |
 
 ## Theming
 
@@ -82,7 +81,7 @@ type FileSelectorTheme = {
 ```
 
 > [!NOTE]
-> To see the default theme used by the prompt, look at the [fileSelectorTheme](src/index.ts#L30) constant and the [FileSelectorTheme](src/types.ts#L5) type.
+> To see the default theme used by the prompt, look at the [fileSelectorTheme](src/index.ts#L29) constant and the [FileSelectorTheme](src/types.ts#L5) type.
 
 ## Examples
 

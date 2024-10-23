@@ -123,13 +123,6 @@ export type FileSelectorConfig = {
    */
   filter?: (file: FileStats) => boolean
   /**
-   * The function to use to filter the files. Returns `true` to include the file in the list.
-   *
-   * If not provided, all files will be included.
-   * @deprecated Use `filter` instead. This option will be removed in the 0.6.0 release.
-   */
-  match?: (file: FileStats) => boolean
-  /**
    * If `true`, the list will include files and directories that are excluded by the `filter` function.
    * @default false
    */

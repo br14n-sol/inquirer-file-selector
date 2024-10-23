@@ -41,16 +41,6 @@ export function getMaxLength(arr: string[]): number {
 }
 
 /**
- * Check if the given file matches the given filter function.
- */
-export function filterCheck(
-  file: FileStats,
-  filter?: (file: FileStats) => boolean
-): boolean {
-  return !filter || filter(file)
-}
-
-/**
  * Get files of a directory
  */
 export function getDirFiles(dir: string): FileStats[] {
