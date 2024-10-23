@@ -51,7 +51,6 @@ const filePath = await fileSelector({
 | `emptyText` | `string` | | The message that will be displayed when the directory is empty.<br/> **Default**: `Directory is empty.` |
 | `theme` | [See Theming](#theming) | | The theme to use for the file selector. |
 | ~~`match`~~ | ~~`(file: FileStats) => boolean`~~ | | **Deprecated**: Use `filter` instead. |
-| ~~`hideNonMatch`~~ | ~~`boolean`~~ | | **Deprecated**: Use `showExcluded` instead. |
 
 ## Theming
 

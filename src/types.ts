@@ -135,11 +135,6 @@ export type FileSelectorConfig = {
    */
   showExcluded?: boolean
   /**
-   * If `false`, the list will include files and directories that are excluded by the `match` function.
-   * @deprecated Use `showExcluded` instead. This option will be removed in the 0.6.0 release.
-   */
-  hideNonMatch?: boolean
-  /**
    * The label to display when a file is disabled.
    * @default ' (not allowed)'
    */

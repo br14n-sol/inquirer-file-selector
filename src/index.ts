@@ -58,6 +58,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
     pageSize = 10,
     loop = false,
+    showExcluded = false,
     disabledLabel = ' (not allowed)',
     allowCancel = false,
     cancelText = 'Canceled.',
@@ -87,7 +88,6 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       }
     }
 
-    const showExcluded = config.showExcluded ?? config.hideNonMatch === false
     return sortFiles(files, showExcluded)
   }, [currentDir])
 
