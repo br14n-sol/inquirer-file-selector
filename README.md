@@ -41,6 +41,7 @@ const filePath = await fileSelector({
 |--------|------|----------|-------------|
 | `message` | `string` | ✔ | The message to display in the prompt. |
 | `basePath` | `string` | | The path to the directory where it will be started.<br/> **Default**: `process.cwd()` |
+| `type` | `'file'︱'directory'︱'file+directory'` | | The type of elements that are valid selection options.<br/> **Default**: `'file'` |
 | `pageSize` | `number` | | The maximum number of items to display in the list.<br/> **Default**: `10` |
 | `loop` | `boolean` | | If `true`, the list will loop from the last item to the first item and vice versa.<br/> **Default**: `false` |
 | `filter` | `(file: FileStats) => boolean` | | A function to filter files and directories.<br/> If not provided, all files and directories will be included by default. |
@@ -81,7 +82,7 @@ type FileSelectorTheme = {
 ```
 
 > [!NOTE]
-> To see the default theme used by the prompt, look at the [fileSelectorTheme](src/index.ts#L29) constant and the [FileSelectorTheme](src/types.ts#L5) type.
+> To see the default theme used by the prompt, look at the [fileSelectorTheme](src/index.ts#L30) constant and the [FileSelectorTheme](src/types.ts#L5) type.
 
 ## Examples
 
