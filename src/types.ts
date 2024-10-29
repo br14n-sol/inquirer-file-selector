@@ -106,6 +106,11 @@ export type FileSelectorConfig = {
    */
   basePath?: string
   /**
+   * The type of elements that are valid selection options.
+   * @default 'file'
+   */
+  type?: 'file' | 'directory' | 'file+directory'
+  /**
    * The maximum number of items to display in the list.
    * @default 10
    */
