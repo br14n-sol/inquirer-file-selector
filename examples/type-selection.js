@@ -1,5 +1,5 @@
-import select, { Separator } from '@inquirer/select';
-import fileSelector from '../dist/index.js';
+import select, { Separator } from '@inquirer/select'
+import fileSelector from '../dist/index.js'
 
 async function promptForPathSelection() {
   let selectedOption = await select({
@@ -9,28 +9,28 @@ async function promptForPathSelection() {
       { name: 'directory', value: 'directory' },
       { name: 'file+directory', value: 'file+directory' },
       new Separator(),
-      { name: "Exit", value: 'exit' },
-    ],
-  });
+      { name: "Exit", value: 'exit' }
+    ]
+  })
 
   if (selectedOption !== 'exit') {
     selectedOption = await fileSelector({
       message: `Select a path:`,
       type: selectedOption,
-      allowCancel: true,
-    });
+      allowCancel: true
+    })
   }
 
   if (selectedOption === 'canceled') {
-    return promptForPathSelection();
+    return promptForPathSelection()
   }
 
-  return selectedOption;
+  return selectedOption
 }
 
 (async () => {
-  let chosenPath = await promptForPathSelection();
+  let chosenPath = await promptForPathSelection()
   while (chosenPath !== 'exit') {
-    chosenPath = await promptForPathSelection();
+    chosenPath = await promptForPathSelection()
   }
-})();
+})()
