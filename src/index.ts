@@ -1,6 +1,5 @@
 import path from 'node:path'
 import {
-  type Status as InquirerStatus,
   createPrompt,
   isBackspaceKey,
   isDownKey,
@@ -68,10 +67,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
 
   const [status, setStatus] = useState<Status>('idle')
   const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
-  const prefix = usePrefix({
-    status: status as InquirerStatus, // TODO: remove this cast when resolved: https://github.com/SBoudrias/Inquirer.js/issues/1582
-    theme
-  })
+  const prefix = usePrefix({ status, theme })
 
   const [currentDir, setCurrentDir] = useState(
     path.resolve(process.cwd(), config.basePath || '.')
