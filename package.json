@@ -24,7 +24,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@inquirer/select": "4.0.2",
-    "@inquirer/type": "3.0.0",
+    "@inquirer/type": "3.0.1",
     "@tsconfig/node18": "18.2.4",
     "tsup": "8.3.5",
     "typescript": "5.6.3"
