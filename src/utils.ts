@@ -43,8 +43,12 @@ export function getMaxLength(arr: string[]): number {
 /**
  * Get files of a directory
  */
-export function getDirFiles(dir: string): FileStats[] {
-  return fs.readdirSync(dir).map(filename => {
+export function getDirFiles(dir: string, type: string): FileStats[] {
+  const files: string[] = fs.readdirSync(dir)
+  if (type === 'directory' || type === 'file+directory') {
+    files.unshift('.')
+  }
+  return files.map(filename => {
     const filepath = path.join(dir, filename)
     const fileStat = fs.statSync(filepath)
 

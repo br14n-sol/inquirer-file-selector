@@ -74,7 +74,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   )
 
   const items = useMemo(() => {
-    const files = getDirFiles(currentDir)
+    const files = getDirFiles(currentDir, type)
 
     for (const file of files) {
       file.isDisabled = config.filter ? !config.filter(file) : false
