@@ -9,10 +9,14 @@
   "types": "./dist/index.d.ts",
   "files": ["./dist"],
   "scripts": {
+    "prepare": "husky",
     "lint": "biome lint",
     "lint:fix": "biome check --write",
     "prebuild": "npm run lint",
     "build": "tsup --config ./tsup.config.json"
+  },
+  "lint-staged": {
+    "*.{ts,json}": "biome check --write --no-errors-on-unmatched"
   },
   "dependencies": {
     "@inquirer/core": "^10.1.0",
@@ -21,9 +25,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@commitlint/cli": "19.6.0",
+    "@commitlint/config-conventional": "19.6.0",
     "@inquirer/select": "4.0.2",
     "@inquirer/type": "3.0.1",
     "@tsconfig/node18": "18.2.4",
+    "husky": "9.1.7",
+    "lint-staged": "15.2.10",
     "tsup": "8.3.5",
     "typescript": "5.6.3"
   },
