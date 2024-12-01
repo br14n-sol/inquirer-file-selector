@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import type { KeypressEvent } from '@inquirer/core'
 
-import type { FileStats } from './types.js'
+import type { FileStats, SelectionType } from './types.js'
 
 /**
  * ANSI escape code to hide the cursor
@@ -43,11 +43,13 @@ export function getMaxLength(arr: string[]): number {
 /**
  * Get files of a directory
  */
-export function getDirFiles(dir: string, type: string): FileStats[] {
+export function getDirFiles(dir: string, type: SelectionType): FileStats[] {
   const files: string[] = fs.readdirSync(dir)
+
   if (type === 'directory' || type === 'file+directory') {
     files.unshift('.')
   }
+
   return files.map(filename => {
     const filepath = path.join(dir, filename)
     const fileStat = fs.statSync(filepath)

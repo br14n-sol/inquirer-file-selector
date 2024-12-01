@@ -109,7 +109,7 @@ export type FileSelectorConfig = {
    * The type of elements that are valid selection options.
    * @default 'file'
    */
-  type?: 'file' | 'directory' | 'file+directory'
+  type?: SelectionType
   /**
    * The maximum number of items to display in the list.
    * @default 10
@@ -158,8 +158,6 @@ export type FileSelectorConfig = {
   theme?: PartialDeep<Theme<FileSelectorTheme>>
 }
 
-/**
- * Internal types
- */
-
 export type Status = 'idle' | 'done' | 'canceled'
+
+export type SelectionType = 'file' | 'directory' | 'file+directory'
