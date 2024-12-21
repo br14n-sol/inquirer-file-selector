@@ -12,8 +12,9 @@
     "prepare": "husky",
     "lint": "biome lint",
     "lint:fix": "biome check --write",
-    "prebuild": "npm run lint",
-    "build": "tsup --config ./tsup.config.json"
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean && npm run lint",
+    "build": "rollup -c --configPlugin @rollup/plugin-typescript"
   },
   "lint-staged": {
     "*.{ts,json}": "biome check --write --no-errors-on-unmatched"
@@ -29,10 +30,17 @@
     "@commitlint/config-conventional": "19.6.0",
     "@inquirer/select": "4.0.2",
     "@inquirer/type": "3.0.1",
-    "@tsconfig/node18": "18.2.4",
+    "@rollup/plugin-node-resolve": "16.0.0",
+    "@rollup/plugin-terser": "0.4.4",
+    "@rollup/plugin-typescript": "12.1.2",
     "husky": "9.1.7",
     "lint-staged": "15.2.10",
-    "tsup": "8.3.5",
+    "rimraf": "5.0.10",
+    "rollup": "4.28.1",
+    "rollup-plugin-dts": "6.1.1",
+    "rollup-plugin-node-externals": "8.0.0",
+    "rollup-plugin-tsconfig-paths": "1.5.2",
+    "tslib": "2.8.1",
     "typescript": "5.6.3"
   },
   "engines": {
