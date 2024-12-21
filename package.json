@@ -30,7 +30,6 @@
     "@commitlint/config-conventional": "19.6.0",
     "@inquirer/select": "4.0.2",
     "@inquirer/type": "3.0.1",
-    "@rollup/plugin-node-resolve": "16.0.0",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.2",
     "husky": "9.1.7",
