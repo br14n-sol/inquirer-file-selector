@@ -1,11 +1,6 @@
 import path from 'node:path'
 import {
   createPrompt,
-  isBackspaceKey,
-  isDownKey,
-  isEnterKey,
-  isSpaceKey,
-  isUpKey,
   makeTheme,
   useKeypress,
   useMemo,
@@ -14,44 +9,21 @@ import {
   useState
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
-import chalk from 'chalk'
 
-import type { FileSelectorConfig, FileSelectorTheme, Status } from './types.js'
+import defaultTheme from '#themes/default'
+import type { Status } from '#types/common'
+import type { FileSelectorConfig } from '#types/config'
+import type { CustomTheme } from '#types/theme'
+import { ensureTrailingSlash, getDirFiles, sortFiles } from '#utils/file'
 import {
-  CURSOR_HIDE,
-  ensureTrailingSlash,
-  getDirFiles,
-  getMaxLength,
+  isBackspaceKey,
+  isDownKey,
+  isEnterKey,
   isEscapeKey,
-  sortFiles
-} from './utils.js'
-
-const fileSelectorTheme: FileSelectorTheme = {
-  prefix: {
-    idle: chalk.cyan('?'),
-    done: chalk.green(figures.tick),
-    canceled: chalk.red(figures.cross)
-  },
-  icon: {
-    linePrefix: (isLast: boolean) => {
-      return isLast
-        ? `${figures.lineUpRight}${figures.line.repeat(2)} `
-        : `${figures.lineUpDownRight}${figures.line.repeat(2)} `
-    }
-  },
-  style: {
-    disabled: (text: string) => chalk.dim(text),
-    active: (text: string) => chalk.cyan(text),
-    cancelText: (text: string) => chalk.red(text),
-    emptyText: (text: string) => chalk.red(text),
-    directory: (text: string) => chalk.yellow(text),
-    file: (text: string) => chalk.white(text),
-    currentDir: (text: string) => chalk.magenta(text),
-    message: (text: string, _status: Status) => chalk.bold(text),
-    help: (text: string) => chalk.white(text),
-    key: (text: string) => chalk.cyan(text)
-  }
-}
+  isSpaceKey,
+  isUpKey
+} from '#utils/key'
+import { CURSOR_HIDE, getMaxLength } from '#utils/string'
 
 export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
@@ -66,7 +38,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   } = config
 
   const [status, setStatus] = useState<Status>('idle')
-  const theme = makeTheme<FileSelectorTheme>(fileSelectorTheme, config.theme)
+  const theme = makeTheme<CustomTheme>(defaultTheme, config.theme)
   const prefix = usePrefix({ status, theme })
 
   const [currentDir, setCurrentDir] = useState(
