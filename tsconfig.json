@@ -8,7 +8,12 @@
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
 
-    "strict": true
+    "strict": true,
+    "paths": {
+      "#themes/*": ["./src/themes/*"],
+      "#types/*": ["./src/types/*"],
+      "#utils/*": ["./src/utils/*"]
+    }
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
