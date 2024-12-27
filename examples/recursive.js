@@ -8,14 +8,14 @@ async function promptForPathSelection() {
       { name: 'File Selector', value: 'file-selector' },
       // ... other options
       new Separator(),
-      { name: "Exit", value: 'exit' }
+      { name: 'Exit', value: 'exit' }
     ]
   })
 
   if (selectedOption === 'file-selector') {
     selectedOption = await fileSelector({
       message: 'Select a file:',
-      filter: (file) => file.isDirectory() || file.name.endsWith('.json'),
+      filter: file => file.isDirectory() || file.name.endsWith('.json'),
       allowCancel: true
     })
   }
@@ -26,8 +26,7 @@ async function promptForPathSelection() {
 
   return selectedOption
 }
-
-(async () => {
+;(async () => {
   let chosenPath = await promptForPathSelection()
   while (chosenPath !== 'exit') {
     chosenPath = await promptForPathSelection()

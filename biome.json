@@ -47,6 +47,6 @@
     "defaultBranch": "main"
   },
   "files": {
-    "include": ["**/*.ts", "**/*.json"]
+    "include": ["**/*.js", "**/*.ts", "**/*.json"]
   }
 }

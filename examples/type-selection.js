@@ -9,13 +9,13 @@ async function promptForPathSelection() {
       { name: 'directory', value: 'directory' },
       { name: 'file+directory', value: 'file+directory' },
       new Separator(),
-      { name: "Exit", value: 'exit' }
+      { name: 'Exit', value: 'exit' }
     ]
   })
 
   if (selectedOption !== 'exit') {
     selectedOption = await fileSelector({
-      message: `Select a path:`,
+      message: 'Select a path:',
       type: selectedOption,
       allowCancel: true
     })
@@ -27,8 +27,7 @@ async function promptForPathSelection() {
 
   return selectedOption
 }
-
-(async () => {
+;(async () => {
   let chosenPath = await promptForPathSelection()
   while (chosenPath !== 'exit') {
     chosenPath = await promptForPathSelection()
