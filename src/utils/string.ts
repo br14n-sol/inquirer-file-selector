@@ -15,7 +15,7 @@ export function stripAnsiEscapeCodes(str: string): string {
  */
 export function getMaxLength(arr: string[]): number {
   return arr.reduce(
-    (maxLength, item) => Math.max(maxLength, stripAnsiEscapeCodes(item).length),
+    (maxLength, str) => Math.max(maxLength, stripAnsiEscapeCodes(str).length),
     0
   )
 }
