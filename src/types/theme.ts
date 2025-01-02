@@ -3,76 +3,76 @@ import type { Status } from '#types/common'
 export interface CustomTheme {
   prefix: {
     /**
-     * The prefix to use for the idle status.
+     * Prefix displayed when the prompt is idle.
      * @default chalk.cyan('?')
      */
     idle: string
     /**
-     * The prefix to use for the done status.
+     * Prefix displayed when the prompt is done.
      * @default chalk.green(figures.tick)
      */
     done: string
     /**
-     * The prefix to use for the canceled status.
+     * Prefix displayed when the prompt is canceled.
      * @default chalk.red(figures.cross)
      */
     canceled: string
   }
   icon: {
     /**
-     * The prefix to use for the line.
+     * Prefix to use for the line.
      * @default isLast => isLast ? └── : ├──
      */
     linePrefix: (isLast: boolean) => string
   }
   style: {
     /**
-     * The style to use for the disabled items.
+     * Style for disabled items.
      * @default chalk.dim
      */
     disabled: (text: string) => string
     /**
-     * The style to use for the active item.
+     * Style for the currently active item.
      * @default chalk.cyan
      */
     active: (text: string) => string
     /**
-     * The style to use for the cancel text.
+     * Style for the cancel text.
      * @default chalk.red
      */
     cancelText: (text: string) => string
     /**
-     * The style to use for the empty text.
+     * Style for empty text.
      * @default chalk.red
      */
     emptyText: (text: string) => string
     /**
-     * The style to use for items of type directory.
+     * Style for items of type `'directory'`.
      * @default chalk.yellow
      */
     directory: (text: string) => string
     /**
-     * The style to use for items of type file.
+     * Style for items of type `'file'`.
      * @default chalk.white
      */
     file: (text: string) => string
     /**
-     * The style to use for the current directory header.
+     * Style for the current directory header.
      * @default chalk.magenta
      */
     currentDir: (text: string) => string
     /**
-     * The style to use for the message.
+     * Style applied to the main message, defined in `config.message`.
      * @default chalk.bold
      */
     message: (text: string, status: Status) => string
     /**
-     * The style to use for the key bindings help.
+     * Style for the key binding help section.
      * @default chalk.white
      */
     help: (text: string) => string
     /**
-     * The style to use for the keys in the key bindings help.
+     * Style for key labels in the help section.
      * @default chalk.cyan
      */
     key: (text: string) => string
