@@ -13,6 +13,7 @@ import figures from '@inquirer/figures'
 import defaultTheme from '#themes/default'
 import type { Status } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
+import type { FileStats } from '#types/file'
 import type { CustomTheme } from '#types/theme'
 import { ensureTrailingSlash, getDirFiles, sortFiles } from '#utils/file'
 import {
@@ -27,7 +28,6 @@ import { CURSOR_HIDE, getMaxLength } from '#utils/string'
 
 export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
-    type = 'file',
     pageSize = 10,
     loop = false,
     showExcluded = false,
@@ -46,13 +46,26 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   )
 
   const items = useMemo(() => {
-    const files = getDirFiles(currentDir, type)
+    const files = getDirFiles(currentDir)
 
     for (const file of files) {
       file.isDisabled = config.filter ? !config.filter(file) : false
     }
 
-    return sortFiles(files, showExcluded)
+    const sortedFiles = sortFiles(files, showExcluded)
+
+    if (config.type !== 'file') {
+      // TODO: This is a trick to add the current directory as a selectable item,
+      //       but it's a bit ugly. maybe there's a better way to do it?
+      sortedFiles.unshift({
+        name: '.',
+        path: currentDir,
+        isDirectory: () => true,
+        isDisabled: false
+      } as FileStats)
+    }
+
+    return sortedFiles
   }, [currentDir])
 
   const bounds = useMemo(() => {
@@ -73,8 +86,8 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     if (isEnterKey(key)) {
       if (
         activeItem.isDisabled ||
-        (type === 'file' && activeItem.isDirectory()) ||
-        (type === 'directory' && !activeItem.isDirectory())
+        (config.type === 'file' && activeItem.isDirectory()) ||
+        (config.type === 'directory' && !activeItem.isDirectory())
       ) {
         return
       }
