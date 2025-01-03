@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import type { SelectionType } from '#types/common'
 import type { FileStats } from '#types/file'
 
 /**
@@ -14,14 +13,8 @@ export function ensureTrailingSlash(dir: string): string {
 /**
  * Get files of a directory
  */
-export function getDirFiles(dir: string, type: SelectionType): FileStats[] {
-  const files: string[] = fs.readdirSync(dir)
-
-  if (type === 'directory' || type === 'file+directory') {
-    files.unshift('.')
-  }
-
-  return files.map(filename => {
+export function getDirFiles(dir: string): FileStats[] {
+  return fs.readdirSync(dir).map(filename => {
     const filepath = path.join(dir, filename)
     const fileStat = fs.statSync(filepath)
 

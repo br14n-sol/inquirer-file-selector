@@ -1,7 +1,6 @@
 import type { Theme } from '@inquirer/core'
 import type { PartialDeep } from '@inquirer/type'
 
-import type { SelectionType } from '#types/common'
 import type { FileStats } from '#types/file'
 import type { CustomTheme } from '#types/theme'
 
@@ -14,9 +13,10 @@ export interface FileSelectorConfig {
   basePath?: string
   /**
    * The type of elements that are valid selection options.
-   * @default 'file'
+   *
+   * If not provided, all files and directories are valid selection options.
    */
-  type?: SelectionType
+  type?: 'file' | 'directory'
   /**
    * The maximum number of items to display in the list.
    * @default 10
