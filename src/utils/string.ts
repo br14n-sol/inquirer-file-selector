@@ -1,21 +1,21 @@
 /**
- * ANSI escape code to hide the cursor
+ * ANSI escape code to hide the cursor.
  */
-export const CURSOR_HIDE = '\x1B[?25l'
+export const ANSI_HIDE_CURSOR = '\x1B[?25l'
 
 /**
- * Strip ANSI codes from the given string
+ * Strip ANSI escape codes from a string.
  */
-export function stripAnsiCodes(str: string): string {
+export function stripAnsiEscapeCodes(str: string): string {
   return str.replace(/\x1B\[\d+m/g, '')
 }
 
 /**
- * Get the maximum length of the given array of strings
+ * Computes the maximum length of the given strings after stripping ANSI escape codes.
  */
 export function getMaxLength(arr: string[]): number {
   return arr.reduce(
-    (max, item) => Math.max(max, stripAnsiCodes(item).length),
+    (maxLength, str) => Math.max(maxLength, stripAnsiEscapeCodes(str).length),
     0
   )
 }

@@ -5,62 +5,66 @@ import type { FileStats } from '#types/file'
 import type { CustomTheme } from '#types/theme'
 
 export interface FileSelectorConfig {
+  /**
+   * Main message displayed in the prompt.
+   * @example 'Select a file:'
+   */
   message: string
   /**
-   * The path to the directory where it will be started.
+   * Path to the directory where the selection starts.
    * @default process.cwd()
    */
   basePath?: string
   /**
-   * The type of elements that are valid selection options.
+   * Type of items that are valid choices.
    *
-   * If not provided, all files and directories are valid selection options.
+   * If not provided, all items are valid choices.
    */
   type?: 'file' | 'directory'
   /**
-   * The maximum number of items to display in the list.
+   * Maximum number of items to display in the list at the same time.
    * @default 10
    */
   pageSize?: number
   /**
-   * If `true`, the list will loop from the last item to the first item and vice versa.
+   * If `true`, the list moves from the last item to the first and vice versa.
    * @default false
    */
   loop?: boolean
   /**
-   * A function to filter files and directories. It returns `true` to include the file or directory in the list,
-   * and `false` to exclude it.
+   * Function to filter items.
+   * Returns `true` to include an item in the list, and `false` to exclude it.
    *
-   * If not provided, all files and directories will be included by default.
+   * If not provided, all items are included by default.
    */
   filter?: (file: FileStats) => boolean
   /**
-   * If `true`, the list will include files and directories that are excluded by the `filter` function.
+   * If `true`, excluded items (by the `filter` function) are shown in the list.
    * @default false
    */
   showExcluded?: boolean
   /**
-   * The label to display when a file is disabled.
+   * Label displayed next to an item when it is disabled.
    * @default ' (not allowed)'
    */
   disabledLabel?: string
   /**
-   * If true, the prompt will allow the user to cancel the selection.
+   * If `true`, allows the user to cancel the selection.
    * @default false
    */
   allowCancel?: boolean
   /**
-   * The message to display when the user cancels the selection.
+   * Message displayed when the user cancels the selection.
    * @default 'Canceled.'
    */
   cancelText?: string
   /**
-   * The message that will be displayed when the directory is empty.
+   * Message displayed if the directory is empty.
    * @default 'Directory is empty.'
    */
   emptyText?: string
   /**
-   * The theme to use for the file selector.
+   * Theme applied to the file selector.
    */
   theme?: PartialDeep<Theme<CustomTheme>>
 }

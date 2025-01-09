@@ -2,17 +2,20 @@ import type { Stats } from 'node:fs'
 
 export type FileStats = Stats & {
   /**
-   * The name of the file or directory.
+   * Item name.
    */
   name: string
   /**
-   * The path to the file or directory.
+   * Full path to the item.
    */
   path: string
   /**
-   * If the file or directory is disabled, it will be displayed in the list with the `disabledLabel` property.
+   * Indicates whether the item is disabled.
+   * - `false`: Item is enabled and displayed in the list.
+   * - `true`: Item is disabled and shown only if `showExcluded` is `true`.
    *
-   * Set to `true` if the `filter` function returns `false`.
+   * Disabled items are labeled with `disabledLabel` when visible.
+   * This is set to `true` if `filter` function returns `false` for the item.
    */
   isDisabled: boolean
 }

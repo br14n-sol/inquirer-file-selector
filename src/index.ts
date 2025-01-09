@@ -15,7 +15,7 @@ import type { Status } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
 import type { FileStats } from '#types/file'
 import type { CustomTheme } from '#types/theme'
-import { ensureTrailingSlash, getDirFiles, sortFiles } from '#utils/file'
+import { ensurePathSeparator, getDirFiles, sortFiles } from '#utils/file'
 import {
   isBackspaceKey,
   isDownKey,
@@ -24,7 +24,7 @@ import {
   isSpaceKey,
   isUpKey
 } from '#utils/key'
-import { CURSOR_HIDE, getMaxLength } from '#utils/string'
+import { ANSI_HIDE_CURSOR, getMaxLength } from '#utils/string'
 
 export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const {
@@ -131,7 +131,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
       const linePrefix = theme.icon.linePrefix(isLast)
 
       const line = item.isDirectory()
-        ? `${linePrefix}${ensureTrailingSlash(item.name)}`
+        ? `${linePrefix}${ensurePathSeparator(item.name)}`
         : `${linePrefix}${item.name}`
 
       if (item.isDisabled) {
@@ -159,7 +159,7 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
   }
 
-  const header = theme.style.currentDir(ensureTrailingSlash(currentDir))
+  const header = theme.style.currentDir(ensurePathSeparator(currentDir))
   const helpTip = useMemo(() => {
     const helpTipLines = [
       `${theme.style.key(figures.arrowUp + figures.arrowDown)} navigate, ${theme.style.key('<enter>')} select${allowCancel ? `, ${theme.style.key('<esc>')} cancel` : ''}`,
@@ -172,5 +172,5 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     return `${delimiter}\n${helpTipLines.join('\n')}`
   }, [])
 
-  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}\n${helpTip}${CURSOR_HIDE}`
+  return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}\n${helpTip}${ANSI_HIDE_CURSOR}`
 })
