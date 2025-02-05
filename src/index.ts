@@ -31,7 +31,6 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     pageSize = 10,
     loop = false,
     showExcluded = false,
-    disabledLabel = ' (not allowed)',
     allowCancel = false,
     cancelText = 'Canceled.',
     emptyText = 'Directory is empty.'
