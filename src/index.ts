@@ -10,7 +10,7 @@ import {
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
 
-import defaultTheme from '#themes/default'
+import baseTheme from '#themes/base'
 import type { Status } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
 import type { FileStats } from '#types/file'
@@ -31,14 +31,13 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     pageSize = 10,
     loop = false,
     showExcluded = false,
-    disabledLabel = ' (not allowed)',
     allowCancel = false,
     cancelText = 'Canceled.',
     emptyText = 'Directory is empty.'
   } = config
 
   const [status, setStatus] = useState<Status>('idle')
-  const theme = makeTheme<CustomTheme>(defaultTheme, config.theme)
+  const theme = makeTheme<CustomTheme>(baseTheme, config.theme)
   const prefix = usePrefix({ status, theme })
 
   const [currentDir, setCurrentDir] = useState(
@@ -126,25 +125,8 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
   const page = usePagination({
     items,
     active,
-    renderItem({ item, index, isActive }) {
-      const isLast = index === items.length - 1
-      const linePrefix = theme.icon.linePrefix(isLast)
-
-      const line = item.isDirectory()
-        ? `${linePrefix}${ensurePathSeparator(item.name)}`
-        : `${linePrefix}${item.name}`
-
-      if (item.isDisabled) {
-        return theme.style.disabled(`${line}${disabledLabel}`)
-      }
-
-      const baseColor = item.isDirectory()
-        ? theme.style.directory
-        : theme.style.file
-      const color = isActive ? theme.style.active : baseColor
-
-      return color(line)
-    },
+    renderItem: ({ item, index, isActive }) =>
+      theme.renderItem(item, { items, index, isActive }),
     pageSize,
     loop
   })

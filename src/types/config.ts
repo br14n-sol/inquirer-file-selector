@@ -37,17 +37,12 @@ export interface FileSelectorConfig {
    *
    * If not provided, all items are included by default.
    */
-  filter?: (file: FileStats) => boolean
+  filter?: (item: FileStats) => boolean
   /**
    * If `true`, excluded items (by the `filter` function) are shown in the list.
    * @default false
    */
   showExcluded?: boolean
-  /**
-   * Label displayed next to an item when it is disabled.
-   * @default ' (not allowed)'
-   */
-  disabledLabel?: string
   /**
    * If `true`, allows the user to cancel the selection.
    * @default false
