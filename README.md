@@ -98,14 +98,7 @@ node <example-name>.js
 
 ## Contributing
 
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am "feat: my new feature"`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
-
-> [!NOTE]
-> The commit message should follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Copyright & License
 
