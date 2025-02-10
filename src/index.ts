@@ -26,7 +26,7 @@ import {
 } from '#utils/key'
 import { ANSI_HIDE_CURSOR, getMaxLength } from '#utils/string'
 
-export default createPrompt<string | null, FileSelectorConfig>(
+export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
   (config, done) => {
     const {
       pageSize = 10,
