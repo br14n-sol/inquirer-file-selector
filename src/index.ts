@@ -14,7 +14,7 @@ import baseTheme from '#themes/base'
 import type { Status } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
 import type { FileStats } from '#types/file'
-import type { CustomTheme } from '#types/theme'
+import type { CustomTheme, RenderContext } from '#types/theme'
 import { ensurePathSeparator, getDirFiles, sortFiles } from '#utils/file'
 import {
   isBackspaceKey,
@@ -158,3 +158,11 @@ export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
     return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}\n${helpTip}${ANSI_HIDE_CURSOR}`
   }
 )
+
+export type {
+  Status,
+  FileSelectorConfig,
+  FileStats,
+  CustomTheme,
+  RenderContext
+}
