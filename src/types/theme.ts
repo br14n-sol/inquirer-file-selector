@@ -14,6 +14,10 @@ export type RenderContext = {
    * Whether the item is currently active.
    */
   isActive: boolean
+  /**
+   * List is displayed in loop mode.
+   */
+  loop: boolean
 }
 
 export interface CustomTheme {

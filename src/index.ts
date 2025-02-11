@@ -127,7 +127,7 @@ export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
       items,
       active,
       renderItem: ({ item, index, isActive }) =>
-        theme.renderItem(item, { items, index, isActive }),
+        theme.renderItem(item, { items, index, isActive, loop }),
       pageSize,
       loop
     })
