@@ -33,9 +33,10 @@ const theme: CustomTheme = {
   },
   renderItem(item: FileStats, context: RenderContext) {
     const isLast = context.index === context.items.length - 1
-    const linePrefix = isLast
-      ? this.hierarchySymbols.leaf
-      : this.hierarchySymbols.branch
+    const linePrefix =
+      isLast && !context.loop
+        ? this.hierarchySymbols.leaf
+        : this.hierarchySymbols.branch
     const isDirectory = item.isDirectory()
     const line = isDirectory
       ? `${linePrefix} ${ensurePathSeparator(item.name)}`
