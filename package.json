@@ -16,7 +16,7 @@
     "prebuild": "npm run clean && npm run lint",
     "build": "rollup -c --configPlugin @rollup/plugin-typescript"
   },
-  "lint-staged": {
+  "nano-staged": {
     "*.{ts,json}": "biome check --write --no-errors-on-unmatched"
   },
   "dependencies": {
@@ -33,7 +33,7 @@
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.2",
     "husky": "9.1.7",
-    "lint-staged": "15.2.10",
+    "nano-staged": "0.8.0",
     "rimraf": "5.0.10",
     "rollup": "4.28.1",
     "rollup-plugin-dts": "6.1.1",

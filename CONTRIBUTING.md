@@ -15,7 +15,7 @@ This project uses the following tools to maintain code quality and consistency:
 
 - [Biome](https://biomejs.dev/) for formatting and linting
 - [husky](https://github.com/typicode/husky) for managing Git hooks
-- [lint-staged](https://github.com/okonet/lint-staged) for running linters on staged files
+- [nano-staged](https://github.com/usmanyunusov/nano-staged) for running linters on staged files
 - [commitlint](https://commitlint.js.org/) for enforcing commit message conventions
 
 ## Getting Started
