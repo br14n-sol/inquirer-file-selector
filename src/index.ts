@@ -143,7 +143,9 @@ export default createPrompt<string, FileSelectorConfig>((config, done) => {
     active,
     renderItem({ item, index, isActive }) {
       const isLast = index === items.length - 1
-      const linePrefix = theme.icon.linePrefix(isLast)
+      const linePrefix = loop
+        ? theme.icon.linePrefix(false)
+        : theme.icon.linePrefix(isLast)
 
       const line = item.isDirectory()
         ? `${linePrefix}${ensureTrailingSlash(item.name)}`
