@@ -29,7 +29,7 @@
     "@commitlint/cli": "19.7.1",
     "@commitlint/config-conventional": "19.7.1",
     "@inquirer/select": "4.0.9",
-    "@inquirer/type": "3.0.1",
+    "@inquirer/type": "3.0.4",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.2",
     "husky": "9.1.7",
