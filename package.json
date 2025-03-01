@@ -20,7 +20,7 @@
     "*.{ts,json}": "biome check --write --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@inquirer/core": "^10.1.0",
+    "@inquirer/core": "^10.1.7",
     "@inquirer/figures": "^1.0.10",
     "chalk": "^5.4.1"
   },
