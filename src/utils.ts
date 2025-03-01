@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import type { KeypressEvent } from '@inquirer/core'
 
+import { stripVTControlCharacters } from 'node:util'
 import type { FileStats, SelectionType } from './types.js'
 
 /**
@@ -24,18 +25,11 @@ export function ensureTrailingSlash(dir: string): string {
 }
 
 /**
- * Strip ANSI codes from the given string
- */
-export function stripAnsiCodes(str: string): string {
-  return str.replace(/\x1B\[\d+m/g, '')
-}
-
-/**
  * Get the maximum length of the given array of strings
  */
 export function getMaxLength(arr: string[]): number {
   return arr.reduce(
-    (max, item) => Math.max(max, stripAnsiCodes(item).length),
+    (max, item) => Math.max(max, stripVTControlCharacters(item).length),
     0
   )
 }
