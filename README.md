@@ -84,18 +84,6 @@ type FileSelectorTheme = {
 > [!NOTE]
 > To see the default theme used by the prompt, look at the [fileSelectorTheme](src/index.ts#L30) constant and the [FileSelectorTheme](src/types.ts#L5) type.
 
-## Examples
-
-For examples look in the examples/ directory. You can execute the examples using node.
-
-```shell
-cd examples/
-node <example-name>.js
-```
-
-> [!NOTE]
-> Before running the examples, make sure you have installed the dependencies with `npm install` and compiled the project with `npm run build`.
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
