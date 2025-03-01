@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@inquirer/core": "^10.1.0",
-    "@inquirer/figures": "^1.0.8",
+    "@inquirer/figures": "^1.0.10",
     "chalk": "^5.4.1"
   },
   "devDependencies": {
