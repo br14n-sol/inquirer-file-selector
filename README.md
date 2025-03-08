@@ -90,6 +90,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Copyright & License
 
-© 2024 [Brian Fernandez](https://github.com/br14n-sol)
+© 2024 [Brian Fernandez](https://github.com/br14n-sol) and Contributors.
 
 This project is licensed under the MIT license. See the file [LICENSE](LICENSE) for details.
