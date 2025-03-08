@@ -9,6 +9,15 @@ body:
         Thanks for taking the time to fill out this bug report!
 
   - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please provide a clear and concise description of the issue.
+      placeholder: |
+        Example:
+          "When I do X, Y happens instead of Z."
+
+  - type: textarea
     id: steps_to_reproduce
     attributes:
       label: Steps to Reproduce
