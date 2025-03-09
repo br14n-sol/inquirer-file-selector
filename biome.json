@@ -31,7 +31,19 @@
         "useForOf": "error",
         "useShorthandArrayType": "error",
         "useShorthandAssign": "error",
-        "useNamingConvention": "error"
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "conventions": [
+              {
+                "selector": {
+                  "kind": "objectLiteralProperty"
+                },
+                "formats": ["camelCase", "PascalCase"]
+              }
+            ]
+          }
+        }
       },
       "suspicious": {
         "noEmptyBlockStatements": "warn",
