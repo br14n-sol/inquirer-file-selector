@@ -10,8 +10,9 @@ import {
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
 
+import { Status } from '#enums/common'
 import baseTheme from '#themes/base'
-import type { Status } from '#types/common'
+import type { StatusType } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
 import type { FileStats } from '#types/file'
 import type { CustomTheme, RenderContext } from '#types/theme'
@@ -26,7 +27,7 @@ import {
 } from '#utils/key'
 import { ANSI_HIDE_CURSOR, getMaxLength } from '#utils/string'
 
-export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
+const fileSelector = createPrompt<string | null, FileSelectorConfig>(
   (config, done) => {
     const {
       pageSize = 10,
@@ -37,7 +38,7 @@ export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
       emptyText = 'Directory is empty.'
     } = config
 
-    const [status, setStatus] = useState<Status>('idle')
+    const [status, setStatus] = useState<StatusType>(Status.Idle)
     const theme = makeTheme<CustomTheme>(baseTheme, config.theme)
     const prefix = usePrefix({ status, theme })
 
@@ -92,7 +93,7 @@ export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
           return
         }
 
-        setStatus('done')
+        setStatus(Status.Done)
         done(activeItem.path)
       } else if (isSpaceKey(key) && activeItem.isDirectory()) {
         setCurrentDir(activeItem.path)
@@ -118,7 +119,7 @@ export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
         setCurrentDir(path.resolve(currentDir, '..'))
         setActive(bounds.first)
       } else if (isEscapeKey(key) && allowCancel) {
-        setStatus('canceled')
+        setStatus(Status.Canceled)
         done(null)
       }
     })
@@ -134,11 +135,11 @@ export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
 
     const message = theme.style.message(config.message, status)
 
-    if (status === 'canceled') {
+    if (status === Status.Canceled) {
       return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`
     }
 
-    if (status === 'done') {
+    if (status === Status.Done) {
       return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
     }
 
@@ -159,8 +160,10 @@ export const fileSelector = createPrompt<string | null, FileSelectorConfig>(
   }
 )
 
+export { fileSelector, Status }
+
 export type {
-  Status,
+  StatusType,
   FileSelectorConfig,
   FileStats,
   CustomTheme,

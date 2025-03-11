@@ -1,7 +1,7 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
 
-import type { Status } from '#types/common'
+import type { StatusType } from '#types/common'
 import type { FileStats } from '#types/file'
 import type { CustomTheme, RenderContext } from '#types/theme'
 import { ensurePathSeparator } from '#utils/file'
@@ -20,7 +20,7 @@ const theme: CustomTheme = {
     directory: (text: string) => chalk.yellow(text),
     file: (text: string) => chalk.white(text),
     currentDir: (text: string) => chalk.magenta(text),
-    message: (text: string, _status: Status) => chalk.bold(text),
+    message: (text: string, _status: StatusType) => chalk.bold(text),
     help: (text: string) => chalk.white(text),
     key: (text: string) => chalk.cyan(text)
   },
