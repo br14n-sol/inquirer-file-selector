@@ -1,4 +1,4 @@
-import type { Status } from '#types/common'
+import type { StatusType } from '#types/common'
 import type { FileStats } from '#types/file'
 
 export type RenderContext = {
@@ -78,7 +78,7 @@ export interface CustomTheme {
      * Style applied to the main message, defined in `config.message`.
      * @default chalk.bold
      */
-    message: (text: string, status: Status) => string
+    message: (text: string, status: StatusType) => string
     /**
      * Style for the key binding help section.
      * @default chalk.white

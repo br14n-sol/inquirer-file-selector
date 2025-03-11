@@ -12,7 +12,8 @@
     "paths": {
       "#themes/*": ["./src/themes/*"],
       "#types/*": ["./src/types/*"],
-      "#utils/*": ["./src/utils/*"]
+      "#utils/*": ["./src/utils/*"],
+      "#enums/*": ["./src/enums/*"]
     }
   },
   "include": ["**/*.ts"],
