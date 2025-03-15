@@ -4,7 +4,7 @@ I'm really glad you're reading this! If you're interested in contributing to `in
 
 ## Prerequisites
 
-- **Node.js 18.20.5** (Ensure it's installed: `node -v`)
+- **Node.js 20.19.0** (Ensure it's installed: `node -v`)
   - Using a version manager like [fnm](https://github.com/Schniz/fnm) is recommended to easily switch between Node.js versions.
 - **Git** (Required for cloning and contributing)
 - A GitHub account to fork and submit pull requests
