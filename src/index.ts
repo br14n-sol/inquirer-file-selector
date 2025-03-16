@@ -2,6 +2,7 @@ import path from 'node:path'
 import {
   createPrompt,
   makeTheme,
+  useEffect,
   useKeypress,
   useMemo,
   usePagination,
@@ -16,7 +17,12 @@ import type { StatusType } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
 import type { FileStats } from '#types/file'
 import type { CustomTheme, RenderContext } from '#types/theme'
-import { ensurePathSeparator, getDirFiles, sortFiles } from '#utils/file'
+import {
+  ensurePathSeparator,
+  getFileInfo,
+  listDirFiles,
+  sortFiles
+} from '#utils/file'
 import {
   isBackspaceKey,
   isDownKey,
@@ -45,31 +51,55 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.basePath || '.')
     )
+    const [items, setItems] = useState<FileStats[]>([])
 
-    const items = useMemo(() => {
-      const files = getDirFiles(currentDir)
+    useEffect(() => {
+      ;(async () => {
+        const { data: fileList, error } = await listDirFiles(currentDir)
 
-      for (const file of files) {
-        file.isDisabled = config.filter ? !config.filter(file) : false
-      }
+        if (error) {
+          // TODO: handle this
+          return
+        }
 
-      const filteredFiles = files.filter(
-        file => showExcluded || !file.isDisabled
-      )
-      const sortedFiles = sortFiles(filteredFiles)
+        const itemList = []
+        for (const filename of fileList) {
+          const filePath = path.join(currentDir, filename)
+          const { data: info, error: error2 } = await getFileInfo(filePath)
 
-      if (config.type !== 'file') {
-        // TODO: This is a trick to add the current directory as a selectable item,
-        //       but it's a bit ugly. maybe there's a better way to do it?
-        sortedFiles.unshift({
-          name: '.',
-          path: currentDir,
-          isDirectory: () => true,
-          isDisabled: false
-        } as FileStats)
-      }
+          if (error2) {
+            // TODO: handle this
+            continue
+          }
 
-      return sortedFiles
+          const itemObj = Object.assign(info, {
+            name: filename,
+            path: filePath
+          }) as FileStats
+          itemObj.isDisabled = config.filter ? !config.filter(itemObj) : false
+
+          if (!showExcluded && itemObj.isDisabled) {
+            continue
+          }
+
+          itemList.push(itemObj)
+        }
+
+        const sortedItems = sortFiles(itemList)
+
+        if (config.type !== 'file') {
+          // TODO: This is a trick to add the current directory as a selectable item,
+          //       but it's a bit ugly. maybe there's a better way to do it?
+          sortedItems.unshift({
+            name: '.',
+            path: currentDir,
+            isDirectory: () => true,
+            isDisabled: false
+          } as FileStats)
+        }
+
+        setItems(itemList)
+      })()
     }, [currentDir])
 
     const bounds = useMemo(() => {
@@ -88,6 +118,8 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
 
     useKeypress((key, rl) => {
       if (isEnterKey(key)) {
+        // TODO: Prevents the active item from being selected if there is a permission error.
+
         if (
           activeItem.isDisabled ||
           (config.type === 'file' && activeItem.isDirectory()) ||
@@ -99,6 +131,8 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
         setStatus(Status.Done)
         done(activeItem.path)
       } else if (isSpaceKey(key) && activeItem.isDirectory()) {
+        // TODO: Prevent the current directory from being updated if there is a permission error.
+
         setCurrentDir(activeItem.path)
         setActive(bounds.first)
       } else if (isUpKey(key) || isDownKey(key)) {

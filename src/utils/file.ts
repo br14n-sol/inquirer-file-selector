@@ -1,6 +1,7 @@
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import type { Result } from '#types/common'
 import type { FileStats } from '#types/file'
 
 /**
@@ -11,20 +12,22 @@ export function ensurePathSeparator(dirPath: string): string {
   return dirPath.endsWith(path.sep) ? dirPath : `${dirPath}${path.sep}`
 }
 
-/**
- * Get files of a directory.
- */
-export function getDirFiles(dirPath: string): FileStats[] {
-  return fs.readdirSync(dirPath).map(filename => {
-    const filepath = path.join(dirPath, filename)
-    const fileStat = fs.statSync(filepath)
+export async function listDirFiles(
+  dirPath: string
+): Promise<Result<string[], NodeJS.ErrnoException>> {
+  return fs
+    .readdir(dirPath)
+    .then(nameList => ({ data: nameList, error: null }))
+    .catch(error => ({ data: null, error }))
+}
 
-    return Object.assign(fileStat, {
-      name: filename,
-      path: filepath,
-      isDisabled: false
-    })
-  })
+export async function getFileInfo(
+  filePath: string
+): Promise<Result<Awaited<ReturnType<typeof fs.stat>>, NodeJS.ErrnoException>> {
+  return fs
+    .stat(filePath)
+    .then(fileInfo => ({ data: fileInfo, error: null }))
+    .catch(error => ({ data: null, error }))
 }
 
 /**
