@@ -53,7 +53,10 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
         file.isDisabled = config.filter ? !config.filter(file) : false
       }
 
-      const sortedFiles = sortFiles(files, showExcluded)
+      const filteredFiles = files.filter(
+        file => showExcluded || !file.isDisabled
+      )
+      const sortedFiles = sortFiles(filteredFiles)
 
       if (config.type !== 'file') {
         // TODO: This is a trick to add the current directory as a selectable item,

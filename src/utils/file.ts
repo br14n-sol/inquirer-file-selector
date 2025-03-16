@@ -28,10 +28,7 @@ export function getDirFiles(dirPath: string): FileStats[] {
 }
 
 /**
- * Sorts an array of `FileStats` objects, with the option to exclude disabled files.
- *
- * If `showExcluded` is `true`, all files (including disabled) are included in the result.
- * If `showExcluded` is `false`, disabled files are excluded from the result.
+ * Sorts an array of `FileStats` objects.
  *
  * Sorting is done in the following order:
  * 1. Disabled files are placed at the end.
@@ -40,22 +37,17 @@ export function getDirFiles(dirPath: string): FileStats[] {
  * If two items have the same priority (e.g., both are files, both are directories, or both are disabled),
  * the items are sorted alphabetically by name.
  */
-export function sortFiles(
-  files: FileStats[],
-  showExcluded: boolean
-): FileStats[] {
-  return files
-    .filter(file => showExcluded || !file.isDisabled)
-    .sort((a, b) => {
-      // Prioritize based on attributes (isDisabled and isDirectory)
-      const aPriority = (a.isDisabled ? 2 : 0) + (a.isDirectory() ? -1 : 0)
-      const bPriority = (b.isDisabled ? 2 : 0) + (b.isDirectory() ? -1 : 0)
+export function sortFiles(files: FileStats[]): FileStats[] {
+  return files.sort((a, b) => {
+    // Prioritize based on attributes (isDisabled and isDirectory)
+    const aPriority = (a.isDisabled ? 2 : 0) + (a.isDirectory() ? -1 : 0)
+    const bPriority = (b.isDisabled ? 2 : 0) + (b.isDirectory() ? -1 : 0)
 
-      if (aPriority !== bPriority) {
-        return aPriority - bPriority
-      }
+    if (aPriority !== bPriority) {
+      return aPriority - bPriority
+    }
 
-      // If priorities are equal, sort by name
-      return a.name.localeCompare(b.name)
-    })
+    // If priorities are equal, sort by name
+    return a.name.localeCompare(b.name)
+  })
 }
