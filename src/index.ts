@@ -10,19 +10,16 @@ import {
   useState
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
-
 import { Status } from '#enums/common'
+import { ItemKind } from '#enums/item'
 import baseTheme from '#themes/base'
 import type { StatusType } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
-import type { FileStats } from '#types/file'
+import type { Item } from '#types/item'
+import type { ItemKindType } from '#types/item'
 import type { CustomTheme, RenderContext } from '#types/theme'
-import {
-  ensurePathSeparator,
-  getFileInfo,
-  listDirFiles,
-  sortFiles
-} from '#utils/file'
+import { ensurePathSeparator, getFileStat, listDirFiles } from '#utils/file'
+import { sortItems, toItem } from '#utils/item'
 import {
   isBackspaceKey,
   isDownKey,
@@ -51,10 +48,19 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.basePath || '.')
     )
-    const [items, setItems] = useState<FileStats[]>([])
+    const [items, setItems] = useState<Item[]>([])
 
     useEffect(() => {
       ;(async () => {
+        const { data: rootStats, error: error3 } = await getFileStat(currentDir)
+
+        if (error3) {
+          // TODO: handle this
+          return
+        }
+
+        const rootItem = toItem('. (current directory)', currentDir, rootStats)
+
         const { data: fileList, error } = await listDirFiles(currentDir)
 
         if (error) {
@@ -65,18 +71,17 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
         const itemList = []
         for (const filename of fileList) {
           const filePath = path.join(currentDir, filename)
-          const { data: info, error: error2 } = await getFileInfo(filePath)
+          const { data: fileStats, error: error2 } = await getFileStat(filePath)
 
           if (error2) {
             // TODO: handle this
             continue
           }
 
-          const itemObj = Object.assign(info, {
-            name: filename,
-            path: filePath
-          }) as FileStats
-          itemObj.isDisabled = config.filter ? !config.filter(itemObj) : false
+          const itemObj = toItem(filename, filePath, fileStats)
+          if (config.filter) {
+            itemObj.isDisabled = !config.filter(itemObj)
+          }
 
           if (!showExcluded && itemObj.isDisabled) {
             continue
@@ -85,17 +90,10 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
           itemList.push(itemObj)
         }
 
-        const sortedItems = sortFiles(itemList)
+        const sortedItems = sortItems(itemList)
 
         if (config.type !== 'file') {
-          // TODO: This is a trick to add the current directory as a selectable item,
-          //       but it's a bit ugly. maybe there's a better way to do it?
-          sortedItems.unshift({
-            name: '.',
-            path: currentDir,
-            isDirectory: () => true,
-            isDisabled: false
-          } as FileStats)
+          sortedItems.unshift(rootItem)
         }
 
         setItems(itemList)
@@ -116,28 +114,29 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
     const [active, setActive] = useState(bounds.first)
     const activeItem = items[active]
 
-    useKeypress((key, rl) => {
+    useKeypress(key => {
       if (isEnterKey(key)) {
         // TODO: Prevents the active item from being selected if there is a permission error.
 
         if (
           activeItem.isDisabled ||
-          (config.type === 'file' && activeItem.isDirectory()) ||
-          (config.type === 'directory' && !activeItem.isDirectory())
+          (config.type === 'file' && activeItem.kind === ItemKind.Directory) ||
+          (config.type === 'directory' &&
+            activeItem.kind !== ItemKind.Directory)
         ) {
           return
         }
 
         setStatus(Status.Done)
         done(activeItem.path)
-      } else if (isSpaceKey(key) && activeItem.isDirectory()) {
+      } else if (isSpaceKey(key)) {
+        if (activeItem.kind !== ItemKind.Directory) return
+
         // TODO: Prevent the current directory from being updated if there is a permission error.
 
         setCurrentDir(activeItem.path)
         setActive(bounds.first)
       } else if (isUpKey(key) || isDownKey(key)) {
-        rl.clearLine(0)
-
         if (
           loop ||
           (isUpKey(key) && active !== bounds.first) ||
@@ -155,7 +154,9 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
       } else if (isBackspaceKey(key)) {
         setCurrentDir(path.resolve(currentDir, '..'))
         setActive(bounds.first)
-      } else if (isEscapeKey(key) && allowCancel) {
+      } else if (isEscapeKey(key)) {
+        if (!allowCancel) return
+
         setStatus(Status.Canceled)
         done(null)
       }
@@ -197,12 +198,13 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
   }
 )
 
-export { fileSelector, Status }
+export { fileSelector, Status, ItemKind }
 
 export type {
   StatusType,
   FileSelectorConfig,
-  FileStats,
+  Item,
   CustomTheme,
-  RenderContext
+  RenderContext,
+  ItemKindType
 }

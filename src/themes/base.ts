@@ -1,8 +1,8 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
-
+import { ItemKind } from '#enums/item'
 import type { StatusType } from '#types/common'
-import type { FileStats } from '#types/file'
+import type { Item } from '#types/item'
 import type { CustomTheme, RenderContext } from '#types/theme'
 import { ensurePathSeparator } from '#utils/file'
 
@@ -31,13 +31,13 @@ const theme: CustomTheme = {
     branch: figures.lineUpDownRight + figures.line,
     leaf: figures.lineUpRight + figures.line
   },
-  renderItem(item: FileStats, context: RenderContext) {
+  renderItem(item: Item, context: RenderContext) {
     const isLast = context.index === context.items.length - 1
     const linePrefix =
       isLast && !context.loop
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
-    const isDirectory = item.isDirectory()
+    const isDirectory = item.kind === ItemKind.Directory
     const line = isDirectory
       ? `${linePrefix} ${ensurePathSeparator(item.name)}`
       : `${linePrefix} ${item.name}`
