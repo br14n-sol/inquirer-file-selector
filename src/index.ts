@@ -18,8 +18,8 @@ import type { FileSelectorConfig } from '#types/config'
 import type { Item } from '#types/item'
 import type { ItemKindType } from '#types/item'
 import type { CustomTheme, RenderContext } from '#types/theme'
-import { ensurePathSeparator, getFileStat, listDirFiles } from '#utils/file'
-import { sortItems, toItem } from '#utils/item'
+import { ensurePathSeparator, listDirFiles } from '#utils/file'
+import { getItemStat, sortItems } from '#utils/item'
 import {
   isBackspaceKey,
   isDownKey,
@@ -50,55 +50,65 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
     )
     const [items, setItems] = useState<Item[]>([])
 
-    useEffect(() => {
-      ;(async () => {
-        const { data: rootStats, error: error3 } = await getFileStat(currentDir)
-
-        if (error3) {
-          // TODO: handle this
-          return
-        }
-
-        const rootItem = toItem('. (current directory)', currentDir, rootStats)
-
-        const { data: fileList, error } = await listDirFiles(currentDir)
+    async function listItems(target: Item | string) {
+      if (typeof target === 'string') {
+        const { data: root, error } = await getItemStat(target)
 
         if (error) {
-          // TODO: handle this
+          // TODO: Think about how to handle these errors (listItems->getItemStat)
+          console.log(error)
           return
         }
 
-        const itemList = []
-        for (const filename of fileList) {
-          const filePath = path.join(currentDir, filename)
-          const { data: fileStats, error: error2 } = await getFileStat(filePath)
+        // biome-ignore lint/style/noParameterAssign: This is provisional (?)
+        target = root
+      }
 
-          if (error2) {
-            // TODO: handle this
-            continue
-          }
+      const dirFiles = await listDirFiles(target.path)
 
-          const itemObj = toItem(filename, filePath, fileStats)
-          if (config.filter) {
-            itemObj.isDisabled = !config.filter(itemObj)
-          }
+      if (dirFiles.error) {
+        // TODO: Think about how to handle these errors (listItems->listDirFiles)
+        console.log(dirFiles.error)
+        return
+      }
 
-          if (!showExcluded && itemObj.isDisabled) {
-            continue
-          }
+      const itemList = []
+      for (const fileName of dirFiles.data) {
+        const filePath = path.join(target.path, fileName)
+        const { data: newItem, error } = await getItemStat(filePath)
 
-          itemList.push(itemObj)
+        if (error) {
+          // TODO: Think about how to handle these errors (listItems->getItemStat)
+          console.log(error)
+          continue
         }
 
-        const sortedItems = sortItems(itemList)
-
-        if (config.type !== 'file') {
-          sortedItems.unshift(rootItem)
+        if (config.filter) {
+          newItem.isDisabled = !config.filter(newItem)
         }
 
-        setItems(itemList)
-      })()
-    }, [currentDir])
+        if (!showExcluded && newItem.isDisabled) {
+          continue
+        }
+
+        itemList.push(newItem)
+      }
+
+      const sortedItems = sortItems(itemList)
+
+      if (config.type !== 'file') {
+        const root = structuredClone(target)
+        root.displayName = './'
+
+        sortedItems.unshift(root)
+      }
+
+      setItems(sortedItems)
+    }
+
+    useEffect(() => {
+      listItems(currentDir)
+    }, []) // First load
 
     const bounds = useMemo(() => {
       const first = items.findIndex(item => !item.isDisabled)
@@ -114,7 +124,34 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
     const [active, setActive] = useState(bounds.first)
     const activeItem = items[active]
 
-    useKeypress(key => {
+    async function handleOpenDirectory(target: Item) {
+      setStatus(Status.Loading)
+      target.displayName += ' (loading)' // TODO: This label is provisional
+
+      await listItems(target)
+
+      setCurrentDir(target.path)
+      setActive(0)
+
+      setStatus(Status.Idle)
+    }
+
+    async function handleGoParentDirectory(target: string) {
+      setStatus(Status.Loading)
+
+      // TODO: Run this only if target is different from currentDir
+      await listItems(target)
+
+      setCurrentDir(target)
+      setActive(0)
+
+      setStatus(Status.Idle)
+    }
+
+    useKeypress(async key => {
+      // Block use of keys when status is loading
+      if (status === Status.Loading) return
+
       if (isEnterKey(key)) {
         // TODO: Prevents the active item from being selected if there is a permission error.
 
@@ -132,10 +169,7 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
       } else if (isSpaceKey(key)) {
         if (activeItem.kind !== ItemKind.Directory) return
 
-        // TODO: Prevent the current directory from being updated if there is a permission error.
-
-        setCurrentDir(activeItem.path)
-        setActive(bounds.first)
+        await handleOpenDirectory(activeItem)
       } else if (isUpKey(key) || isDownKey(key)) {
         if (
           loop ||
@@ -152,8 +186,7 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
           setActive(next)
         }
       } else if (isBackspaceKey(key)) {
-        setCurrentDir(path.resolve(currentDir, '..'))
-        setActive(bounds.first)
+        await handleGoParentDirectory(path.resolve(currentDir, '..'))
       } else if (isEscapeKey(key)) {
         if (!allowCancel) return
 

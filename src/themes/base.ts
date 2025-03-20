@@ -4,7 +4,6 @@ import { ItemKind } from '#enums/item'
 import type { StatusType } from '#types/common'
 import type { Item } from '#types/item'
 import type { CustomTheme, RenderContext } from '#types/theme'
-import { ensurePathSeparator } from '#utils/file'
 
 const theme: CustomTheme = {
   prefix: {
@@ -37,15 +36,13 @@ const theme: CustomTheme = {
       isLast && !context.loop
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
-    const isDirectory = item.kind === ItemKind.Directory
-    const line = isDirectory
-      ? `${linePrefix} ${ensurePathSeparator(item.name)}`
-      : `${linePrefix} ${item.name}`
+    const line = `${linePrefix} ${item.displayName}`
 
     if (item.isDisabled) {
       return this.style.disabled(`${line} ${this.labels.disabled}`)
     }
 
+    const isDirectory = item.kind === ItemKind.Directory
     const baseColor = isDirectory ? this.style.directory : this.style.file
     const color = context.isActive ? this.style.active : baseColor
 

@@ -1,19 +1,29 @@
 import type { Stats } from 'node:fs'
+import { basename } from 'node:path'
 import { ItemKind } from '#enums/item'
+import type { Result } from '#types/common'
 import type { Item, ItemKindType } from '#types/item'
+import { ensurePathSeparator, getFileStat } from '#utils/file'
 
 function getItemKind(stats: Stats): ItemKindType {
   if (stats.isDirectory()) return ItemKind.Directory
   if (stats.isFile()) return ItemKind.File
-  if (stats.isSymbolicLink()) return ItemKind.SymbolicLink
   return ItemKind.Unknown
 }
 
-export function toItem(name: string, path: string, stats: Stats): Item {
+function createItem(path: string, stats: Stats): Item {
+  const name = basename(path)
+  const kind = getItemKind(stats)
+
+  // TODO: I don't remember why i added this property to the Item type (?)
+  const displayName =
+    kind === ItemKind.Directory ? ensurePathSeparator(name) : name
+
   return {
+    displayName,
     name,
     path,
-    kind: getItemKind(stats),
+    kind,
     size: stats.size,
     createdAt: stats.birthtimeMs,
     modifiedAt: stats.mtimeMs,
@@ -21,27 +31,38 @@ export function toItem(name: string, path: string, stats: Stats): Item {
   }
 }
 
+export async function getItemStat(
+  path: string
+): Promise<Result<Item, NodeJS.ErrnoException>> {
+  const { data: stats, error } = await getFileStat(path)
+
+  if (error) return { data: null, error }
+
+  const item = createItem(path, stats)
+
+  return { data: item, error: null }
+}
+
 export function sortItems(items: Item[]): Item[] {
-  return items.sort((a, b) => {
-    // TODO: Change sort order to:
-    //       1. Disabled items are placed at the end.
-    //       2. By item kind:
-    //          1. Directoy
-    //          2. SymbolicLink
-    //          3. File
-    //          4. Unknown
+  const kindOrder: Record<ItemKindType, number> = {
+    [ItemKind.Directory]: 1,
+    [ItemKind.File]: 2,
+    [ItemKind.Unknown]: 3
+  }
 
-    // Prioritize based on attributes (isDisabled and isDirectory)
-    const aPriority =
-      (a.isDisabled ? 2 : 0) + (a.kind === ItemKind.Directory ? -1 : 0)
-    const bPriority =
-      (b.isDisabled ? 2 : 0) + (b.kind === ItemKind.Directory ? -1 : 0)
-
-    if (aPriority !== bPriority) {
-      return aPriority - bPriority
+  return items.toSorted((a, b) => {
+    // 1. Disabled items are placed at the end
+    if (a.isDisabled !== b.isDisabled) {
+      return a.isDisabled ? 1 : -1
     }
 
-    // If priorities are equal, sort by name
+    // 2. Sort by item kind (Directory -> File -> Unknown)
+    const kindComparison = kindOrder[a.kind] - kindOrder[b.kind]
+    if (kindComparison !== 0) {
+      return kindComparison
+    }
+
+    // 3. If all else is equal, sort by name
     return a.name.localeCompare(b.name)
   })
 }
