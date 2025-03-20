@@ -2,6 +2,7 @@ import path from 'node:path'
 import {
   createPrompt,
   makeTheme,
+  useEffect,
   useKeypress,
   useMemo,
   usePagination,
@@ -9,14 +10,16 @@ import {
   useState
 } from '@inquirer/core'
 import figures from '@inquirer/figures'
-
 import { Status } from '#enums/common'
+import { ItemKind } from '#enums/item'
 import baseTheme from '#themes/base'
 import type { StatusType } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
-import type { FileStats } from '#types/file'
+import type { Item } from '#types/item'
+import type { ItemKindType } from '#types/item'
 import type { CustomTheme, RenderContext } from '#types/theme'
-import { ensurePathSeparator, getDirFiles, sortFiles } from '#utils/file'
+import { ensurePathSeparator, listDirFiles } from '#utils/file'
+import { getItemStat, sortItems } from '#utils/item'
 import {
   isBackspaceKey,
   isDownKey,
@@ -45,32 +48,67 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.basePath || '.')
     )
+    const [items, setItems] = useState<Item[]>([])
 
-    const items = useMemo(() => {
-      const files = getDirFiles(currentDir)
+    async function listItems(target: Item | string) {
+      if (typeof target === 'string') {
+        const { data: root, error } = await getItemStat(target)
 
-      for (const file of files) {
-        file.isDisabled = config.filter ? !config.filter(file) : false
+        if (error) {
+          // TODO: Think about how to handle these errors (listItems->getItemStat)
+          console.log(error)
+          return
+        }
+
+        // biome-ignore lint/style/noParameterAssign: This is provisional (?)
+        target = root
       }
 
-      const filteredFiles = files.filter(
-        file => showExcluded || !file.isDisabled
-      )
-      const sortedFiles = sortFiles(filteredFiles)
+      const dirFiles = await listDirFiles(target.path)
+
+      if (dirFiles.error) {
+        // TODO: Think about how to handle these errors (listItems->listDirFiles)
+        console.log(dirFiles.error)
+        return
+      }
+
+      const itemList = []
+      for (const fileName of dirFiles.data) {
+        const filePath = path.join(target.path, fileName)
+        const { data: newItem, error } = await getItemStat(filePath)
+
+        if (error) {
+          // TODO: Think about how to handle these errors (listItems->getItemStat)
+          console.log(error)
+          continue
+        }
+
+        if (config.filter) {
+          newItem.isDisabled = !config.filter(newItem)
+        }
+
+        if (!showExcluded && newItem.isDisabled) {
+          continue
+        }
+
+        itemList.push(newItem)
+      }
+
+      const sortedItems = sortItems(itemList)
 
       if (config.type !== 'file') {
-        // TODO: This is a trick to add the current directory as a selectable item,
-        //       but it's a bit ugly. maybe there's a better way to do it?
-        sortedFiles.unshift({
-          name: '.',
-          path: currentDir,
-          isDirectory: () => true,
-          isDisabled: false
-        } as FileStats)
+        const root = structuredClone(target)
+        root.displayName = './'
+
+        sortedItems.unshift(root)
       }
 
-      return sortedFiles
-    }, [currentDir])
+      setItems(sortedItems)
+    }
+
+    useEffect(() => {
+      listItems(currentDir)
+    }, []) // First load
 
     const bounds = useMemo(() => {
       const first = items.findIndex(item => !item.isDisabled)
@@ -86,24 +124,53 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
     const [active, setActive] = useState(bounds.first)
     const activeItem = items[active]
 
-    useKeypress((key, rl) => {
+    async function handleOpenDirectory(target: Item) {
+      setStatus(Status.Loading)
+      target.displayName += ' (loading)' // TODO: This label is provisional
+
+      await listItems(target)
+
+      setCurrentDir(target.path)
+      setActive(0)
+
+      setStatus(Status.Idle)
+    }
+
+    async function handleGoParentDirectory(target: string) {
+      setStatus(Status.Loading)
+
+      // TODO: Run this only if target is different from currentDir
+      await listItems(target)
+
+      setCurrentDir(target)
+      setActive(0)
+
+      setStatus(Status.Idle)
+    }
+
+    useKeypress(async key => {
+      // Block use of keys when status is loading
+      if (status === Status.Loading) return
+
       if (isEnterKey(key)) {
+        // TODO: Prevents the active item from being selected if there is a permission error.
+
         if (
           activeItem.isDisabled ||
-          (config.type === 'file' && activeItem.isDirectory()) ||
-          (config.type === 'directory' && !activeItem.isDirectory())
+          (config.type === 'file' && activeItem.kind === ItemKind.Directory) ||
+          (config.type === 'directory' &&
+            activeItem.kind !== ItemKind.Directory)
         ) {
           return
         }
 
         setStatus(Status.Done)
         done(activeItem.path)
-      } else if (isSpaceKey(key) && activeItem.isDirectory()) {
-        setCurrentDir(activeItem.path)
-        setActive(bounds.first)
-      } else if (isUpKey(key) || isDownKey(key)) {
-        rl.clearLine(0)
+      } else if (isSpaceKey(key)) {
+        if (activeItem.kind !== ItemKind.Directory) return
 
+        await handleOpenDirectory(activeItem)
+      } else if (isUpKey(key) || isDownKey(key)) {
         if (
           loop ||
           (isUpKey(key) && active !== bounds.first) ||
@@ -119,9 +186,10 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
           setActive(next)
         }
       } else if (isBackspaceKey(key)) {
-        setCurrentDir(path.resolve(currentDir, '..'))
-        setActive(bounds.first)
-      } else if (isEscapeKey(key) && allowCancel) {
+        await handleGoParentDirectory(path.resolve(currentDir, '..'))
+      } else if (isEscapeKey(key)) {
+        if (!allowCancel) return
+
         setStatus(Status.Canceled)
         done(null)
       }
@@ -163,12 +231,13 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
   }
 )
 
-export { fileSelector, Status }
+export { fileSelector, Status, ItemKind }
 
 export type {
   StatusType,
   FileSelectorConfig,
-  FileStats,
+  Item,
   CustomTheme,
-  RenderContext
+  RenderContext,
+  ItemKindType
 }
