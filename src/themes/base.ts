@@ -13,7 +13,8 @@ const theme: CustomTheme = {
     canceled: chalk.red(figures.cross)
   },
   style: {
-    disabled: (text: string) => chalk.dim(text),
+    disabled: (linePrefix: string, text: string) =>
+      chalk.dim(`${linePrefix} ${chalk.strikethrough(text)}`),
     active: (text: string) => chalk.cyan(text),
     cancelText: (text: string) => chalk.red(text),
     emptyText: (text: string) => chalk.red(text),
@@ -23,9 +24,6 @@ const theme: CustomTheme = {
     message: (text: string, _status: StatusType) => chalk.bold(text),
     help: (text: string) => chalk.italic.dim(text),
     key: (text: string) => chalk.cyan(text)
-  },
-  labels: {
-    disabled: '(not allowed)'
   },
   hierarchySymbols: {
     branch: figures.lineUpDownRight + figures.line,
@@ -46,19 +44,22 @@ const theme: CustomTheme = {
         : this.hierarchySymbols.branch
     const isDirectory = item.isDirectory()
     const isRoot = item.name === '.'
-    const line = isDirectory
-      ? `${linePrefix} ${ensurePathSeparator(item.name)}`
-      : `${linePrefix} ${item.name}`
+    const name = isDirectory ? ensurePathSeparator(item.name) : item.name
 
     if (item.isDisabled) {
-      return this.style.disabled(`${line} ${this.labels.disabled}`)
+      return this.style.disabled(linePrefix, name)
     }
 
     const baseColor = isDirectory ? this.style.directory : this.style.file
     const color = context.isActive ? this.style.active : baseColor
-    const help = isDirectory ? this.help.directory(isRoot) : this.help.file
+    let line = color(`${linePrefix} ${name}`)
 
-    return `${color(line)}${context.isActive ? ` ${this.style.help(help)}` : ''}`
+    if (context.isActive) {
+      const help = isDirectory ? this.help.directory(isRoot) : this.help.file
+      line += ` ${this.style.help(help)}`
+    }
+
+    return line
   }
 }
 

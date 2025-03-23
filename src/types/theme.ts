@@ -41,9 +41,9 @@ export interface CustomTheme {
   style: {
     /**
      * Style for disabled items.
-     * @default chalk.dim
+     * @default chalk.strikethrough.dim
      */
-    disabled: (text: string) => string
+    disabled: (linePrefix: string, text: string) => string
     /**
      * Style for the currently active item.
      * @default chalk.cyan
@@ -89,13 +89,6 @@ export interface CustomTheme {
      * @default chalk.cyan
      */
     key: (text: string) => string
-  }
-  labels: {
-    /**
-     * Label displayed next to an item when it is disabled.
-     * @default '(not allowed)'
-     */
-    disabled: string
   }
   hierarchySymbols: {
     /**
