@@ -8,7 +8,6 @@ import {
   usePrefix,
   useState
 } from '@inquirer/core'
-import figures from '@inquirer/figures'
 
 import { Status } from '#enums/common'
 import baseTheme from '#themes/base'
@@ -25,7 +24,7 @@ import {
   isSpaceKey,
   isUpKey
 } from '#utils/key'
-import { ANSI_HIDE_CURSOR, getMaxLength } from '#utils/string'
+import { ANSI_HIDE_CURSOR } from '#utils/string'
 
 const fileSelector = createPrompt<string | null, FileSelectorConfig>(
   (config, done) => {
@@ -146,20 +145,10 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
       return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
     }
 
+    const helpTop = theme.style.help(theme.help.top(allowCancel))
     const header = theme.style.currentDir(ensurePathSeparator(currentDir))
-    const helpTip = useMemo(() => {
-      const helpTipLines = [
-        `${theme.style.key(figures.arrowUp + figures.arrowDown)} navigate, ${theme.style.key('<enter>')} select${allowCancel ? `, ${theme.style.key('<esc>')} cancel` : ''}`,
-        `${theme.style.key('<space>')} open directory, ${theme.style.key('<backspace>')} go back`
-      ]
 
-      const helpTipMaxLength = getMaxLength(helpTipLines)
-      const delimiter = figures.lineBold.repeat(helpTipMaxLength)
-
-      return `${delimiter}\n${helpTipLines.join('\n')}`
-    }, [])
-
-    return `${prefix} ${message}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}\n${helpTip}${ANSI_HIDE_CURSOR}`
+    return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`
   }
 )
 

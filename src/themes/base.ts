@@ -21,7 +21,7 @@ const theme: CustomTheme = {
     file: (text: string) => chalk.white(text),
     currentDir: (text: string) => chalk.magenta(text),
     message: (text: string, _status: StatusType) => chalk.bold(text),
-    help: (text: string) => chalk.white(text),
+    help: (text: string) => chalk.italic.dim(text),
     key: (text: string) => chalk.cyan(text)
   },
   labels: {
@@ -31,6 +31,13 @@ const theme: CustomTheme = {
     branch: figures.lineUpDownRight + figures.line,
     leaf: figures.lineUpRight + figures.line
   },
+  help: {
+    top: (allowCancel: boolean) =>
+      `(Press ${figures.arrowUp + figures.arrowDown} to navigate, <backspace> to go back${allowCancel ? ', <esc> to cancel' : ''})`,
+    directory: (isRoot: boolean) =>
+      `(Press ${!isRoot ? '<space> to open, ' : ''}<enter> to select)`,
+    file: '(Press <enter> to select)'
+  },
   renderItem(item: FileStats, context: RenderContext) {
     const isLast = context.index === context.items.length - 1
     const linePrefix =
@@ -38,6 +45,7 @@ const theme: CustomTheme = {
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
     const isDirectory = item.isDirectory()
+    const isRoot = item.name === '.'
     const line = isDirectory
       ? `${linePrefix} ${ensurePathSeparator(item.name)}`
       : `${linePrefix} ${item.name}`
@@ -48,8 +56,9 @@ const theme: CustomTheme = {
 
     const baseColor = isDirectory ? this.style.directory : this.style.file
     const color = context.isActive ? this.style.active : baseColor
+    const help = isDirectory ? this.help.directory(isRoot) : this.help.file
 
-    return color(line)
+    return `${color(line)}${context.isActive ? ` ${this.style.help(help)}` : ''}`
   }
 }
 

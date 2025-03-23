@@ -81,7 +81,7 @@ export interface CustomTheme {
     message: (text: string, status: StatusType) => string
     /**
      * Style for the key binding help section.
-     * @default chalk.white
+     * @default chalk.italic.dim
      */
     help: (text: string) => string
     /**
@@ -108,6 +108,22 @@ export interface CustomTheme {
      * @default '└─'
      */
     leaf: string
+  }
+  help: {
+    /**
+     * Help message displayed at the top of the prompt.
+     * @param allowCancel - Whether the prompt allows canceling the selection.
+     */
+    top: (allowCancel: boolean) => string
+    /**
+     * Help message displayed for directories.
+     * @param isRoot - Whether the directory is the root directory.
+     */
+    directory: (isRoot: boolean) => string
+    /**
+     * Help message displayed for files.
+     */
+    file: string
   }
   /**
    * Function to render an item in the list.
