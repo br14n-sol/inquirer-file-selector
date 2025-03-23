@@ -41,9 +41,9 @@ export interface CustomTheme {
   style: {
     /**
      * Style for disabled items.
-     * @default chalk.dim
+     * @default chalk.strikethrough.dim
      */
-    disabled: (text: string) => string
+    disabled: (linePrefix: string, text: string) => string
     /**
      * Style for the currently active item.
      * @default chalk.cyan
@@ -81,7 +81,7 @@ export interface CustomTheme {
     message: (text: string, status: StatusType) => string
     /**
      * Style for the key binding help section.
-     * @default chalk.white
+     * @default chalk.italic.dim
      */
     help: (text: string) => string
     /**
@@ -89,13 +89,6 @@ export interface CustomTheme {
      * @default chalk.cyan
      */
     key: (text: string) => string
-  }
-  labels: {
-    /**
-     * Label displayed next to an item when it is disabled.
-     * @default '(not allowed)'
-     */
-    disabled: string
   }
   hierarchySymbols: {
     /**
@@ -108,6 +101,22 @@ export interface CustomTheme {
      * @default '└─'
      */
     leaf: string
+  }
+  help: {
+    /**
+     * Help message displayed at the top of the prompt.
+     * @param allowCancel - Whether the prompt allows canceling the selection.
+     */
+    top: (allowCancel: boolean) => string
+    /**
+     * Help message displayed for directories.
+     * @param isRoot - Whether the directory is the root directory.
+     */
+    directory: (isRoot: boolean) => string
+    /**
+     * Help message displayed for files.
+     */
+    file: string
   }
   /**
    * Function to render an item in the list.
