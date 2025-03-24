@@ -15,7 +15,12 @@ import type { StatusType } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
 import type { FileStats } from '#types/file'
 import type { CustomTheme, RenderContext } from '#types/theme'
-import { ensurePathSeparator, getDirFiles, sortFiles } from '#utils/file'
+import {
+  createFileStats,
+  ensurePathSeparator,
+  getDirFiles,
+  sortFiles
+} from '#utils/file'
 import {
   isBackspaceKey,
   isDownKey,
@@ -26,7 +31,7 @@ import {
 } from '#utils/key'
 import { ANSI_HIDE_CURSOR } from '#utils/string'
 
-const fileSelector = createPrompt<string | null, FileSelectorConfig>(
+const fileSelector = createPrompt<FileStats | null, FileSelectorConfig>(
   (config, done) => {
     const {
       pageSize = 10,
@@ -58,14 +63,10 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
       const sortedFiles = sortFiles(filteredFiles)
 
       if (config.type !== 'file') {
-        // TODO: This is a trick to add the current directory as a selectable item,
-        //       but it's a bit ugly. maybe there's a better way to do it?
-        sortedFiles.unshift({
-          name: '.',
-          path: currentDir,
-          isDirectory: () => true,
-          isDisabled: false
-        } as FileStats)
+        const root = createFileStats(currentDir)
+        root.name = '.'
+
+        sortedFiles.unshift(root)
       }
 
       return sortedFiles
@@ -96,7 +97,7 @@ const fileSelector = createPrompt<string | null, FileSelectorConfig>(
         }
 
         setStatus(Status.Done)
-        done(activeItem.path)
+        done(activeItem)
       } else if (isSpaceKey(key) && activeItem.isDirectory()) {
         setCurrentDir(activeItem.path)
         setActive(bounds.first)
