@@ -12,18 +12,26 @@ export function ensurePathSeparator(dirPath: string): string {
 }
 
 /**
+ * Creates a `FileStats` object from a file path.
+ */
+export function createFileStats(filepath: string): FileStats {
+  const fileStat = fs.statSync(filepath)
+  const filename = path.basename(filepath)
+
+  return Object.assign(fileStat, {
+    name: filename,
+    path: filepath,
+    isDisabled: false
+  })
+}
+
+/**
  * Get files of a directory.
  */
 export function getDirFiles(dirPath: string): FileStats[] {
   return fs.readdirSync(dirPath).map(filename => {
     const filepath = path.join(dirPath, filename)
-    const fileStat = fs.statSync(filepath)
-
-    return Object.assign(fileStat, {
-      name: filename,
-      path: filepath,
-      isDisabled: false
-    })
+    return createFileStats(filepath)
   })
 }
 
