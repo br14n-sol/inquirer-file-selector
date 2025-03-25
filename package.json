@@ -20,22 +20,22 @@
     "*.{ts,json}": "biome check --write --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@inquirer/core": "^10.1.0",
-    "@inquirer/figures": "^1.0.8",
-    "chalk": "^5.3.0"
+    "@inquirer/core": "^10.1.9",
+    "@inquirer/figures": "^1.0.11",
+    "chalk": "^5.4.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@commitlint/cli": "19.6.0",
-    "@commitlint/config-conventional": "19.6.0",
-    "@inquirer/type": "3.0.1",
+    "@commitlint/cli": "19.8.0",
+    "@commitlint/config-conventional": "19.8.0",
+    "@inquirer/type": "3.0.5",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.2",
     "husky": "9.1.7",
     "nano-staged": "0.8.0",
-    "rimraf": "5.0.10",
-    "rollup": "4.28.1",
-    "rollup-plugin-dts": "6.1.1",
+    "rimraf": "6.0.1",
+    "rollup": "4.37.0",
+    "rollup-plugin-dts": "6.2.1",
     "rollup-plugin-node-externals": "8.0.0",
     "rollup-plugin-tsconfig-paths": "1.5.2",
     "tslib": "2.8.1",
