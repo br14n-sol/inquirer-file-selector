@@ -27,7 +27,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@commitlint/cli": "19.8.0",
-    "@commitlint/config-conventional": "19.6.0",
+    "@commitlint/config-conventional": "19.8.0",
     "@inquirer/type": "3.0.1",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.2",
