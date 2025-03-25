@@ -1,6 +1,5 @@
 import type { Theme } from '@inquirer/core'
 import type { PartialDeep } from '@inquirer/type'
-
 import type { FileStats } from '#types/file'
 import type { CustomTheme } from '#types/theme'
 
