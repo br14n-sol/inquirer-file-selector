@@ -8,7 +8,6 @@ import {
   usePrefix,
   useState
 } from '@inquirer/core'
-
 import { Status } from '#enums/common'
 import baseTheme from '#themes/base'
 import type { StatusType } from '#types/common'

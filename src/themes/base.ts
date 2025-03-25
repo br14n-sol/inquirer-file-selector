@@ -1,6 +1,5 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
-
 import type { StatusType } from '#types/common'
 import type { FileStats } from '#types/file'
 import type { CustomTheme, RenderContext } from '#types/theme'
