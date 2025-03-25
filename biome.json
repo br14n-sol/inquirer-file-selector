@@ -47,8 +47,7 @@
       },
       "suspicious": {
         "noEmptyBlockStatements": "warn",
-        "useAwait": "warn",
-        "noControlCharactersInRegex": "off"
+        "useAwait": "warn"
       }
     }
   },
