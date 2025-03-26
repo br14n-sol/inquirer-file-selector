@@ -1,7 +1,7 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
-import type { StatusType } from '#types/common'
 import type { Item } from '#types/item'
+import type { StatusType } from '#types/status'
 import type { PromptTheme, RenderContext } from '#types/theme'
 import { ensurePathSeparator } from '#utils/item'
 

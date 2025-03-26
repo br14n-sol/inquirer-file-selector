@@ -8,11 +8,11 @@ import {
   usePrefix,
   useState
 } from '@inquirer/core'
-import { Status } from '#enums/common'
+import { Status } from '#enums/status'
 import { baseTheme } from '#themes/base'
-import type { StatusType } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
 import type { Item } from '#types/item'
+import type { StatusType } from '#types/status'
 import type { PromptTheme, RenderContext } from '#types/theme'
 import {
   createItemFromPath,

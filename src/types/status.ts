@@ -1,4 +1,4 @@
-import type { Status } from '#enums/common'
+import type { Status } from '#enums/status'
 
 /**
  * Type representing allowed prompt statuses.
