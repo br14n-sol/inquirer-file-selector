@@ -3,7 +3,7 @@ import type { PartialDeep } from '@inquirer/type'
 import type { Item } from '#types/item'
 import type { PromptTheme } from '#types/theme'
 
-export interface FileSelectorConfig {
+export interface PromptConfig {
   /**
    * Main message displayed in the prompt.
    * @example 'Select a file:'
