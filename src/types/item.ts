@@ -1,21 +1,16 @@
 import type { Stats } from 'node:fs'
 
 export type Item = Stats & {
-  /**
-   * Item name.
-   */
+  /** Item name. */
   name: string
-  /**
-   * Full path to the item.
-   */
+  /** Full path. */
   path: string
   /**
-   * Indicates whether the item is disabled.
-   * - `false`: Item is enabled and displayed in the list.
-   * - `true`: Item is disabled and shown only if `showExcluded` is `true`.
+   * Indicates if the item is disabled.
+   * - `false`: Visible in the list.
+   * - `true`: Hidden unless `showExcluded` is `true`.
    *
-   * Disabled items are labeled with `disabledLabel` when visible.
-   * This is set to `true` if `filter` function returns `false` for the item.
+   * Set to `true` if `config.filter` returns `false`.
    */
   isDisabled: boolean
 }
