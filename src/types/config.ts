@@ -1,64 +1,56 @@
 import type { Theme } from '@inquirer/core'
 import type { PartialDeep } from '@inquirer/type'
-import type { FileStats } from '#types/file'
-import type { CustomTheme } from '#types/theme'
+import type { Item } from '#types/item'
+import type { PromptTheme } from '#types/theme'
 
-export interface FileSelectorConfig {
-  /**
-   * Main message displayed in the prompt.
-   * @example 'Select a file:'
-   */
+export interface PromptConfig {
+  /** Main message displayed in the prompt. */
   message: string
   /**
-   * Path to the directory where the selection starts.
+   * Initial directory.
    * @default process.cwd()
    */
   basePath?: string
   /**
-   * Type of items that are valid choices.
-   *
-   * If not provided, all items are valid choices.
+   * Allowed item type.
+   * If omitted, all items are valid.
    */
   type?: 'file' | 'directory'
   /**
-   * Maximum number of items to display in the list at the same time.
+   * Max items displayed at once.
    * @default 10
    */
   pageSize?: number
   /**
-   * If `true`, the list moves from the last item to the first and vice versa.
+   * Indicates if navigation is looped from the last to the first element.
    * @default false
    */
   loop?: boolean
   /**
-   * Function to filter items.
-   * Returns `true` to include an item in the list, and `false` to exclude it.
-   *
-   * If not provided, all items are included by default.
+   * Filters items in the list.
+   * @param item - Item to evaluate.
    */
-  filter?: (item: FileStats) => boolean
+  filter?: (item: Item) => boolean
   /**
-   * If `true`, excluded items (by the `filter` function) are shown in the list.
+   * Indicates if items excluded by `filter` are visible.
    * @default false
    */
   showExcluded?: boolean
   /**
-   * If `true`, allows the user to cancel the selection.
+   * Indicates if canceling is allowed.
    * @default false
    */
   allowCancel?: boolean
   /**
-   * Message displayed when the user cancels the selection.
+   * Message when selection is canceled.
    * @default 'Canceled.'
    */
   cancelText?: string
   /**
-   * Message displayed if the directory is empty.
+   * Message when the directory is empty.
    * @default 'Directory is empty.'
    */
   emptyText?: string
-  /**
-   * Theme applied to the file selector.
-   */
-  theme?: PartialDeep<Theme<CustomTheme>>
+  /** Theme applied to the file selector. */
+  theme?: PartialDeep<Theme<PromptTheme>>
 }

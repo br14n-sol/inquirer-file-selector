@@ -1,11 +1,11 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
-import type { StatusType } from '#types/common'
-import type { FileStats } from '#types/file'
-import type { CustomTheme, RenderContext } from '#types/theme'
-import { ensurePathSeparator } from '#utils/file'
+import type { Item } from '#types/item'
+import type { StatusType } from '#types/status'
+import type { PromptTheme, RenderContext } from '#types/theme'
+import { ensurePathSeparator } from '#utils/item'
 
-const theme: CustomTheme = {
+export const baseTheme: PromptTheme = {
   prefix: {
     idle: chalk.cyan('?'),
     done: chalk.green(figures.tick),
@@ -35,7 +35,7 @@ const theme: CustomTheme = {
       `(Press ${!isRoot ? '<space> to open, ' : ''}<enter> to select)`,
     file: '(Press <enter> to select)'
   },
-  renderItem(item: FileStats, context: RenderContext) {
+  renderItem(item: Item, context: RenderContext) {
     const isLast = context.index === context.items.length - 1
     const linePrefix =
       isLast && !context.loop
@@ -61,5 +61,3 @@ const theme: CustomTheme = {
     return line
   }
 }
-
-export default theme

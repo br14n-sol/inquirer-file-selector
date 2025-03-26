@@ -1,6 +1,4 @@
-/**
- * Possible statuses for prompt.
- */
+/** Possible prompt statuses. */
 export const Status = {
   Idle: 'idle',
   Done: 'done',
