@@ -1,11 +1,11 @@
 import type { StatusType } from '#types/common'
-import type { FileStats } from '#types/file'
+import type { Item } from '#types/item'
 
 export type RenderContext = {
   /**
    * List of items to render.
    */
-  items: FileStats[]
+  items: Item[]
   /**
    * Index of the item in the list.
    */
@@ -124,5 +124,5 @@ export interface CustomTheme {
    * @param context - Context information about the item.
    * @returns The rendered item as a string.
    */
-  renderItem: (item: FileStats, context: RenderContext) => string
+  renderItem: (item: Item, context: RenderContext) => string
 }

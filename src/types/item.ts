@@ -1,6 +1,6 @@
 import type { Stats } from 'node:fs'
 
-export type FileStats = Stats & {
+export type Item = Stats & {
   /**
    * Item name.
    */

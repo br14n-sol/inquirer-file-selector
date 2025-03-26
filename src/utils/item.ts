@@ -1,25 +1,25 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import type { FileStats } from '#types/file'
+import { readdirSync, statSync } from 'node:fs'
+import { basename, join, sep } from 'node:path'
+import type { Item } from '#types/item'
 
 /**
  * Ensures that the given path ends with a separator (e.g., '/' or '\\'),
  * depending on the platform.
  */
-export function ensurePathSeparator(dirPath: string): string {
-  return dirPath.endsWith(path.sep) ? dirPath : `${dirPath}${path.sep}`
+export function ensurePathSeparator(path: string): string {
+  return path.endsWith(sep) ? path : `${path}${sep}`
 }
 
 /**
  * Creates a `FileStats` object from a file path.
  */
-export function createFileStats(filepath: string): FileStats {
-  const fileStat = fs.statSync(filepath)
-  const filename = path.basename(filepath)
+export function createItemFromPath(path: string): Item {
+  const stats = statSync(path)
+  const name = basename(path)
 
-  return Object.assign(fileStat, {
-    name: filename,
-    path: filepath,
+  return Object.assign(stats, {
+    name,
+    path,
     isDisabled: false
   })
 }
@@ -27,10 +27,10 @@ export function createFileStats(filepath: string): FileStats {
 /**
  * Get files of a directory.
  */
-export function getDirFiles(dirPath: string): FileStats[] {
-  return fs.readdirSync(dirPath).map(filename => {
-    const filepath = path.join(dirPath, filename)
-    return createFileStats(filepath)
+export function getDirItems(path: string): Item[] {
+  return readdirSync(path).map(fileName => {
+    const filePath = join(path, fileName)
+    return createItemFromPath(filePath)
   })
 }
 
@@ -44,8 +44,8 @@ export function getDirFiles(dirPath: string): FileStats[] {
  * If two items have the same priority (e.g., both are files, both are directories, or both are disabled),
  * the items are sorted alphabetically by name.
  */
-export function sortFiles(files: FileStats[]): FileStats[] {
-  return files.sort((a, b) => {
+export function sortItems(items: Item[]): Item[] {
+  return items.sort((a, b) => {
     // Prioritize based on attributes (isDisabled and isDirectory)
     const aPriority = (a.isDisabled ? 2 : 0) + (a.isDirectory() ? -1 : 0)
     const bPriority = (b.isDisabled ? 2 : 0) + (b.isDirectory() ? -1 : 0)

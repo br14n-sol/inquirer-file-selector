@@ -12,14 +12,14 @@ import { Status } from '#enums/common'
 import baseTheme from '#themes/base'
 import type { StatusType } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
-import type { FileStats } from '#types/file'
+import type { Item } from '#types/item'
 import type { CustomTheme, RenderContext } from '#types/theme'
 import {
-  createFileStats,
+  createItemFromPath,
   ensurePathSeparator,
-  getDirFiles,
-  sortFiles
-} from '#utils/file'
+  getDirItems,
+  sortItems
+} from '#utils/item'
 import {
   isBackspaceKey,
   isDownKey,
@@ -30,7 +30,7 @@ import {
 } from '#utils/key'
 import { ANSI_HIDE_CURSOR } from '#utils/string'
 
-const fileSelector = createPrompt<FileStats | null, FileSelectorConfig>(
+const fileSelector = createPrompt<Item | null, FileSelectorConfig>(
   (config, done) => {
     const {
       pageSize = 10,
@@ -50,7 +50,7 @@ const fileSelector = createPrompt<FileStats | null, FileSelectorConfig>(
     )
 
     const items = useMemo(() => {
-      const files = getDirFiles(currentDir)
+      const files = getDirItems(currentDir)
 
       for (const file of files) {
         file.isDisabled = config.filter ? !config.filter(file) : false
@@ -59,10 +59,10 @@ const fileSelector = createPrompt<FileStats | null, FileSelectorConfig>(
       const filteredFiles = files.filter(
         file => showExcluded || !file.isDisabled
       )
-      const sortedFiles = sortFiles(filteredFiles)
+      const sortedFiles = sortItems(filteredFiles)
 
       if (config.type !== 'file') {
-        const root = createFileStats(currentDir)
+        const root = createItemFromPath(currentDir)
         root.name = '.'
 
         sortedFiles.unshift(root)
@@ -154,10 +154,4 @@ const fileSelector = createPrompt<FileStats | null, FileSelectorConfig>(
 
 export { fileSelector, Status }
 
-export type {
-  StatusType,
-  FileSelectorConfig,
-  FileStats,
-  CustomTheme,
-  RenderContext
-}
+export type { StatusType, FileSelectorConfig, Item, CustomTheme, RenderContext }

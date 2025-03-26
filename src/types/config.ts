@@ -1,6 +1,6 @@
 import type { Theme } from '@inquirer/core'
 import type { PartialDeep } from '@inquirer/type'
-import type { FileStats } from '#types/file'
+import type { Item } from '#types/item'
 import type { CustomTheme } from '#types/theme'
 
 export interface FileSelectorConfig {
@@ -36,7 +36,7 @@ export interface FileSelectorConfig {
    *
    * If not provided, all items are included by default.
    */
-  filter?: (item: FileStats) => boolean
+  filter?: (item: Item) => boolean
   /**
    * If `true`, excluded items (by the `filter` function) are shown in the list.
    * @default false
