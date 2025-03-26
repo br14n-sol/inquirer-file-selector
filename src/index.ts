@@ -9,11 +9,11 @@ import {
   useState
 } from '@inquirer/core'
 import { Status } from '#enums/common'
-import baseTheme from '#themes/base'
+import { baseTheme } from '#themes/base'
 import type { StatusType } from '#types/common'
 import type { FileSelectorConfig } from '#types/config'
 import type { Item } from '#types/item'
-import type { CustomTheme, RenderContext } from '#types/theme'
+import type { PromptTheme, RenderContext } from '#types/theme'
 import {
   createItemFromPath,
   ensurePathSeparator,
@@ -42,7 +42,7 @@ const fileSelector = createPrompt<Item | null, FileSelectorConfig>(
     } = config
 
     const [status, setStatus] = useState<StatusType>(Status.Idle)
-    const theme = makeTheme<CustomTheme>(baseTheme, config.theme)
+    const theme = makeTheme<PromptTheme>(baseTheme, config.theme)
     const prefix = usePrefix({ status, theme })
 
     const [currentDir, setCurrentDir] = useState(
@@ -154,4 +154,4 @@ const fileSelector = createPrompt<Item | null, FileSelectorConfig>(
 
 export { fileSelector, Status }
 
-export type { StatusType, FileSelectorConfig, Item, CustomTheme, RenderContext }
+export type { StatusType, FileSelectorConfig, Item, PromptTheme, RenderContext }

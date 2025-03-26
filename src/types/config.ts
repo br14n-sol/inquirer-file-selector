@@ -1,7 +1,7 @@
 import type { Theme } from '@inquirer/core'
 import type { PartialDeep } from '@inquirer/type'
 import type { Item } from '#types/item'
-import type { CustomTheme } from '#types/theme'
+import type { PromptTheme } from '#types/theme'
 
 export interface FileSelectorConfig {
   /**
@@ -60,5 +60,5 @@ export interface FileSelectorConfig {
   /**
    * Theme applied to the file selector.
    */
-  theme?: PartialDeep<Theme<CustomTheme>>
+  theme?: PartialDeep<Theme<PromptTheme>>
 }

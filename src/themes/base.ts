@@ -2,10 +2,10 @@ import figures from '@inquirer/figures'
 import chalk from 'chalk'
 import type { StatusType } from '#types/common'
 import type { Item } from '#types/item'
-import type { CustomTheme, RenderContext } from '#types/theme'
+import type { PromptTheme, RenderContext } from '#types/theme'
 import { ensurePathSeparator } from '#utils/item'
 
-const theme: CustomTheme = {
+export const baseTheme: PromptTheme = {
   prefix: {
     idle: chalk.cyan('?'),
     done: chalk.green(figures.tick),
@@ -61,5 +61,3 @@ const theme: CustomTheme = {
     return line
   }
 }
-
-export default theme

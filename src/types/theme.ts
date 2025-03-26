@@ -20,7 +20,7 @@ export type RenderContext = {
   loop: boolean
 }
 
-export interface CustomTheme {
+export interface PromptTheme {
   prefix: {
     /**
      * Prefix displayed when the prompt is idle.
