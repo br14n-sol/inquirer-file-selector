@@ -21,8 +21,7 @@ export const baseTheme: PromptTheme = {
     file: (text: string) => chalk.white(text),
     currentDir: (text: string) => chalk.magenta(text),
     message: (text: string, _status: StatusType) => chalk.bold(text),
-    help: (text: string) => chalk.italic.dim(text),
-    key: (text: string) => chalk.cyan(text)
+    help: (text: string) => chalk.italic.dim(text)
   },
   hierarchySymbols: {
     branch: figures.lineUpDownRight + figures.line,
