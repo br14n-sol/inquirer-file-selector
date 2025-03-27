@@ -76,11 +76,6 @@ export interface PromptTheme {
      * @default chalk.italic.dim
      */
     help: (text: string) => string
-    /**
-     * Style for key labels in the help section.
-     * @default chalk.cyan
-     */
-    key: (text: string) => string
   }
   hierarchySymbols: {
     /**
