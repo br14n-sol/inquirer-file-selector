@@ -9,7 +9,7 @@ import {
   useState
 } from '@inquirer/core'
 import { Status } from '#enums/status'
-import { baseTheme } from '#themes/base'
+import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
 import type { Item } from '#types/item'
 import type { StatusType } from '#types/status'
