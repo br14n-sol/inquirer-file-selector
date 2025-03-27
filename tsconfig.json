@@ -9,10 +9,7 @@
 
     "strict": true,
     "paths": {
-      "#themes/*": ["./src/themes/*"],
-      "#types/*": ["./src/types/*"],
-      "#utils/*": ["./src/utils/*"],
-      "#enums/*": ["./src/enums/*"]
+      "#*": ["./src/*"]
     }
   },
   "include": ["**/*.ts"],
