@@ -12,11 +12,6 @@ export interface PromptConfig {
    */
   basePath?: string
   /**
-   * Allowed item type.
-   * If omitted, all items are valid.
-   */
-  type?: 'file' | 'directory'
-  /**
    * Max items displayed at once.
    * @default 10
    */
@@ -36,6 +31,7 @@ export interface PromptConfig {
    * @default false
    */
   showExcluded?: boolean
+  validate?: (item: Item) => boolean
   /**
    * Indicates if canceling is allowed.
    * @default false

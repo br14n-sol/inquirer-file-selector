@@ -1,9 +1,9 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
+import { ItemKind } from '#enums/item'
 import type { Item } from '#types/item'
 import type { StatusType } from '#types/status'
 import type { PromptTheme, RenderContext } from '#types/theme'
-import { ensurePathSeparator } from '#utils/item'
 
 export const baseTheme: PromptTheme = {
   prefix: {
@@ -30,8 +30,8 @@ export const baseTheme: PromptTheme = {
   help: {
     top: (allowCancel: boolean) =>
       `(Press ${figures.arrowUp + figures.arrowDown} to navigate, <backspace> to go back${allowCancel ? ', <esc> to cancel' : ''})`,
-    directory: (isRoot: boolean) =>
-      `(Press ${!isRoot ? '<space> to open, ' : ''}<enter> to select)`,
+    directory: (isBase: boolean) =>
+      `(Press ${!isBase ? '<space> to open, ' : ''}<enter> to select)`,
     file: '(Press <enter> to select)'
   },
   renderItem(item: Item, context: RenderContext) {
@@ -40,20 +40,20 @@ export const baseTheme: PromptTheme = {
       isLast && !context.loop
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
-    const isDirectory = item.isDirectory()
-    const isRoot = item.name === '.'
-    const name = isDirectory ? ensurePathSeparator(item.name) : item.name
 
     if (item.isDisabled) {
-      return this.style.disabled(linePrefix, name)
+      return this.style.disabled(linePrefix, item.displayName)
     }
 
+    const isDirectory = item.kind === ItemKind.Directory
     const baseColor = isDirectory ? this.style.directory : this.style.file
     const color = context.isActive ? this.style.active : baseColor
-    let line = color(`${linePrefix} ${name}`)
+    let line = color(`${linePrefix} ${item.displayName}`)
 
     if (context.isActive) {
-      const help = isDirectory ? this.help.directory(isRoot) : this.help.file
+      const help = isDirectory
+        ? this.help.directory(item.isBase)
+        : this.help.file
       line += ` ${this.style.help(help)}`
     }
 

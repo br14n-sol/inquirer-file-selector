@@ -97,9 +97,9 @@ export interface PromptTheme {
     top: (allowCancel: boolean) => string
     /**
      * The help message displayed for directories.
-     * @param isRoot - Indicates if the directory is the root directory.
+     * @param isBase - Indicates if the directory is the base directory.
      */
-    directory: (isRoot: boolean) => string
+    directory: (isBase: boolean) => string
     /** The help message displayed for files. */
     file: string
   }
