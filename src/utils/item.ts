@@ -11,12 +11,19 @@ export function ensurePathSeparator(path: string): string {
 export function createItemFromPath(path: string): Item {
   const stats = statSync(path)
   const name = basename(path)
+  const isDirectory = stats.isDirectory()
+  const displayName = isDirectory ? ensurePathSeparator(name) : name
 
-  return Object.assign(stats, {
+  return {
+    displayName,
     name,
     path,
-    isDisabled: false
-  })
+    size: stats.size,
+    createdMs: stats.birthtimeMs,
+    lastModifiedMs: stats.mtimeMs,
+    isDisabled: false,
+    isDirectory
+  }
 }
 
 /** Get items from a directory. */
@@ -35,8 +42,8 @@ export function getDirItems(path: string): Item[] {
  */
 export function sortItems(items: Item[]): Item[] {
   return items.sort((a, b) => {
-    const aPriority = (a.isDisabled ? 2 : 0) + (a.isDirectory() ? -1 : 0)
-    const bPriority = (b.isDisabled ? 2 : 0) + (b.isDirectory() ? -1 : 0)
+    const aPriority = (a.isDisabled ? 2 : 0) + (a.isDirectory ? -1 : 0)
+    const bPriority = (b.isDisabled ? 2 : 0) + (b.isDirectory ? -1 : 0)
 
     if (aPriority !== bPriority) {
       return aPriority - bPriority

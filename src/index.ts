@@ -60,7 +60,7 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
 
     if (config.type !== 'file') {
       const root = createItemFromPath(currentDir)
-      root.name = '.'
+      root.displayName = ensurePathSeparator('.')
 
       sortedFiles.unshift(root)
     }
@@ -86,15 +86,15 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
     if (isEnterKey(key)) {
       if (
         activeItem.isDisabled ||
-        (config.type === 'file' && activeItem.isDirectory()) ||
-        (config.type === 'directory' && !activeItem.isDirectory())
+        (config.type === 'file' && activeItem.isDirectory) ||
+        (config.type === 'directory' && !activeItem.isDirectory)
       ) {
         return
       }
 
       setStatus(Status.Done)
       done(activeItem)
-    } else if (isSpaceKey(key) && activeItem.isDirectory()) {
+    } else if (isSpaceKey(key) && activeItem.isDirectory) {
       setCurrentDir(activeItem.path)
       setActive(bounds.first)
     } else if (isUpKey(key) || isDownKey(key)) {

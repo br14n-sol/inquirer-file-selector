@@ -3,7 +3,6 @@ import chalk from 'chalk'
 import type { Item } from '#types/item'
 import type { StatusType } from '#types/status'
 import type { PromptTheme, RenderContext } from '#types/theme'
-import { ensurePathSeparator } from '#utils/item'
 
 export const baseTheme: PromptTheme = {
   prefix: {
@@ -40,20 +39,20 @@ export const baseTheme: PromptTheme = {
       isLast && !context.loop
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
-    const isDirectory = item.isDirectory()
-    const isRoot = item.name === '.'
-    const name = isDirectory ? ensurePathSeparator(item.name) : item.name
+    const isRoot = item.displayName === '.'
 
     if (item.isDisabled) {
-      return this.style.disabled(linePrefix, name)
+      return this.style.disabled(linePrefix, item.displayName)
     }
 
-    const baseColor = isDirectory ? this.style.directory : this.style.file
+    const baseColor = item.isDirectory ? this.style.directory : this.style.file
     const color = context.isActive ? this.style.active : baseColor
-    let line = color(`${linePrefix} ${name}`)
+    let line = color(`${linePrefix} ${item.displayName}`)
 
     if (context.isActive) {
-      const help = isDirectory ? this.help.directory(isRoot) : this.help.file
+      const help = item.isDirectory
+        ? this.help.directory(isRoot)
+        : this.help.file
       line += ` ${this.style.help(help)}`
     }
 
