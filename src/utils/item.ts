@@ -1,15 +1,31 @@
-import { readdirSync, statSync } from 'node:fs'
+import type { Stats } from 'node:fs'
+import { readdir, stat } from 'node:fs/promises'
 import { basename, join, sep } from 'node:path'
 import type { Item } from '#types/item'
+
+function isErrorWithCode(error: unknown): error is NodeJS.ErrnoException {
+  return error instanceof Error && 'code' in error
+}
+
+function getErrorMessage(path: string, code?: string) {
+  switch (code) {
+    case 'ENOENT':
+      return `File or directory not found (${code}): '${path}'`
+    case 'EACCES':
+      return `Permission denied (${code}): Cannot access '${path}'`
+    case 'EPERM':
+      return `Operation not permitted (${code}): '${path}'`
+    default:
+      return `Unexpected error (${code}): Cannot access '${path}'`
+  }
+}
 
 /** Ensures the path ends with a separator (`/` or `\`). */
 export function ensurePathSeparator(path: string): string {
   return path.endsWith(sep) ? path : `${path}${sep}`
 }
 
-/** Creates an `Item' object from a file path. */
-export function createItemFromPath(path: string): Item {
-  const stats = statSync(path)
+function createItem(path: string, stats: Stats): Item {
   const name = basename(path)
   const isDirectory = stats.isDirectory()
   const displayName = isDirectory ? ensurePathSeparator(name) : name
@@ -26,12 +42,44 @@ export function createItemFromPath(path: string): Item {
   }
 }
 
+/** Creates an `Item' object from a file path. */
+export async function createItemFromPath(path: string): Promise<Item> {
+  try {
+    const stats = await stat(path)
+    return createItem(path, stats)
+  } catch (error) {
+    throw new Error(
+      getErrorMessage(path, isErrorWithCode(error) ? error.code : undefined),
+      { cause: error }
+    )
+  }
+}
+
 /** Get items from a directory. */
-export function getDirItems(path: string): Item[] {
-  return readdirSync(path).map(fileName => {
-    const filePath = join(path, fileName)
-    return createItemFromPath(filePath)
-  })
+export async function listDirectoryItems(path: string): Promise<Item[]> {
+  try {
+    const fileNames = await readdir(path)
+    const itemList: Item[] = []
+
+    for (const fileName of fileNames) {
+      const filePath = join(path, fileName)
+
+      try {
+        const item = await createItemFromPath(filePath)
+        itemList.push(item)
+      } catch (error) {
+        // TODO: Think about how to send this error to the prompt without breaking the loop
+        console.error(error)
+      }
+    }
+
+    return itemList
+  } catch (error) {
+    throw new Error(
+      getErrorMessage(path, isErrorWithCode(error) ? error.code : undefined),
+      { cause: error }
+    )
+  }
 }
 
 /**
@@ -49,6 +97,6 @@ export function sortItems(items: Item[]): Item[] {
       return aPriority - bPriority
     }
 
-    return a.name.localeCompare(b.name)
+    return a.displayName.localeCompare(b.displayName)
   })
 }

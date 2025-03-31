@@ -2,6 +2,7 @@ import path from 'node:path'
 import {
   createPrompt,
   makeTheme,
+  useEffect,
   useKeypress,
   useMemo,
   usePagination,
@@ -17,7 +18,7 @@ import type { PromptTheme, RenderContext } from '#types/theme'
 import {
   createItemFromPath,
   ensurePathSeparator,
-  getDirItems,
+  listDirectoryItems,
   sortItems
 } from '#utils/item'
 import {
@@ -33,6 +34,7 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
   const {
     pageSize = 10,
     loop = false,
+    filter = () => true,
     showExcluded = false,
     allowCancel = false,
     cancelText = 'Canceled.',
@@ -46,26 +48,18 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
   const [currentDir, setCurrentDir] = useState(
     path.resolve(process.cwd(), config.basePath || '.')
   )
+  const [items, setItems] = useState<Item[]>([])
+  const [error, setError] = useState('')
 
-  const items = useMemo(() => {
-    const files = getDirItems(currentDir)
+  useEffect(() => {
+    ;(async () => {
+      setStatus(Status.Loading)
 
-    for (const file of files) {
-      file.isDisabled = config.filter ? !config.filter(file) : false
-    }
+      await loadItems(currentDir)
 
-    const filteredFiles = files.filter(file => showExcluded || !file.isDisabled)
-    const sortedFiles = sortItems(filteredFiles)
-
-    if (config.type !== 'file') {
-      const cwd = createItemFromPath(currentDir)
-      cwd.displayName = ensurePathSeparator('.')
-
-      sortedFiles.unshift(cwd)
-    }
-
-    return sortedFiles
-  }, [currentDir])
+      setStatus(Status.Idle)
+    })()
+  }, []) // First load
 
   const bounds = useMemo(() => {
     const first = items.findIndex(item => !item.isDisabled)
@@ -81,21 +75,89 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
   const [active, setActive] = useState(bounds.first)
   const activeItem = items[active]
 
-  useKeypress((key, rl) => {
-    if (isEnterKey(key)) {
-      if (
-        activeItem.isDisabled ||
-        (config.type === 'file' && activeItem.isDirectory) ||
-        (config.type === 'directory' && !activeItem.isDirectory)
-      ) {
-        return
-      }
+  async function getCwdItem(target: string | Item) {
+    if (typeof target !== 'string') {
+      return structuredClone(target)
+    }
 
-      setStatus(Status.Done)
-      done(activeItem)
-    } else if (isSpaceKey(key) && activeItem.isDirectory) {
-      setCurrentDir(activeItem.path)
-      setActive(bounds.first)
+    return await createItemFromPath(currentDir)
+  }
+
+  async function loadItems(target: string | Item) {
+    try {
+      const cwd = await getCwdItem(target)
+      cwd.displayName = `.${path.sep}`
+
+      const itemList = await listDirectoryItems(cwd.path)
+      const filteredItems = itemList
+        .map(item => ({
+          ...item,
+          isDisabled: !filter(item)
+        }))
+        .filter(item => showExcluded || !item.isDisabled)
+      const sortedItems = sortItems(filteredItems)
+      sortedItems.unshift(cwd)
+
+      setCurrentDir(cwd.path)
+      setItems(sortedItems)
+      setActive(0)
+    } catch (error) {
+      setError((error as Error).message)
+    }
+  }
+
+  function handleSelectItem(target: Item) {
+    // Ignore if the active item is disabled
+    if (target.isDisabled) return
+
+    if (
+      (config.type === 'file' && target.isDirectory) ||
+      (config.type === 'directory' && !target.isDirectory)
+    ) {
+      return
+    }
+
+    // TODO: Prevents the active item from being selected if there is a permission error (?)
+
+    setStatus(Status.Done)
+    done(target)
+  }
+
+  async function handleOpenDirectory(target: Item) {
+    // Ignore if the target is not a directory
+    if (!target.isDirectory) return
+
+    setStatus(Status.Loading)
+
+    target.displayName += ' (loading)' // TODO: This label is provisional
+
+    await loadItems(target)
+
+    setStatus(Status.Idle)
+  }
+
+  async function handleGoParentDirectory(target: string) {
+    // Ignore if the target is the same as the current directory
+    if (target === currentDir) return
+
+    setStatus(Status.Loading)
+
+    await loadItems(target)
+
+    setStatus(Status.Idle)
+  }
+
+  function handleCancelPrompt() {
+    // Ignore if the prompt does not allow cancellation
+    if (!allowCancel) return
+
+    setStatus(Status.Canceled)
+    done(null)
+  }
+
+  useKeypress(async (key, rl) => {
+    if (isEnterKey(key)) {
+      handleSelectItem(activeItem)
     } else if (isUpKey(key) || isDownKey(key)) {
       rl.clearLine(0)
 
@@ -113,12 +175,13 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
 
         setActive(next)
       }
+    } else if (isSpaceKey(key)) {
+      await handleOpenDirectory(activeItem)
     } else if (isBackspaceKey(key)) {
-      setCurrentDir(path.resolve(currentDir, '..'))
-      setActive(bounds.first)
-    } else if (isEscapeKey(key) && allowCancel) {
-      setStatus(Status.Canceled)
-      done(null)
+      const target = path.resolve(currentDir, '..')
+      await handleGoParentDirectory(target)
+    } else if (isEscapeKey(key)) {
+      handleCancelPrompt()
     }
   })
 
@@ -146,7 +209,10 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
   const helpTop = theme.style.help(theme.help.top(allowCancel))
   const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
-  return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`
+  return [
+    `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`,
+    error
+  ]
 })
 
 export { fileSelector, Status }
