@@ -59,10 +59,10 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
     const sortedFiles = sortItems(filteredFiles)
 
     if (config.type !== 'file') {
-      const root = createItemFromPath(currentDir)
-      root.displayName = ensurePathSeparator('.')
+      const cwd = createItemFromPath(currentDir)
+      cwd.displayName = ensurePathSeparator('.')
 
-      sortedFiles.unshift(root)
+      sortedFiles.unshift(cwd)
     }
 
     return sortedFiles
@@ -126,8 +126,10 @@ const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
   const page = usePagination({
     items,
     active,
-    renderItem: ({ item, index, isActive }) =>
-      theme.renderItem(item, { items, index, isActive, loop }),
+    renderItem: ({ item, index, isActive }) => {
+      const isCwd = item.path === currentDir
+      return theme.renderItem(item, { items, loop, index, isActive, isCwd })
+    },
     pageSize,
     loop
   })

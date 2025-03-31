@@ -29,8 +29,8 @@ export const baseTheme: PromptTheme = {
   help: {
     top: (allowCancel: boolean) =>
       `(Press ${figures.arrowUp + figures.arrowDown} to navigate, <backspace> to go back${allowCancel ? ', <esc> to cancel' : ''})`,
-    directory: (isRoot: boolean) =>
-      `(Press ${!isRoot ? '<space> to open, ' : ''}<enter> to select)`,
+    directory: (isCwd: boolean) =>
+      `(Press ${!isCwd ? '<space> to open, ' : ''}<enter> to select)`,
     file: '(Press <enter> to select)'
   },
   renderItem(item: Item, context: RenderContext) {
@@ -39,7 +39,6 @@ export const baseTheme: PromptTheme = {
       isLast && !context.loop
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
-    const isRoot = item.displayName === '.'
 
     if (item.isDisabled) {
       return this.style.disabled(linePrefix, item.displayName)
@@ -50,10 +49,10 @@ export const baseTheme: PromptTheme = {
     let line = color(`${linePrefix} ${item.displayName}`)
 
     if (context.isActive) {
-      const help = item.isDirectory
-        ? this.help.directory(isRoot)
+      const helpMessage = item.isDirectory
+        ? this.help.directory(context.isCwd)
         : this.help.file
-      line += ` ${this.style.help(help)}`
+      line += ` ${this.style.help(helpMessage)}`
     }
 
     return line
