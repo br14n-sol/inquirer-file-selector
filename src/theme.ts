@@ -12,15 +12,15 @@ export const baseTheme: PromptTheme = {
   },
   style: {
     disabled: (linePrefix: string, text: string) =>
-      chalk.dim(`${linePrefix} ${chalk.strikethrough(text)}`),
+      chalk.gray(`${linePrefix} ${chalk.strikethrough(text)}`),
     active: (text: string) => chalk.cyan(text),
     cancelText: (text: string) => chalk.red(text),
     emptyText: (text: string) => chalk.red(text),
-    directory: (text: string) => chalk.yellow(text),
-    file: (text: string) => chalk.white(text),
-    currentDir: (text: string) => chalk.magenta(text),
+    directory: (text: string) => chalk.yellowBright(text),
+    file: (text: string) => text,
+    currentDir: (text: string) => chalk.magentaBright(text),
     message: (text: string, _status: StatusType) => chalk.bold(text),
-    help: (text: string) => chalk.italic.dim(text)
+    help: (text: string) => chalk.italic.gray(text)
   },
   hierarchySymbols: {
     branch: figures.lineUpDownRight + figures.line,
