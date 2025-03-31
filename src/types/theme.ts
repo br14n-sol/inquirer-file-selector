@@ -4,12 +4,14 @@ import type { StatusType } from '#types/status'
 export type RenderContext = {
   /** Items to render. */
   items: Item[]
+  /** Indicates if the list is displayed in loop mode. */
+  loop: boolean
   /** Item index. */
   index: number
   /** Indicates if the item is active. */
   isActive: boolean
-  /** Indicates if the list is displayed in loop mode. */
-  loop: boolean
+  /** Indicates if the item is the current working directory. */
+  isCwd: boolean
 }
 
 export interface PromptTheme {
@@ -97,9 +99,9 @@ export interface PromptTheme {
     top: (allowCancel: boolean) => string
     /**
      * The help message displayed for directories.
-     * @param isRoot - Indicates if the directory is the root directory.
+     * @param isCwd - Indicates if the directory is the current directory.
      */
-    directory: (isRoot: boolean) => string
+    directory: (isCwd: boolean) => string
     /** The help message displayed for files. */
     file: string
   }
