@@ -35,7 +35,7 @@ export interface PromptTheme {
   style: {
     /**
      * Defines the style for disabled items.
-     * @default chalk.strikethrough.dim
+     * @default chalk.strikethrough.gray
      */
     disabled: (linePrefix: string, text: string) => string
     /**
@@ -55,17 +55,17 @@ export interface PromptTheme {
     emptyText: (text: string) => string
     /**
      * Defines the style for items of type `'directory'`.
-     * @default chalk.yellow
+     * @default chalk.yellowBright
      */
     directory: (text: string) => string
     /**
      * Defines the style for items of type `'file'`.
-     * @default chalk.white
+     * @default No style applied
      */
     file: (text: string) => string
     /**
      * Defines the style for the current directory header.
-     * @default chalk.magenta
+     * @default chalk.magentaBright
      */
     currentDir: (text: string) => string
     /**
@@ -75,7 +75,7 @@ export interface PromptTheme {
     message: (text: string, status: StatusType) => string
     /**
      * Defines the style for help messages.
-     * @default chalk.italic.dim
+     * @default chalk.italic.gray
      */
     help: (text: string) => string
   }
