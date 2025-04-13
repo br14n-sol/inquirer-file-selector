@@ -1,6 +1,6 @@
 # inquirer-file-selector
 
-![version](https://img.shields.io/npm/v/inquirer-file-selector)
+![version](https://img.shields.io/npm/v/inquirer-file-selector?label=latest)
 ![license](https://img.shields.io/npm/l/inquirer-file-selector)
 ![node-current](https://img.shields.io/node/v/inquirer-file-selector?color=darkgreen)
 ![unpacked-size](https://img.shields.io/npm/unpacked-size/inquirer-file-selector)
@@ -20,9 +20,32 @@ A prompt implementation for [Inquirer.js](https://github.com/SBoudrias/Inquirer.
 
 ## Installation
 
+<table>
+  <thead>
+    <tr>
+      <th>pnpm (recommended)</th>
+      <th>npm</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>
+
+```sh
+pnpm add inquirer-file-selector
+```
+
+  </td>
+  <td>
+
 ```sh
 npm install inquirer-file-selector
 ```
+
+  </td>
+  </tr>
+  </tbody>
+</table>
 
 ## Usage
 
