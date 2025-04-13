@@ -1,7 +1,7 @@
 {
   "name": "inquirer-file-selector",
   "author": "Brian Fernandez",
-  "description": "Inquerer file selector prompt.",
+  "description": "Inquirer file selector prompt.",
   "version": "0.6.1",
   "license": "MIT",
   "type": "module",
