@@ -6,6 +6,11 @@ I'm really glad you're reading this! If you're interested in contributing to `in
 
 - **Node.js 20.19.0** (Ensure it's installed: `node -v`)
   - Using a version manager like [fnm](https://github.com/Schniz/fnm) is recommended to easily switch between Node.js versions.
+- **pnpm 10.8.1** (Used for managing dependencies)
+   - It's recommended to enable [pnpm](https://pnpm.io/) via [corepack](https://github.com/nodejs/corepack):
+     ```sh
+     corepack enable pnpm
+     ```
 - **Git** (Required for cloning and contributing)
 - A GitHub account to fork and submit pull requests
 
@@ -27,7 +32,7 @@ This project uses the following tools to maintain code quality and consistency:
    ```
 2. **Install dependencies**:
    ```sh
-   npm install
+   pnpm install
    ```
 3. **Create a new branch** for your changes:
    ```sh
