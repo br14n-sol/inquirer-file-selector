@@ -8,7 +8,7 @@ import {
   usePrefix,
   useState
 } from '@inquirer/core'
-import { Status } from '#enums/status'
+import { ANSI_HIDE_CURSOR, Status } from '#consts'
 import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
 import type { Item } from '#types/item'
@@ -28,7 +28,6 @@ import {
   isSpaceKey,
   isUpKey
 } from '#utils/key'
-import { ANSI_HIDE_CURSOR } from '#utils/string'
 
 const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
   const {
