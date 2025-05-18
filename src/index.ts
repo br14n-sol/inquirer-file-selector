@@ -29,126 +29,138 @@ import {
   isUpKey
 } from '#utils/key'
 
-const fileSelector = createPrompt<Item | null, PromptConfig>((config, done) => {
-  const {
-    pageSize = 10,
-    loop = false,
-    showExcluded = false,
-    allowCancel = false,
-    cancelText = 'Canceled.',
-    emptyText = 'Directory is empty.'
-  } = config
+export function fileSelector(
+  config: PromptConfig & { allowCancel?: false }
+): Promise<Item>
 
-  const [status, setStatus] = useState<StatusType>(Status.Idle)
-  const theme = makeTheme<PromptTheme>(baseTheme, config.theme)
-  const prefix = usePrefix({ status, theme })
+export function fileSelector(
+  config: PromptConfig & { allowCancel: true }
+): Promise<Item | null>
 
-  const [currentDir, setCurrentDir] = useState(
-    path.resolve(process.cwd(), config.basePath || '.')
-  )
+export function fileSelector(config: PromptConfig): Promise<Item | null> {
+  return createPrompt<Item | null, PromptConfig>((config, done) => {
+    const {
+      pageSize = 10,
+      loop = false,
+      showExcluded = false,
+      allowCancel = false,
+      cancelText = 'Canceled.',
+      emptyText = 'Directory is empty.'
+    } = config
 
-  const items = useMemo(() => {
-    const files = getDirItems(currentDir)
+    const [status, setStatus] = useState<StatusType>(Status.Idle)
+    const theme = makeTheme<PromptTheme>(baseTheme, config.theme)
+    const prefix = usePrefix({ status, theme })
 
-    for (const file of files) {
-      file.isDisabled = config.filter ? !config.filter(file) : false
-    }
+    const [currentDir, setCurrentDir] = useState(
+      path.resolve(process.cwd(), config.basePath || '.')
+    )
 
-    const filteredFiles = files.filter(file => showExcluded || !file.isDisabled)
-    const sortedFiles = sortItems(filteredFiles)
+    const items = useMemo(() => {
+      const files = getDirItems(currentDir)
 
-    if (config.type !== 'file') {
-      const cwd = createItemFromPath(currentDir)
-      cwd.displayName = ensurePathSeparator('.')
-
-      sortedFiles.unshift(cwd)
-    }
-
-    return sortedFiles
-  }, [currentDir])
-
-  const bounds = useMemo(() => {
-    const first = items.findIndex(item => !item.isDisabled)
-    const last = items.findLastIndex(item => !item.isDisabled)
-
-    if (first === -1) {
-      return { first: 0, last: 0 }
-    }
-
-    return { first, last }
-  }, [items])
-
-  const [active, setActive] = useState(bounds.first)
-  const activeItem = items[active]
-
-  useKeypress((key, rl) => {
-    if (isEnterKey(key)) {
-      if (
-        activeItem.isDisabled ||
-        (config.type === 'file' && activeItem.isDirectory) ||
-        (config.type === 'directory' && !activeItem.isDirectory)
-      ) {
-        return
+      for (const file of files) {
+        file.isDisabled = config.filter ? !config.filter(file) : false
       }
 
-      setStatus(Status.Done)
-      done(activeItem)
-    } else if (isSpaceKey(key) && activeItem.isDirectory) {
-      setCurrentDir(activeItem.path)
-      setActive(bounds.first)
-    } else if (isUpKey(key) || isDownKey(key)) {
-      rl.clearLine(0)
+      const filteredFiles = files.filter(
+        file => showExcluded || !file.isDisabled
+      )
+      const sortedFiles = sortItems(filteredFiles)
 
-      if (
-        loop ||
-        (isUpKey(key) && active !== bounds.first) ||
-        (isDownKey(key) && active !== bounds.last)
-      ) {
-        const offset = isUpKey(key) ? -1 : 1
-        let next = active
+      if (config.type !== 'file') {
+        const cwd = createItemFromPath(currentDir)
+        cwd.displayName = ensurePathSeparator('.')
 
-        do {
-          next = (next + offset + items.length) % items.length
-        } while (items[next].isDisabled)
-
-        setActive(next)
+        sortedFiles.unshift(cwd)
       }
-    } else if (isBackspaceKey(key)) {
-      setCurrentDir(path.resolve(currentDir, '..'))
-      setActive(bounds.first)
-    } else if (isEscapeKey(key) && allowCancel) {
-      setStatus(Status.Canceled)
-      done(null)
+
+      return sortedFiles
+    }, [currentDir])
+
+    const bounds = useMemo(() => {
+      const first = items.findIndex(item => !item.isDisabled)
+      const last = items.findLastIndex(item => !item.isDisabled)
+
+      if (first === -1) {
+        return { first: 0, last: 0 }
+      }
+
+      return { first, last }
+    }, [items])
+
+    const [active, setActive] = useState(bounds.first)
+    const activeItem = items[active]
+
+    useKeypress((key, rl) => {
+      if (isEnterKey(key)) {
+        if (
+          activeItem.isDisabled ||
+          (config.type === 'file' && activeItem.isDirectory) ||
+          (config.type === 'directory' && !activeItem.isDirectory)
+        ) {
+          return
+        }
+
+        setStatus(Status.Done)
+        done(activeItem)
+      } else if (isSpaceKey(key) && activeItem.isDirectory) {
+        setCurrentDir(activeItem.path)
+        setActive(bounds.first)
+      } else if (isUpKey(key) || isDownKey(key)) {
+        rl.clearLine(0)
+
+        if (
+          loop ||
+          (isUpKey(key) && active !== bounds.first) ||
+          (isDownKey(key) && active !== bounds.last)
+        ) {
+          const offset = isUpKey(key) ? -1 : 1
+          let next = active
+
+          do {
+            next = (next + offset + items.length) % items.length
+          } while (items[next].isDisabled)
+
+          setActive(next)
+        }
+      } else if (isBackspaceKey(key)) {
+        setCurrentDir(path.resolve(currentDir, '..'))
+        setActive(bounds.first)
+      } else if (isEscapeKey(key) && allowCancel) {
+        setStatus(Status.Canceled)
+        done(null)
+      }
+    })
+
+    const page = usePagination({
+      items,
+      active,
+      renderItem: ({ item, index, isActive }) => {
+        const isCwd = item.path === currentDir
+        return theme.renderItem(item, { items, loop, index, isActive, isCwd })
+      },
+      pageSize,
+      loop
+    })
+
+    const message = theme.style.message(config.message, status)
+
+    if (status === Status.Canceled) {
+      return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`
     }
-  })
 
-  const page = usePagination({
-    items,
-    active,
-    renderItem: ({ item, index, isActive }) => {
-      const isCwd = item.path === currentDir
-      return theme.renderItem(item, { items, loop, index, isActive, isCwd })
-    },
-    pageSize,
-    loop
-  })
+    if (status === Status.Done) {
+      return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
+    }
 
-  const message = theme.style.message(config.message, status)
+    const helpTop = theme.style.help(theme.help.top(allowCancel))
+    const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
-  if (status === Status.Canceled) {
-    return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`
-  }
+    return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`
+  })(config)
+}
 
-  if (status === Status.Done) {
-    return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
-  }
-
-  const helpTop = theme.style.help(theme.help.top(allowCancel))
-  const header = theme.style.currentDir(ensurePathSeparator(currentDir))
-
-  return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`
-})
-
-export { fileSelector, Status }
+export { Status }
 
 export type { StatusType, PromptConfig, Item, PromptTheme, RenderContext }
