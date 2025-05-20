@@ -64,9 +64,9 @@ const selection: Item = await fileSelector({
 
 See the full documentation in the [docs/](docs/) directory:
 
-- [Getting Started](docs/getting-started.md) **(not ready)**
-- [Theming](docs/theming.md) **(not ready)**
-- [Examples](docs/examples.md) **(not ready)**
+- [Getting Started](docs/getting-started.md)
+- [Examples](docs/examples.md)
+- [Theming](docs/theming.md)
 
 ## Contributing
 
