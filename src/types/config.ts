@@ -30,7 +30,7 @@ export interface PromptConfig {
    * Filters items in the list.
    * @param item - Item to evaluate.
    */
-  filter?: (item: Item) => boolean
+  filter?: (item: Readonly<Item>) => boolean
   /**
    * Indicates if items excluded by `filter` are visible.
    * @default false

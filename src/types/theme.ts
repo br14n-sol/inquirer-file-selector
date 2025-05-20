@@ -1,9 +1,9 @@
-import type { Item } from '#types/item'
+import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 
 export type RenderContext = {
   /** Items to render. */
-  items: Item[]
+  items: RawItem[]
   /** Indicates if the list is displayed in loop mode. */
   loop: boolean
   /** Item index. */
@@ -110,5 +110,5 @@ export interface PromptTheme {
    * @param item - The item to render.
    * @param context - Additional context about the item.
    */
-  renderItem: (item: Item, context: RenderContext) => string
+  renderItem: (item: RawItem, context: RenderContext) => string
 }

@@ -11,14 +11,15 @@ import {
 import { ANSI_HIDE_CURSOR, Status } from '#consts'
 import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
-import type { Item } from '#types/item'
+import type { Item, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type { PromptTheme, RenderContext } from '#types/theme'
 import {
-  createItemFromPath,
+  createRawItem,
   ensurePathSeparator,
-  getDirItems,
-  sortItems
+  readRawItems,
+  sortRawItems,
+  stripInternalProps
 } from '#utils/item'
 import {
   isBackspaceKey,
@@ -42,6 +43,7 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
     const {
       pageSize = 10,
       loop = false,
+      filter = () => true,
       showExcluded = false,
       allowCancel = false,
       cancelText = 'Canceled.',
@@ -57,30 +59,27 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
     )
 
     const items = useMemo(() => {
-      const files = getDirItems(currentDir)
-
-      for (const file of files) {
-        file.isDisabled = config.filter ? !config.filter(file) : false
-      }
-
-      const filteredFiles = files.filter(
-        file => showExcluded || !file.isDisabled
-      )
-      const sortedFiles = sortItems(filteredFiles)
+      const rawItems = readRawItems(currentDir)
+        .map(rawItem => {
+          const strippedItem = stripInternalProps(rawItem)
+          return { ...rawItem, isDisabled: !filter(strippedItem) }
+        })
+        .filter(rawItem => showExcluded || !rawItem.isDisabled)
+      sortRawItems(rawItems)
 
       if (config.type !== 'file') {
-        const cwd = createItemFromPath(currentDir)
+        const cwd = createRawItem(currentDir)
         cwd.displayName = ensurePathSeparator('.')
 
-        sortedFiles.unshift(cwd)
+        rawItems.unshift(cwd)
       }
 
-      return sortedFiles
+      return rawItems
     }, [currentDir])
 
     const bounds = useMemo(() => {
-      const first = items.findIndex(item => !item.isDisabled)
-      const last = items.findLastIndex(item => !item.isDisabled)
+      const first = items.findIndex(rawItem => !rawItem.isDisabled)
+      const last = items.findLastIndex(rawItem => !rawItem.isDisabled)
 
       if (first === -1) {
         return { first: 0, last: 0 }
@@ -102,8 +101,10 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
           return
         }
 
+        const strippedItem = stripInternalProps(activeItem)
+
         setStatus(Status.Done)
-        done(activeItem)
+        done(strippedItem)
       } else if (isSpaceKey(key) && activeItem.isDirectory) {
         setCurrentDir(activeItem.path)
         setActive(bounds.first)
@@ -163,4 +164,11 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
 
 export { Status }
 
-export type { StatusType, PromptConfig, Item, PromptTheme, RenderContext }
+export type {
+  StatusType,
+  PromptConfig,
+  Item,
+  RawItem,
+  PromptTheme,
+  RenderContext
+}
