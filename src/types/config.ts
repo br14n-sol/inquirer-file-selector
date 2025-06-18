@@ -51,6 +51,11 @@ export interface PromptConfig {
    * @default 'Directory is empty.'
    */
   emptyText?: string
+  /**
+   * Indicates if multiple items can be selected.
+   * @default false
+   */
+  multiple?: boolean
   /** Theme applied to the file selector. */
   theme?: PartialDeep<Theme<PromptTheme>>
 }

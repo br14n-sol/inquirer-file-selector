@@ -12,6 +12,8 @@ export type RenderContext = {
   isActive: boolean
   /** Indicates if the item is the current working directory. */
   isCwd: boolean
+  /** Indicates if the item is currently selected (in multiple selection mode). */
+  isSelected?: boolean
 }
 
 export interface PromptTheme {
@@ -95,8 +97,9 @@ export interface PromptTheme {
     /**
      * The help message displayed at the top of the prompt.
      * @param allowCancel - Indicates if canceling is allowed.
+     * @param multiple - Indicates if multiple selection is enabled.
      */
-    top: (allowCancel: boolean) => string
+    top: (allowCancel: boolean, multiple?: boolean) => string
     /**
      * The help message displayed for directories.
      * @param isCwd - Indicates if the directory is the current directory.

@@ -22,7 +22,8 @@ export function createRawItem(path: string): RawItem {
     createdMs: stats.birthtimeMs,
     lastModifiedMs: stats.mtimeMs,
     isDisabled: false,
-    isDirectory
+    isDirectory,
+    isSelected: false
   }
 }
 

@@ -27,8 +27,15 @@ export const baseTheme: PromptTheme = {
     leaf: figures.lineUpRight + figures.line
   },
   help: {
-    top: (allowCancel: boolean) =>
-      `(Press ${figures.arrowUp + figures.arrowDown} to navigate, <backspace> to go back${allowCancel ? ', <esc> to cancel' : ''})`,
+    top: (allowCancel: boolean, multiple?: boolean) => {
+      const nav = `${figures.arrowUp + figures.arrowDown} to navigate`
+      const back = '<backspace> to go back'
+      const cancel = allowCancel ? ', <esc> to cancel' : ''
+      if (multiple) {
+        return `(Press ${nav}, <space> to toggle selection, <enter> to confirm, ${back}${cancel})`
+      }
+      return `(Press ${nav}, ${back}${cancel})`
+    },
     directory: (isCwd: boolean) =>
       `(Press ${!isCwd ? '<space> to open, ' : ''}<enter> to select)`,
     file: '(Press <enter> to select)'
@@ -40,13 +47,28 @@ export const baseTheme: PromptTheme = {
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
 
+    // CWD item ('.') should not show a selection marker, even if isSelected is somehow true.
+    // item.displayName for CWD is typically './' or '.\'
+    const isCurrentDirectoryItem = context.isCwd && (item.displayName === './' || item.displayName === '.\\');
+    const selectionMarker =
+      context.isSelected && !isCurrentDirectoryItem
+        ? chalk.green(figures.radioOn) // [x] or (✔)
+        : figures.radioOff; // [ ] or ( )
+
+    // For CWD, we don't want any marker, just the prefix.
+    const displayLinePrefix = isCurrentDirectoryItem ? linePrefix : `${linePrefix} ${selectionMarker}`;
+
     if (item.isDisabled) {
-      return this.style.disabled(linePrefix, item.displayName)
+      // Pass the potentially modified prefix (with or without selection marker)
+      return this.style.disabled(displayLinePrefix, item.displayName)
     }
 
     const baseColor = item.isDirectory ? this.style.directory : this.style.file
     const color = context.isActive ? this.style.active : baseColor
-    let line = color(`${linePrefix} ${item.displayName}`)
+    // Apply color to the item name part, prefix and marker should maintain their style or be styled separately if needed.
+    // For now, only item.displayName gets the dynamic color.
+    let line = `${displayLinePrefix} ${color(item.displayName)}`
+
 
     if (context.isActive) {
       const helpMessage = item.isDirectory

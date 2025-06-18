@@ -30,16 +30,31 @@ import {
   isUpKey
 } from '#utils/key'
 
+// Multiple selection enabled, cancellation disabled
 export function fileSelector(
-  config: PromptConfig & { allowCancel?: false }
+  config: PromptConfig & { multiple: true; allowCancel?: false }
+): Promise<Item[]>
+
+// Multiple selection enabled, cancellation enabled
+export function fileSelector(
+  config: PromptConfig & { multiple: true; allowCancel: true }
+): Promise<Item[] | null>
+
+// Single selection, cancellation disabled (existing)
+export function fileSelector(
+  config: PromptConfig & { multiple?: false; allowCancel?: false }
 ): Promise<Item>
 
+// Single selection, cancellation enabled (existing)
 export function fileSelector(
-  config: PromptConfig & { allowCancel: true }
+  config: PromptConfig & { multiple?: false; allowCancel: true }
 ): Promise<Item | null>
 
-export function fileSelector(config: PromptConfig): Promise<Item | null> {
-  return createPrompt<Item | null, PromptConfig>((config, done) => {
+// Main implementation signature
+export function fileSelector(
+  config: PromptConfig
+): Promise<Item | Item[] | null> {
+  return createPrompt<Item | Item[] | null, PromptConfig>((config, done) => {
     const {
       pageSize = 10,
       loop = false,
@@ -53,6 +68,7 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
     const [status, setStatus] = useState<StatusType>(Status.Idle)
     const theme = makeTheme<PromptTheme>(baseTheme, config.theme)
     const prefix = usePrefix({ status, theme })
+    const [selectedItems, setSelectedItems] = useState<Item[]>([])
 
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.basePath || '.')
@@ -62,7 +78,14 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
       const rawItems = readRawItems(currentDir)
         .map(rawItem => {
           const strippedItem = stripInternalProps(rawItem)
-          return { ...rawItem, isDisabled: !filter(strippedItem) }
+          const isSelected = selectedItems.some(
+            selected => selected.path === rawItem.path
+          )
+          return {
+            ...rawItem,
+            isDisabled: !filter(strippedItem),
+            isSelected
+          }
         })
         .filter(rawItem => showExcluded || !rawItem.isDisabled)
       sortRawItems(rawItems)
@@ -70,12 +93,15 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
       if (config.type !== 'file') {
         const cwd = createRawItem(currentDir)
         cwd.displayName = ensurePathSeparator('.')
-
+        // Ensure CWD item also has isSelected, though it's unlikely to be selectable
+        cwd.isSelected = selectedItems.some(
+          selected => selected.path === cwd.path
+        )
         rawItems.unshift(cwd)
       }
 
       return rawItems
-    }, [currentDir])
+    }, [currentDir, filter, showExcluded, selectedItems, config.type])
 
     const bounds = useMemo(() => {
       const first = items.findIndex(rawItem => !rawItem.isDisabled)
@@ -93,21 +119,59 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
 
     useKeypress((key, rl) => {
       if (isEnterKey(key)) {
-        if (
-          activeItem.isDisabled ||
-          (config.type === 'file' && activeItem.isDirectory) ||
-          (config.type === 'directory' && !activeItem.isDirectory)
-        ) {
-          return
+        if (!activeItem) return
+
+        if (config.multiple) {
+          if (activeItem.isDisabled) return
+
+          if (selectedItems.length > 0) {
+            setStatus(Status.Done)
+            done(selectedItems)
+          } else if (
+            !(config.type === 'file' && activeItem.isDirectory) &&
+            !(config.type === 'directory' && !activeItem.isDirectory)
+          ) {
+            // If no items selected with Space, Enter selects the active item if valid
+            setStatus(Status.Done)
+            done([stripInternalProps(activeItem)])
+          }
+          // If selectedItems is empty and activeItem is not valid for config.type, Enter does nothing.
+        } else {
+          // Original Enter logic for single selection mode
+          if (
+            activeItem.isDisabled ||
+            (config.type === 'file' && activeItem.isDirectory) ||
+            (config.type === 'directory' && !activeItem.isDirectory)
+          ) {
+            return
+          }
+          const strippedItem = stripInternalProps(activeItem)
+          setStatus(Status.Done)
+          done(strippedItem)
         }
+      } else if (isSpaceKey(key)) {
+        if (!activeItem) return
 
-        const strippedItem = stripInternalProps(activeItem)
+        if (config.multiple) {
+          if (activeItem.isDisabled) return
+          // CWD item ('.') should not be selectable in multiple mode
+          if (activeItem.path === currentDir && activeItem.displayName === ensurePathSeparator('.')) return
 
-        setStatus(Status.Done)
-        done(strippedItem)
-      } else if (isSpaceKey(key) && activeItem.isDirectory) {
-        setCurrentDir(activeItem.path)
-        setActive(bounds.first)
+
+          const itemPath = activeItem.path
+          const isSelected = selectedItems.some(item => item.path === itemPath)
+
+          if (isSelected) {
+            setSelectedItems(selectedItems.filter(item => item.path !== itemPath))
+          } else {
+            setSelectedItems([...selectedItems, stripInternalProps(activeItem)])
+          }
+        } else if (activeItem.isDirectory) {
+          // Original Space logic for single selection mode (navigate directories)
+          setCurrentDir(activeItem.path)
+          setActive(bounds.first)
+          setSelectedItems([]) // Clear selections when navigating
+        }
       } else if (isUpKey(key) || isDownKey(key)) {
         rl.clearLine(0)
 
@@ -128,6 +192,7 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
       } else if (isBackspaceKey(key)) {
         setCurrentDir(path.resolve(currentDir, '..'))
         setActive(bounds.first)
+        setSelectedItems([]) // Clear selections when navigating
       } else if (isEscapeKey(key) && allowCancel) {
         setStatus(Status.Canceled)
         done(null)
@@ -139,7 +204,15 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
       active,
       renderItem: ({ item, index, isActive }) => {
         const isCwd = item.path === currentDir
-        return theme.renderItem(item, { items, loop, index, isActive, isCwd })
+        // item from items list already has isSelected property due to the modified useMemo
+        return theme.renderItem(item, {
+          items,
+          loop,
+          index,
+          isActive,
+          isCwd,
+          isSelected: item.isSelected
+        })
       },
       pageSize,
       loop
@@ -152,10 +225,15 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
     }
 
     if (status === Status.Done) {
-      return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
+      const answer = config.multiple
+        ? selectedItems.map(item => item.name).join(', ')
+        : activeItem?.path // activeItem could be undefined if items list is empty
+      return `${prefix} ${message} ${theme.style.answer(answer || '')}`
     }
 
-    const helpTop = theme.style.help(theme.help.top(allowCancel))
+    const helpTop = theme.style.help(
+      theme.help.top(allowCancel, config.multiple)
+    )
     const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
     return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`
