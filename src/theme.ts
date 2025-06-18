@@ -32,7 +32,7 @@ export const baseTheme: PromptTheme = {
       const back = '<backspace> to go back'
       const cancel = allowCancel ? ', <esc> to cancel' : ''
       if (multiple) {
-        return `(Press ${nav}, <space> to toggle selection, <enter> to confirm, ${back}${cancel})`
+        return `(Press ${nav}, <space> to toggle selection, <right> or <l> to open directories, <enter> to confirm, ${back}${cancel})`
       }
       return `(Press ${nav}, ${back}${cancel})`
     },
@@ -49,14 +49,17 @@ export const baseTheme: PromptTheme = {
 
     // CWD item ('.') should not show a selection marker, even if isSelected is somehow true.
     // item.displayName for CWD is typically './' or '.\'
-    const isCurrentDirectoryItem = context.isCwd && (item.displayName === './' || item.displayName === '.\\');
+    const isCurrentDirectoryItem =
+      context.isCwd && (item.displayName === './' || item.displayName === '.\\')
     const selectionMarker =
       context.isSelected && !isCurrentDirectoryItem
         ? chalk.green(figures.radioOn) // [x] or (✔)
-        : figures.radioOff; // [ ] or ( )
+        : figures.radioOff // [ ] or ( )
 
     // For CWD, we don't want any marker, just the prefix.
-    const displayLinePrefix = isCurrentDirectoryItem ? linePrefix : `${linePrefix} ${selectionMarker}`;
+    const displayLinePrefix = isCurrentDirectoryItem
+      ? linePrefix
+      : `${linePrefix} ${selectionMarker}`
 
     if (item.isDisabled) {
       // Pass the potentially modified prefix (with or without selection marker)
@@ -68,7 +71,6 @@ export const baseTheme: PromptTheme = {
     // Apply color to the item name part, prefix and marker should maintain their style or be styled separately if needed.
     // For now, only item.displayName gets the dynamic color.
     let line = `${displayLinePrefix} ${color(item.displayName)}`
-
 
     if (context.isActive) {
       const helpMessage = item.isDirectory

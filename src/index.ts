@@ -91,12 +91,14 @@ export function fileSelector(
       sortRawItems(rawItems)
 
       if (config.type !== 'file') {
-        const cwd = createRawItem(currentDir)
-        cwd.displayName = ensurePathSeparator('.')
-        // Ensure CWD item also has isSelected, though it's unlikely to be selectable
-        cwd.isSelected = selectedItems.some(
-          selected => selected.path === cwd.path
-        )
+        const cwdRaw = createRawItem(currentDir)
+        const cwd = {
+          ...cwdRaw,
+          displayName: ensurePathSeparator('.'),
+          isSelected: selectedItems.some(
+            selected => selected.path === cwdRaw.path
+          )
+        }
         rawItems.unshift(cwd)
       }
 
@@ -155,14 +157,19 @@ export function fileSelector(
         if (config.multiple) {
           if (activeItem.isDisabled) return
           // CWD item ('.') should not be selectable in multiple mode
-          if (activeItem.path === currentDir && activeItem.displayName === ensurePathSeparator('.')) return
-
+          if (
+            activeItem.path === currentDir &&
+            activeItem.displayName === ensurePathSeparator('.')
+          )
+            return
 
           const itemPath = activeItem.path
           const isSelected = selectedItems.some(item => item.path === itemPath)
 
           if (isSelected) {
-            setSelectedItems(selectedItems.filter(item => item.path !== itemPath))
+            setSelectedItems(
+              selectedItems.filter(item => item.path !== itemPath)
+            )
           } else {
             setSelectedItems([...selectedItems, stripInternalProps(activeItem)])
           }
@@ -172,6 +179,13 @@ export function fileSelector(
           setActive(bounds.first)
           setSelectedItems([]) // Clear selections when navigating
         }
+      } else if (key.name === 'right' || key.name === 'l') {
+        // Use Right arrow or 'l' to navigate into directories in multiple mode
+        if (!activeItem || !activeItem.isDirectory) return
+
+        setCurrentDir(activeItem.path)
+        setActive(bounds.first)
+        setSelectedItems([]) // Clear selections when navigating
       } else if (isUpKey(key) || isDownKey(key)) {
         rl.clearLine(0)
 
