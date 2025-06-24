@@ -49,9 +49,6 @@
       "optional": true
     }
   },
-  "pnpm": {
-    "onlyBuiltDependencies": ["@biomejs/biome"]
-  },
   "engines": {
     "node": ">=20"
   },
