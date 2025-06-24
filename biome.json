@@ -1,38 +1,47 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "formatter": {
-    "indentStyle": "space"
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "single",
-      "trailingCommas": "none",
-      "semicolons": "asNeeded",
-      "arrowParentheses": "asNeeded",
-      "indentStyle": "space"
-    }
-  },
-  "json": {
-    "formatter": {
-      "indentStyle": "space"
-    }
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
   },
   "linter": {
+    "enabled": true,
+    "domains": {
+      "project": "recommended"
+    },
     "rules": {
       "recommended": true,
+      "complexity": {
+        "noForEach": "on"
+      },
       "correctness": {
-        "noUnusedVariables": "warn",
-        "noUnusedImports": "warn",
-        "useArrayLiterals": "error"
+        "noUnusedVariables": {
+          "level": "on",
+          "options": {
+            "ignoreRestSiblings": true
+          }
+        }
+      },
+      "performance": {
+        "noBarrelFile": "on",
+        "noDelete": "on"
       },
       "style": {
-        "useCollapsedElseIf": "error",
-        "useConsistentArrayType": "error",
-        "useForOf": "error",
-        "useShorthandArrayType": "error",
-        "useShorthandAssign": "error",
+        "noCommonJs": "on",
+        "noDefaultExport": "on",
+        "noEnum": "on",
+        "noUnusedTemplateLiteral": "on",
+        "useAtIndex": "on",
+        "useCollapsedElseIf": "on",
+        "useCollapsedIf": "on",
+        "useConsistentArrayType": "on",
+        "useFilenamingConvention": "on",
+        "useForOf": "on",
+        "useShorthandAssign": "on",
         "useNamingConvention": {
-          "level": "error",
+          "level": "on",
           "options": {
             "conventions": [
               {
@@ -46,9 +55,30 @@
         }
       },
       "suspicious": {
-        "noEmptyBlockStatements": "warn",
-        "useAwait": "warn"
+        "noEmptyBlockStatements": "on"
       }
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "recommended": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "enabled": true,
+      "quoteStyle": "single",
+      "trailingCommas": "none",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "asNeeded"
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true,
+      "trailingCommas": "none",
+      "expand": "auto"
     }
   },
   "vcs": {
@@ -58,6 +88,18 @@
     "defaultBranch": "main"
   },
   "files": {
-    "include": ["**/*.js", "**/*.ts", "**/*.json"]
-  }
+    "includes": ["**/*.js", "**/*.ts", "**/*.json"]
+  },
+  "overrides": [
+    {
+      "includes": ["rollup.config.js"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
+        }
+      }
+    }
+  ]
 }
