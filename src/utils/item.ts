@@ -28,10 +28,17 @@ export function createRawItem(path: string): RawItem {
 
 /** Reads all entries in the directory and returns them as `RawItem[]`. */
 export function readRawItems(path: string): RawItem[] {
-  return readdirSync(path).map(fileName => {
-    const filePath = join(path, fileName)
-    return createRawItem(filePath)
-  })
+  return readdirSync(path)
+    .map(fileName => {
+      const filePath = join(path, fileName)
+      try {
+        return createRawItem(filePath)
+      } catch {
+        // Skip missing or inaccessible files/directories
+        return null
+      }
+    })
+    .filter((item): item is RawItem => item !== null)
 }
 
 /**
