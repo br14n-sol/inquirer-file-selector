@@ -4,6 +4,8 @@ import type { StatusType } from '#types/status'
 export type RenderContext = {
   /** Items to render. */
   items: RawItem[]
+  /** Indicates if multiple items can be selected. */
+  multiple: boolean
   /** Indicates if the list is displayed in loop mode. */
   loop: boolean
   /** Item index. */

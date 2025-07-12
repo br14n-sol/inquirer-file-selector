@@ -48,6 +48,14 @@ export const baseTheme: PromptTheme = {
     const color = context.isActive ? this.style.active : baseColor
     let line = color(`${linePrefix} ${item.displayName}`)
 
+    if (context.multiple) {
+      if (item.isSelected) {
+        line += ` ${figures.radioOn}`
+      } else if (context.isActive) {
+        line += ` ${figures.radioOff}`
+      }
+    }
+
     if (context.isActive) {
       const helpMessage = item.isDirectory
         ? this.help.directory(item.isCwd)

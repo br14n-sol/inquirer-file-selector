@@ -17,6 +17,11 @@ export interface PromptConfig {
    */
   type?: 'file' | 'directory'
   /**
+   * Indicates if multiple items can be selected.
+   * @default false
+   */
+  multiple?: boolean
+  /**
    * Max items displayed at once.
    * @default 10
    */
