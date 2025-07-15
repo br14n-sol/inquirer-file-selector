@@ -10,8 +10,6 @@ export type RenderContext = {
   index: number
   /** Indicates if the item is active. */
   isActive: boolean
-  /** Indicates if the item is the current working directory. */
-  isCwd: boolean
 }
 
 export interface PromptTheme {
