@@ -70,6 +70,7 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
       if (config.type !== 'file') {
         const cwd = createRawItem(currentDir)
         cwd.displayName = ensurePathSeparator('.')
+        cwd.isCwd = cwd.path === currentDir
 
         rawItems.unshift(cwd)
       }
@@ -137,10 +138,8 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
     const page = usePagination({
       items,
       active,
-      renderItem: ({ item, index, isActive }) => {
-        const isCwd = item.path === currentDir
-        return theme.renderItem(item, { items, loop, index, isActive, isCwd })
-      },
+      renderItem: ({ item, index, isActive }) =>
+        theme.renderItem(item, { items, loop, index, isActive }),
       pageSize,
       loop
     })

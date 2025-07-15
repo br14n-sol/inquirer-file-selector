@@ -22,7 +22,8 @@ export function createRawItem(path: string): RawItem {
     createdMs: stats.birthtimeMs,
     lastModifiedMs: stats.mtimeMs,
     isDisabled: false,
-    isDirectory
+    isDirectory,
+    isCwd: false
   }
 }
 
@@ -62,8 +63,8 @@ export function sortRawItems(items: RawItem[]): void {
   })
 }
 
-/** Removes internal-only properties (`displayName` and `isDisabled`) from a `RawItem`. */
+/** Removes internal-only properties from a `RawItem`. */
 export function stripInternalProps(raw: RawItem): Item {
-  const { displayName, isDisabled, ...item } = raw
+  const { displayName, isDisabled, isCwd, ...item } = raw
   return item
 }

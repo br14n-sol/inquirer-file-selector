@@ -50,7 +50,7 @@ export const baseTheme: PromptTheme = {
 
     if (context.isActive) {
       const helpMessage = item.isDirectory
-        ? this.help.directory(context.isCwd)
+        ? this.help.directory(item.isCwd)
         : this.help.file
       line += ` ${this.style.help(helpMessage)}`
     }
