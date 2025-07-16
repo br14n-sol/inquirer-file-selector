@@ -189,7 +189,10 @@ export function fileSelector(
       return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
     }
 
-    const helpTop = theme.style.help(theme.help.top(allowCancel))
+    const helpTop = theme.renderHelp('header', undefined, {
+      allowCancel,
+      multiple
+    })
     const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
     return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`

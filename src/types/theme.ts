@@ -1,6 +1,11 @@
 import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 
+export type PromptContext = {
+  allowCancel: boolean
+  multiple: boolean
+}
+
 export type RenderContext = {
   /** Items to render. */
   items: RawItem[]
@@ -78,6 +83,7 @@ export interface PromptTheme {
      * @default chalk.italic.gray
      */
     help: (text: string) => string
+    key: (text: string) => string
   }
   hierarchySymbols: {
     /**
@@ -91,20 +97,11 @@ export interface PromptTheme {
      */
     leaf: string
   }
-  help: {
-    /**
-     * The help message displayed at the top of the prompt.
-     * @param allowCancel - Indicates if canceling is allowed.
-     */
-    top: (allowCancel: boolean) => string
-    /**
-     * The help message displayed for directories.
-     * @param isCwd - Indicates if the directory is the current directory.
-     */
-    directory: (isCwd: boolean) => string
-    /** The help message displayed for files. */
-    file: string
-  }
+  renderHelp: (
+    type: 'inline' | 'header',
+    item?: RawItem,
+    context?: PromptContext
+  ) => string
   /**
    * Renders an item in the list.
    * @param item - The item to render.

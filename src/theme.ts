@@ -1,5 +1,6 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
+import { Actions } from '#consts'
 import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type { PromptTheme, RenderContext } from '#types/theme'
@@ -20,18 +21,48 @@ export const baseTheme: PromptTheme = {
     file: (text: string) => text,
     currentDir: (text: string) => chalk.magentaBright(text),
     message: (text: string, _status: StatusType) => chalk.bold(text),
-    help: (text: string) => chalk.italic.gray(text)
+    help: (text: string) => chalk.gray(text),
+    key: (text: string) => chalk.bgGray.white(` ${text} `)
   },
   hierarchySymbols: {
     branch: figures.lineUpDownRight + figures.line,
     leaf: figures.lineUpRight + figures.line
   },
-  help: {
-    top: (allowCancel: boolean) =>
-      `(Press ${figures.arrowUp + figures.arrowDown} to navigate, <backspace> to go back${allowCancel ? ', <esc> to cancel' : ''})`,
-    directory: (isCwd: boolean) =>
-      `(Press ${!isCwd ? '<space> to open, ' : ''}<enter> to select)`,
-    file: '(Press <enter> to select)'
+  renderHelp(type, item, context) {
+    switch (type) {
+      case 'header': {
+        const tips = []
+        tips.push(
+          `${this.style.key(Actions.Up.label)} or ${this.style.key(Actions.Down.label)} to navigate`
+        )
+        tips.push(`${this.style.key(Actions.Back.label)} to go back`)
+
+        if (context?.multiple) {
+          tips.push(`${this.style.key(Actions.Confirm.label)} to confirm`)
+        }
+
+        if (context?.allowCancel) {
+          tips.push(`${this.style.key(Actions.Cancel.label)} to cancel`)
+        }
+
+        return this.style.help(`(Press ${tips.join(', ')})`)
+      }
+      case 'inline': {
+        const tips = []
+
+        if (!item?.isCwd && item?.isDirectory) {
+          tips.push(`${this.style.key(Actions.Forward.label)} to open`)
+        }
+
+        if (context?.multiple) {
+          tips.push(`${this.style.key(Actions.Toggle.label)} to select`)
+        } else {
+          tips.push(`${this.style.key(Actions.Confirm.label)} to select`)
+        }
+
+        return this.style.help(`(Press ${tips.join(', ')})`)
+      }
+    }
   },
   renderItem(item: RawItem, context: RenderContext) {
     const isLast = context.index === context.items.length - 1
@@ -57,9 +88,10 @@ export const baseTheme: PromptTheme = {
     }
 
     if (context.isActive) {
-      const helpMessage = item.isDirectory
-        ? this.help.directory(item.isCwd)
-        : this.help.file
+      const helpMessage = this.renderHelp('inline', item, {
+        allowCancel: false,
+        multiple: context.multiple
+      })
       line += ` ${this.style.help(helpMessage)}`
     }
 
