@@ -20,18 +20,58 @@ export const baseTheme: PromptTheme = {
     file: (text: string) => text,
     currentDir: (text: string) => chalk.magentaBright(text),
     message: (text: string, _status: StatusType) => chalk.bold(text),
-    help: (text: string) => chalk.italic.gray(text)
+    help: (text: string) => chalk.gray(text),
+    key: (text: string) => chalk.bgGray.white(` ${text} `)
   },
   hierarchySymbols: {
     branch: figures.lineUpDownRight + figures.line,
     leaf: figures.lineUpRight + figures.line
   },
-  help: {
-    top: (allowCancel: boolean) =>
-      `(Press ${figures.arrowUp + figures.arrowDown} to navigate, <backspace> to go back${allowCancel ? ', <esc> to cancel' : ''})`,
-    directory: (isCwd: boolean) =>
-      `(Press ${!isCwd ? '<space> to open, ' : ''}<enter> to select)`,
-    file: '(Press <enter> to select)'
+  labels: {
+    keys: {
+      up: `${figures.arrowUp}/w`,
+      down: `${figures.arrowDown}/s`,
+      back: `${figures.arrowLeft}/a`,
+      forward: `${figures.arrowRight}/d`,
+      toggle: '\u2423', // ␣
+      confirm: '\u21B5', // ↵
+      cancel: 'Esc'
+    },
+    hints: {
+      navigate: '{{up}} or {{down}} to navigate',
+      goBack: '{{back}} to go back',
+      goForward: '{{forward}} to open',
+      toggle: '{{toggle}} to select',
+      confirm: '{{confirm}} to confirm',
+      cancel: '{{cancel}} to cancel'
+    }
+  },
+  renderHelp(type, item, context) {
+    switch (type) {
+      case 'header': {
+        const hints = []
+        hints.push(this.labels.hints.navigate)
+        hints.push(this.labels.hints.goBack)
+
+        context?.multiple && hints.push(this.labels.hints.confirm)
+        context?.allowCancel && hints.push(this.labels.hints.cancel)
+
+        return this.style.help(`(Press ${hints.join(', ')})`)
+      }
+      case 'inline': {
+        const hints = []
+
+        if (!item?.isCwd && item?.isDirectory) {
+          hints.push(this.labels.hints.goForward)
+        }
+
+        context?.multiple
+          ? hints.push(this.labels.hints.toggle)
+          : hints.push(this.labels.hints.confirm)
+
+        return this.style.help(`(Press ${hints.join(', ')})`)
+      }
+    }
   },
   renderItem(item: RawItem, context: RenderContext) {
     const isLast = context.index === context.items.length - 1
@@ -57,9 +97,10 @@ export const baseTheme: PromptTheme = {
     }
 
     if (context.isActive) {
-      const helpMessage = item.isDirectory
-        ? this.help.directory(item.isCwd)
-        : this.help.file
+      const helpMessage = this.renderHelp('inline', item, {
+        allowCancel: false,
+        multiple: context.multiple
+      })
       line += ` ${this.style.help(helpMessage)}`
     }
 
