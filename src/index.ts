@@ -56,7 +56,13 @@ export function fileSelector(
     } = config
 
     const [status, setStatus] = useState<StatusType>(Status.Idle)
-    const theme = makeTheme<PromptTheme>(baseTheme, config.theme)
+
+    // Memoize the theme to avoid unnecessary re-computations
+    const theme = useMemo(
+      () => makeTheme<PromptTheme>(baseTheme, config.theme),
+      []
+    )
+
     const prefix = usePrefix({ status, theme })
     const selections = useRef<RawItem[]>([])
 
