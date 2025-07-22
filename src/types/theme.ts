@@ -1,9 +1,13 @@
 import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 
+// TODO: Move `type` property to dedicated type and reuse it in `PromptConfig`
+
 export type RenderContext = {
   /** Items to render. */
   items: RawItem[]
+  /** Indicates the type of item expected. */
+  type: 'file' | 'directory' | undefined
   /** Indicates if multiple items can be selected. */
   multiple: boolean
   /** Indicates if the list is displayed in loop mode. */

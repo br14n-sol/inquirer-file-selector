@@ -176,7 +176,14 @@ export function fileSelector(
       items,
       active,
       renderItem: ({ item, index, isActive }) =>
-        theme.renderItem(item, { items, multiple, loop, index, isActive }),
+        theme.renderItem(item, {
+          items,
+          type: config.type,
+          multiple,
+          loop,
+          index,
+          isActive
+        }),
       pageSize,
       loop
     })

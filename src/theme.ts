@@ -51,7 +51,12 @@ export const baseTheme: PromptTheme = {
     if (context.multiple) {
       if (item.isSelected) {
         line += ` ${figures.radioOn}`
-      } else if (context.isActive) {
+      } else if (
+        context.isActive &&
+        (!context.type ||
+          (context.type === 'file' && !item.isDirectory) ||
+          (context.type === 'directory' && item.isDirectory))
+      ) {
         line += ` ${figures.radioOff}`
       }
     }
