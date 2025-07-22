@@ -132,6 +132,8 @@ export function fileSelector(
         setActive(bounds.first)
       } else if (Action.isToggle(key)) {
         if (!multiple) return
+        if (config.type === 'file' && activeItem.isDirectory) return
+        if (config.type === 'directory' && !activeItem.isDirectory) return
 
         const index = selections.current.findIndex(
           item => item.path === activeItem.path
