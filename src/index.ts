@@ -6,6 +6,7 @@ import {
   useMemo,
   usePagination,
   usePrefix,
+  useRef,
   useState
 } from '@inquirer/core'
 import { ANSI_HIDE_CURSOR, Status } from '#consts'
@@ -13,7 +14,12 @@ import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
 import type { Item, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
-import type { PromptTheme, RenderContext } from '#types/theme'
+import type {
+  PromptTheme,
+  RenderHelpContext,
+  RenderItemContext
+} from '#types/theme'
+import * as Action from '#utils/actions'
 import {
   createRawItem,
   ensurePathSeparator,
@@ -21,26 +27,30 @@ import {
   sortRawItems,
   stripInternalProps
 } from '#utils/item'
-import {
-  isBackspaceKey,
-  isDownKey,
-  isEnterKey,
-  isEscapeKey,
-  isSpaceKey,
-  isUpKey
-} from '#utils/key'
+import { prepareTheme } from '#utils/theme'
 
 export function fileSelector(
-  config: PromptConfig & { allowCancel?: false }
+  config: PromptConfig & { multiple?: false; allowCancel?: false }
 ): Promise<Item>
 
 export function fileSelector(
-  config: PromptConfig & { allowCancel: true }
+  config: PromptConfig & { multiple?: false; allowCancel: true }
 ): Promise<Item | null>
 
-export function fileSelector(config: PromptConfig): Promise<Item | null> {
-  return createPrompt<Item | null, PromptConfig>((config, done) => {
+export function fileSelector(
+  config: PromptConfig & { multiple: true; allowCancel?: false }
+): Promise<Item[]>
+
+export function fileSelector(
+  config: PromptConfig & { multiple: true; allowCancel: true }
+): Promise<Item[] | null>
+
+export function fileSelector(
+  config: PromptConfig
+): Promise<Item | Item[] | null> {
+  return createPrompt<Item | Item[] | null, PromptConfig>((config, done) => {
     const {
+      multiple = false,
       pageSize = 10,
       loop = false,
       filter = () => true,
@@ -51,8 +61,17 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
     } = config
 
     const [status, setStatus] = useState<StatusType>(Status.Idle)
-    const theme = makeTheme<PromptTheme>(baseTheme, config.theme)
+
+    // Memoize the theme to avoid unnecessary re-computations
+    const theme = useMemo(() => {
+      const t = makeTheme<PromptTheme>(baseTheme, config.theme)
+      prepareTheme(t)
+
+      return t
+    }, [])
+
     const prefix = usePrefix({ status, theme })
+    const selections = useRef<RawItem[]>([])
 
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.basePath || '.')
@@ -75,6 +94,17 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
         rawItems.unshift(cwd)
       }
 
+      // Mark selected items
+      // TODO: Check if is possible optimize this
+      if (multiple) {
+        for (const rawItem of rawItems) {
+          const index = selections.current.findIndex(
+            item => item.path === rawItem.path
+          )
+          rawItem.isSelected = index !== -1
+        }
+      }
+
       return rawItems
     }, [currentDir])
 
@@ -92,44 +122,64 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
     const [active, setActive] = useState(bounds.first)
     const activeItem = items[active]
 
-    useKeypress((key, rl) => {
-      if (isEnterKey(key)) {
-        if (
-          activeItem.isDisabled ||
-          (config.type === 'file' && activeItem.isDirectory) ||
-          (config.type === 'directory' && !activeItem.isDirectory)
-        ) {
-          return
-        }
+    useKeypress(key => {
+      if (Action.isUp(key) || Action.isDown(key)) {
+        if (!loop && Action.isUp(key) && active === bounds.first) return
+        if (!loop && Action.isDown(key) && active === bounds.last) return
 
-        const strippedItem = stripInternalProps(activeItem)
+        const offset = Action.isUp(key) ? -1 : 1
+        let next = active
 
-        setStatus(Status.Done)
-        done(strippedItem)
-      } else if (isSpaceKey(key) && activeItem.isDirectory) {
-        setCurrentDir(activeItem.path)
-        setActive(bounds.first)
-      } else if (isUpKey(key) || isDownKey(key)) {
-        rl.clearLine(0)
+        do {
+          next = (next + offset + items.length) % items.length
+        } while (items[next].isDisabled)
 
-        if (
-          loop ||
-          (isUpKey(key) && active !== bounds.first) ||
-          (isDownKey(key) && active !== bounds.last)
-        ) {
-          const offset = isUpKey(key) ? -1 : 1
-          let next = active
-
-          do {
-            next = (next + offset + items.length) % items.length
-          } while (items[next].isDisabled)
-
-          setActive(next)
-        }
-      } else if (isBackspaceKey(key)) {
+        setActive(next)
+      } else if (Action.isBack(key)) {
         setCurrentDir(path.resolve(currentDir, '..'))
         setActive(bounds.first)
-      } else if (isEscapeKey(key) && allowCancel) {
+      } else if (Action.isForward(key)) {
+        if (!activeItem.isDirectory) return
+
+        setCurrentDir(activeItem.path)
+        setActive(bounds.first)
+      } else if (Action.isToggle(key)) {
+        if (!multiple) return
+        if (config.type === 'file' && activeItem.isDirectory) return
+        if (config.type === 'directory' && !activeItem.isDirectory) return
+
+        const index = selections.current.findIndex(
+          item => item.path === activeItem.path
+        )
+
+        if (index === -1) {
+          activeItem.isSelected = true
+          selections.current.push(activeItem)
+        } else {
+          activeItem.isSelected = false
+          selections.current.splice(index, 1)
+        }
+
+        // Force re-render to reflect selection changes
+        setActive(active - 1)
+        setActive(active)
+      } else if (Action.isConfirm(key)) {
+        let result = null
+
+        if (multiple) {
+          result = selections.current.map(i => stripInternalProps(i))
+        } else {
+          if (config.type === 'file' && activeItem.isDirectory) return
+          if (config.type === 'directory' && !activeItem.isDirectory) return
+
+          result = stripInternalProps(activeItem)
+        }
+
+        setStatus(Status.Done)
+        done(result)
+      } else if (Action.isCancel(key)) {
+        if (!allowCancel) return
+
         setStatus(Status.Canceled)
         done(null)
       }
@@ -139,7 +189,14 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
       items,
       active,
       renderItem: ({ item, index, isActive }) =>
-        theme.renderItem(item, { items, loop, index, isActive }),
+        theme.renderItem(item, {
+          items,
+          type: config.type,
+          multiple,
+          loop,
+          index,
+          isActive
+        }),
       pageSize,
       loop
     })
@@ -154,7 +211,7 @@ export function fileSelector(config: PromptConfig): Promise<Item | null> {
       return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
     }
 
-    const helpTop = theme.style.help(theme.help.top(allowCancel))
+    const helpTop = theme.renderHelp('header', { allowCancel, multiple })
     const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
     return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`
@@ -169,5 +226,6 @@ export type {
   Item,
   RawItem,
   PromptTheme,
-  RenderContext
+  RenderHelpContext,
+  RenderItemContext
 }

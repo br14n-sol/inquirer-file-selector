@@ -1,9 +1,24 @@
 import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 
-export type RenderContext = {
+// TODO: Move `type` property to dedicated type and reuse it in `PromptConfig`
+
+export type RenderHelpContext = {
+  /** Indicates the type of item expected. */
+  type: 'file' | 'directory' | undefined
+  /** Indicates if multiple items can be selected. */
+  multiple: boolean
+  /** Indicates if canceling is allowed. */
+  allowCancel: boolean
+}
+
+export type RenderItemContext = {
   /** Items to render. */
   items: RawItem[]
+  /** Indicates the type of item expected. */
+  type: 'file' | 'directory' | undefined
+  /** Indicates if multiple items can be selected. */
+  multiple: boolean
   /** Indicates if the list is displayed in loop mode. */
   loop: boolean
   /** Item index. */
@@ -76,6 +91,94 @@ export interface PromptTheme {
      * @default chalk.italic.gray
      */
     help: (text: string) => string
+    /**
+     * Defines the style for key labels used in hints.
+     * @default chalk.bgGray.white
+     */
+    key: (text: string) => string
+  }
+  /**
+   * Labels used throughout the prompt for keys and hints.
+   */
+  labels: {
+    /**
+     * Labels used to represent navigation keys.
+     * `style.key` is automatically applied to these values.
+     */
+    keys: {
+      /**
+       * Label for the "up" navigation key.
+       * @default '↑/w'
+       */
+      up: string
+      /**
+       * Label for the "down" navigation key.
+       * @default '↓/s'
+       */
+      down: string
+      /**
+       * Label for the "back" navigation key.
+       * @default '←/a'
+       */
+      back: string
+      /**
+       * Label for the "forward" navigation key.
+       * @default '→/d'
+       */
+      forward: string
+      /**
+       * Label for the "toggle selection" key.
+       * @default '␣'
+       */
+      toggle: string
+      /**
+       * Label for the "confirm" key.
+       * @default '↵'
+       */
+      confirm: string
+      /**
+       * Label for the "cancel" key.
+       * @default 'Esc'
+       */
+      cancel: string
+    }
+    /**
+     * Hint messages shown to the user, describing available actions.
+     * The texts can contain placeholders like `{{up}}`, `{{down}}`, etc.,
+     * which will be replaced by the corresponding values from `labels.keys`.
+     */
+    hints: {
+      /**
+       * Hint for navigation actions.
+       * @default '{{up}} or {{down}} to navigate'
+       */
+      navigate: string
+      /**
+       * Hint for going back.
+       * @default '{{back}} to go back'
+       */
+      goBack: string
+      /**
+       * Hint for going forward (open directory).
+       * @default '{{forward}} to open'
+       */
+      goForward: string
+      /**
+       * Hint for toggling selection.
+       * @default '{{toggle}} to select'
+       */
+      toggle: string
+      /**
+       * Hint for confirming the selection.
+       * @default '{{confirm}} to confirm'
+       */
+      confirm: string
+      /**
+       * Hint for canceling the prompt.
+       * @default '{{cancel}} to cancel'
+       */
+      cancel: string
+    }
   }
   hierarchySymbols: {
     /**
@@ -89,24 +192,27 @@ export interface PromptTheme {
      */
     leaf: string
   }
-  help: {
-    /**
-     * The help message displayed at the top of the prompt.
-     * @param allowCancel - Indicates if canceling is allowed.
-     */
-    top: (allowCancel: boolean) => string
-    /**
-     * The help message displayed for directories.
-     * @param isCwd - Indicates if the directory is the current directory.
-     */
-    directory: (isCwd: boolean) => string
-    /** The help message displayed for files. */
-    file: string
-  }
+  /**
+   * Renders the help message in the header section.
+   * @param type - Help type, `'header'`.
+   * @param context - Additional context for rendering the help message.
+   */
+  renderHelp(type: 'header', context: Partial<RenderHelpContext>): string
+  /**
+   * Renders the help message inline for a specific item.
+   * @param type - Help type, `'inline'`.
+   * @param item - The item for which to render the help message.
+   * @param context - Additional context for rendering the help message.
+   */
+  renderHelp(
+    type: 'inline',
+    item: RawItem,
+    context: Partial<RenderHelpContext>
+  ): string
   /**
    * Renders an item in the list.
    * @param item - The item to render.
    * @param context - Additional context about the item.
    */
-  renderItem: (item: RawItem, context: RenderContext) => string
+  renderItem: (item: RawItem, context: RenderItemContext) => string
 }
