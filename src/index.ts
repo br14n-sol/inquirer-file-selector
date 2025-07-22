@@ -27,6 +27,7 @@ import {
   sortRawItems,
   stripInternalProps
 } from '#utils/item'
+import { prepareTheme } from '#utils/theme'
 
 export function fileSelector(
   config: PromptConfig & { multiple?: false; allowCancel?: false }
@@ -62,10 +63,12 @@ export function fileSelector(
     const [status, setStatus] = useState<StatusType>(Status.Idle)
 
     // Memoize the theme to avoid unnecessary re-computations
-    const theme = useMemo(
-      () => makeTheme<PromptTheme>(baseTheme, config.theme),
-      []
-    )
+    const theme = useMemo(() => {
+      const t = makeTheme<PromptTheme>(baseTheme, config.theme)
+      prepareTheme(t)
+
+      return t
+    }, [])
 
     const prefix = usePrefix({ status, theme })
     const selections = useRef<RawItem[]>([])
