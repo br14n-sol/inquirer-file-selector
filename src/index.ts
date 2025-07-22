@@ -14,7 +14,7 @@ import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
 import type { Item, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
-import type { PromptTheme, RenderContext } from '#types/theme'
+import type { PromptTheme, RenderItemContext } from '#types/theme'
 import * as Action from '#utils/actions'
 import {
   createRawItem,
@@ -219,5 +219,5 @@ export type {
   Item,
   RawItem,
   PromptTheme,
-  RenderContext
+  RenderItemContext
 }

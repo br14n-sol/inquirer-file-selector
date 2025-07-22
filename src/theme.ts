@@ -2,7 +2,7 @@ import figures from '@inquirer/figures'
 import chalk from 'chalk'
 import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
-import type { PromptTheme, RenderContext } from '#types/theme'
+import type { PromptTheme, RenderItemContext } from '#types/theme'
 
 export const baseTheme: PromptTheme = {
   prefix: {
@@ -33,7 +33,7 @@ export const baseTheme: PromptTheme = {
       `(Press ${!isCwd ? '<space> to open, ' : ''}<enter> to select)`,
     file: '(Press <enter> to select)'
   },
-  renderItem(item: RawItem, context: RenderContext) {
+  renderItem(item: RawItem, context: RenderItemContext) {
     const isLast = context.index === context.items.length - 1
     const linePrefix =
       isLast && !context.loop

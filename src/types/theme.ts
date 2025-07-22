@@ -3,7 +3,7 @@ import type { StatusType } from '#types/status'
 
 // TODO: Move `type` property to dedicated type and reuse it in `PromptConfig`
 
-export type RenderContext = {
+export type RenderItemContext = {
   /** Items to render. */
   items: RawItem[]
   /** Indicates the type of item expected. */
@@ -114,5 +114,5 @@ export interface PromptTheme {
    * @param item - The item to render.
    * @param context - Additional context about the item.
    */
-  renderItem: (item: RawItem, context: RenderContext) => string
+  renderItem: (item: RawItem, context: RenderItemContext) => string
 }
