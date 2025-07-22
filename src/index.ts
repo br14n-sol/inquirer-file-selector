@@ -14,7 +14,11 @@ import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
 import type { Item, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
-import type { PromptTheme, RenderItemContext } from '#types/theme'
+import type {
+  PromptTheme,
+  RenderHelpContext,
+  RenderItemContext
+} from '#types/theme'
 import * as Action from '#utils/actions'
 import {
   createRawItem,
@@ -204,7 +208,7 @@ export function fileSelector(
       return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
     }
 
-    const helpTop = theme.style.help(theme.help.top(allowCancel))
+    const helpTop = theme.renderHelp('header', { allowCancel, multiple })
     const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
     return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`
@@ -219,5 +223,6 @@ export type {
   Item,
   RawItem,
   PromptTheme,
+  RenderHelpContext,
   RenderItemContext
 }
