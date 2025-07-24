@@ -55,9 +55,7 @@ export function fileSelector(
       loop = false,
       filter = () => true,
       showExcluded = false,
-      allowCancel = false,
-      cancelText = 'Canceled.',
-      emptyText = 'Directory is empty.'
+      allowCancel = false
     } = config
 
     const [status, setStatus] = useState<StatusType>(Status.Idle)
@@ -204,7 +202,7 @@ export function fileSelector(
     const message = theme.style.message(config.message, status)
 
     if (status === Status.Canceled) {
-      return `${prefix} ${message} ${theme.style.cancelText(cancelText)}`
+      return `${prefix} ${message} ${theme.labels.messages.cancel}`
     }
 
     if (status === Status.Done) {
@@ -214,7 +212,7 @@ export function fileSelector(
     const helpTop = theme.renderHelp('header', { allowCancel, multiple })
     const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
-    return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.style.emptyText(emptyText) : page}${ANSI_HIDE_CURSOR}`
+    return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.labels.messages.empty : page}${ANSI_HIDE_CURSOR}`
   })(config)
 }
 

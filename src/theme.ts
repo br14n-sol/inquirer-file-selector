@@ -18,14 +18,16 @@ export const baseTheme: PromptTheme = {
     disabled: (linePrefix: string, text: string) =>
       chalk.gray(`${linePrefix} ${chalk.strikethrough(text)}`),
     active: (text: string) => chalk.cyan(text),
-    cancelText: (text: string) => chalk.red(text),
-    emptyText: (text: string) => chalk.red(text),
     directory: (text: string) => chalk.yellowBright(text),
     file: (text: string) => text,
     currentDir: (text: string) => chalk.magentaBright(text),
     message: (text: string, _status: StatusType) => chalk.bold(text),
     help: (text: string) => chalk.gray(text),
-    key: (text: string) => chalk.bgGray.white(` ${text} `)
+    key: (text: string) => chalk.bgGray.white(` ${text} `),
+    messages: {
+      cancel: (text: string) => chalk.red(text),
+      empty: (text: string) => chalk.red(text)
+    }
   },
   hierarchySymbols: {
     branch: figures.lineUpDownRight + figures.line,
@@ -48,6 +50,10 @@ export const baseTheme: PromptTheme = {
       toggle: '{{toggle}} to select',
       confirm: '{{confirm}} to confirm',
       cancel: '{{cancel}} to cancel'
+    },
+    messages: {
+      cancel: 'Canceled.',
+      empty: 'Directory is empty.'
     }
   },
   renderHelp(type: 'inline' | 'header', arg1?: unknown, arg2?: unknown) {

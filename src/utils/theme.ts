@@ -11,13 +11,15 @@ import type { PromptTheme } from '#types/theme'
  */
 export function prepareTheme(theme: PromptTheme): void {
   // Reference for easy access
+  const style = theme.style
   const keys = theme.labels.keys
   const hints = theme.labels.hints
+  const messages = theme.labels.messages
 
   // 1. Apply styles to keys labels
   for (const [key, value] of Object.entries(keys)) {
     const keyTyped = key as keyof typeof keys
-    keys[keyTyped] = theme.style.key(value)
+    keys[keyTyped] = style.key(value)
   }
 
   // 2. Replace placeholders in hints with actual key labels
@@ -32,4 +34,8 @@ export function prepareTheme(theme: PromptTheme): void {
       }
     })
   }
+
+  // 3. Apply styles to other static labels
+  messages.cancel = style.messages.cancel(messages.cancel)
+  messages.empty = style.messages.empty(messages.empty)
 }
