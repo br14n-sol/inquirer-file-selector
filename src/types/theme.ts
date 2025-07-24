@@ -56,7 +56,6 @@ export interface PromptTheme {
      * @default chalk.cyan
      */
     active: (text: string) => string
-
     /**
      * Defines the style for items of type `'directory'`.
      * @default chalk.yellowBright
