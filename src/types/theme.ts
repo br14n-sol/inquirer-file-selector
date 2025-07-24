@@ -56,16 +56,7 @@ export interface PromptTheme {
      * @default chalk.cyan
      */
     active: (text: string) => string
-    /**
-     * Defines the style for the cancel text.
-     * @default chalk.red
-     */
-    cancelText: (text: string) => string
-    /**
-     * Defines the style for empty text.
-     * @default chalk.red
-     */
-    emptyText: (text: string) => string
+
     /**
      * Defines the style for items of type `'directory'`.
      * @default chalk.yellowBright
@@ -96,9 +87,24 @@ export interface PromptTheme {
      * @default chalk.bgGray.white
      */
     key: (text: string) => string
+    /**
+     * Defines the style for messages displayed in the prompt.
+     */
+    messages: {
+      /**
+       * Defines the style for the cancel message.
+       * @default chalk.red
+       */
+      cancel: (text: string) => string
+      /**
+       * Defines the style for the empty directory message.
+       * @default chalk.red
+       */
+      empty: (text: string) => string
+    }
   }
   /**
-   * Labels used throughout the prompt for keys and hints.
+   * Labels used throughout the prompt.
    */
   labels: {
     /**
@@ -178,6 +184,22 @@ export interface PromptTheme {
        * @default '{{cancel}} to cancel'
        */
       cancel: string
+    }
+    /**
+     * Messages displayed in the prompt.
+     * `style.messages` is automatically applied to these values.
+     */
+    messages: {
+      /**
+       * Message displayed when the selection is canceled.
+       * @default 'Canceled.'
+       */
+      cancel: string
+      /**
+       * Message displayed when the directory is empty.
+       * @default 'Directory is empty.'
+       */
+      empty: string
     }
   }
   hierarchySymbols: {

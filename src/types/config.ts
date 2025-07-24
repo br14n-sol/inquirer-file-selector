@@ -46,16 +46,6 @@ export interface PromptConfig {
    * @default false
    */
   allowCancel?: boolean
-  /**
-   * Message when selection is canceled.
-   * @default 'Canceled.'
-   */
-  cancelText?: string
-  /**
-   * Message when the directory is empty.
-   * @default 'Directory is empty.'
-   */
-  emptyText?: string
   /** Theme applied to the file selector. */
   theme?: PartialDeep<Theme<PromptTheme>>
 }
