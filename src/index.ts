@@ -9,6 +9,8 @@ import {
   useRef,
   useState
 } from '@inquirer/core'
+import { deepmerge } from 'deepmerge-ts'
+import { baseConfig } from '#config'
 import { ANSI_HIDE_CURSOR, Status } from '#consts'
 import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
@@ -48,18 +50,15 @@ export function fileSelector(
 export function fileSelector(
   config: PromptConfig
 ): Promise<Item | Item[] | null> {
-  return createPrompt<Item | Item[] | null, PromptConfig>((config, done) => {
-    const {
-      multiple = false,
-      pageSize = 10,
-      loop = false,
-      filter = () => true,
-      showExcluded = false,
-      allowCancel = false
-    } = config
-
+  return createPrompt<Item | Item[] | null, PromptConfig>((_config, done) => {
     const [status, setStatus] = useState<StatusType>(Status.Idle)
 
+    // Memoize the config to avoid unnecessary re-computations
+    // TODO: Avoid concatenating arrays
+    const config = useMemo(
+      () => deepmerge(baseConfig, _config) as Required<PromptConfig>,
+      []
+    )
     // Memoize the theme to avoid unnecessary re-computations
     const theme = useMemo(() => {
       const t = makeTheme<PromptTheme>(baseTheme, config.theme)
@@ -79,9 +78,9 @@ export function fileSelector(
       const rawItems = readRawItems(currentDir)
         .map(rawItem => {
           const strippedItem = stripInternalProps(rawItem)
-          return { ...rawItem, isDisabled: !filter(strippedItem) }
+          return { ...rawItem, isDisabled: !config.filter(strippedItem) }
         })
-        .filter(rawItem => showExcluded || !rawItem.isDisabled)
+        .filter(rawItem => config.showExcluded || !rawItem.isDisabled)
       sortRawItems(rawItems)
 
       if (config.type !== 'file') {
@@ -94,7 +93,7 @@ export function fileSelector(
 
       // Mark selected items
       // TODO: Check if is possible optimize this
-      if (multiple) {
+      if (config.multiple) {
         for (const rawItem of rawItems) {
           const index = selections.current.findIndex(
             item => item.path === rawItem.path
@@ -122,8 +121,8 @@ export function fileSelector(
 
     useKeypress(key => {
       if (Action.isUp(key) || Action.isDown(key)) {
-        if (!loop && Action.isUp(key) && active === bounds.first) return
-        if (!loop && Action.isDown(key) && active === bounds.last) return
+        if (!config.loop && Action.isUp(key) && active === bounds.first) return
+        if (!config.loop && Action.isDown(key) && active === bounds.last) return
 
         const offset = Action.isUp(key) ? -1 : 1
         let next = active
@@ -142,7 +141,7 @@ export function fileSelector(
         setCurrentDir(activeItem.path)
         setActive(bounds.first)
       } else if (Action.isToggle(key)) {
-        if (!multiple) return
+        if (!config.multiple) return
         if (config.type === 'file' && activeItem.isDirectory) return
         if (config.type === 'directory' && !activeItem.isDirectory) return
 
@@ -164,7 +163,7 @@ export function fileSelector(
       } else if (Action.isConfirm(key)) {
         let result = null
 
-        if (multiple) {
+        if (config.multiple) {
           result = selections.current.map(i => stripInternalProps(i))
         } else {
           if (config.type === 'file' && activeItem.isDirectory) return
@@ -176,7 +175,7 @@ export function fileSelector(
         setStatus(Status.Done)
         done(result)
       } else if (Action.isCancel(key)) {
-        if (!allowCancel) return
+        if (!config.allowCancel) return
 
         setStatus(Status.Canceled)
         done(null)
@@ -190,13 +189,13 @@ export function fileSelector(
         theme.renderItem(item, {
           items,
           type: config.type,
-          multiple,
-          loop,
+          multiple: config.multiple,
+          loop: config.loop,
           index,
           isActive
         }),
-      pageSize,
-      loop
+      pageSize: config.pageSize,
+      loop: config.loop
     })
 
     const message = theme.style.message(config.message, status)
@@ -209,7 +208,10 @@ export function fileSelector(
       return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
     }
 
-    const helpTop = theme.renderHelp('header', { allowCancel, multiple })
+    const helpTop = theme.renderHelp('header', {
+      allowCancel: config.allowCancel,
+      multiple: config.multiple
+    })
     const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
     return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.labels.messages.empty : page}${ANSI_HIDE_CURSOR}`
