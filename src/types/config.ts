@@ -1,7 +1,11 @@
 import type { Theme } from '@inquirer/core'
-import type { PartialDeep } from '@inquirer/type'
+import type { PartialDeep, Prettify } from '@inquirer/type'
+import type { defaultKeybinds } from '#consts'
 import type { Item } from '#types/item'
 import type { PromptTheme } from '#types/theme'
+
+/** Keybinds type based on the default keybinds. */
+export type Keybinds = typeof defaultKeybinds
 
 export interface PromptConfig {
   /** Main message displayed in the prompt. */
@@ -46,6 +50,11 @@ export interface PromptConfig {
    * @default false
    */
   allowCancel?: boolean
+  /**
+   * Keybinds for actions.
+   * If omitted, default keybinds are used.
+   */
+  keybinds?: Prettify<Partial<Keybinds>>
   /** Theme applied to the file selector. */
   theme?: PartialDeep<Theme<PromptTheme>>
 }
