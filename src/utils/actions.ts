@@ -1,30 +1,19 @@
-import type { KeypressEvent } from '@inquirer/core'
-import { Actions } from '#consts.js'
+import type { ActionCheckFn, ActionCheckMethodName } from '#types/actions'
+import type { Keybinds } from '#types/config'
+import { capitalize } from '#utils/string'
 
-export function isUp(key: KeypressEvent): boolean {
-  return Actions.Up.some(k => k === key.name)
-}
+/** Creates action key checks based on the provided keybinds. */
+export function createActionChecks(
+  defaultKeybinds: Keybinds,
+  keybinds?: Partial<Keybinds>
+): Record<ActionCheckMethodName, ActionCheckFn> {
+  const mergedKeybinds = { ...defaultKeybinds, ...keybinds }
+  const checks = {} as Record<ActionCheckMethodName, ActionCheckFn>
 
-export function isDown(key: KeypressEvent): boolean {
-  return Actions.Down.some(k => k === key.name)
-}
+  for (const [action, keys] of Object.entries(mergedKeybinds)) {
+    const methodName = `is${capitalize(action)}` as ActionCheckMethodName
+    checks[methodName] = event => keys.includes(event.name)
+  }
 
-export function isBack(key: KeypressEvent): boolean {
-  return Actions.Back.some(k => k === key.name)
-}
-
-export function isForward(key: KeypressEvent): boolean {
-  return Actions.Forward.some(k => k === key.name)
-}
-
-export function isToggle(key: KeypressEvent): boolean {
-  return Actions.Toggle.some(k => k === key.name)
-}
-
-export function isConfirm(key: KeypressEvent): boolean {
-  return Actions.Confirm.some(k => k === key.name)
-}
-
-export function isCancel(key: KeypressEvent): boolean {
-  return Actions.Cancel.some(k => k === key.name)
+  return checks
 }

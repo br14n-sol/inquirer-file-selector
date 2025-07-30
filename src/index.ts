@@ -9,7 +9,7 @@ import {
   useRef,
   useState
 } from '@inquirer/core'
-import { ANSI_HIDE_CURSOR, Status } from '#consts'
+import { ANSI_HIDE_CURSOR, defaultKeybinds, Status } from '#consts'
 import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
 import type { Item, RawItem } from '#types/item'
@@ -19,7 +19,7 @@ import type {
   RenderHelpContext,
   RenderItemContext
 } from '#types/theme'
-import * as Action from '#utils/actions'
+import { createActionChecks } from '#utils/actions'
 import {
   createRawItem,
   ensurePathSeparator,
@@ -60,6 +60,10 @@ export function fileSelector(
 
     const [status, setStatus] = useState<StatusType>(Status.Idle)
 
+    // Create action key checks and memoize it to avoid re-creating on every render
+    const action = useMemo(() => {
+      return createActionChecks(defaultKeybinds, config.keybinds)
+    }, [])
     // Memoize the theme to avoid unnecessary re-computations
     const theme = useMemo(() => {
       const t = makeTheme<PromptTheme>(baseTheme, config.theme)
@@ -121,11 +125,11 @@ export function fileSelector(
     const activeItem = items[active]
 
     useKeypress(key => {
-      if (Action.isUp(key) || Action.isDown(key)) {
-        if (!loop && Action.isUp(key) && active === bounds.first) return
-        if (!loop && Action.isDown(key) && active === bounds.last) return
+      if (action.isUp(key) || action.isDown(key)) {
+        if (!loop && action.isUp(key) && active === bounds.first) return
+        if (!loop && action.isDown(key) && active === bounds.last) return
 
-        const offset = Action.isUp(key) ? -1 : 1
+        const offset = action.isUp(key) ? -1 : 1
         let next = active
 
         do {
@@ -133,15 +137,15 @@ export function fileSelector(
         } while (items[next].isDisabled)
 
         setActive(next)
-      } else if (Action.isBack(key)) {
+      } else if (action.isBack(key)) {
         setCurrentDir(path.resolve(currentDir, '..'))
         setActive(bounds.first)
-      } else if (Action.isForward(key)) {
+      } else if (action.isForward(key)) {
         if (!activeItem.isDirectory) return
 
         setCurrentDir(activeItem.path)
         setActive(bounds.first)
-      } else if (Action.isToggle(key)) {
+      } else if (action.isToggle(key)) {
         if (!multiple) return
         if (config.type === 'file' && activeItem.isDirectory) return
         if (config.type === 'directory' && !activeItem.isDirectory) return
@@ -161,7 +165,7 @@ export function fileSelector(
         // Force re-render to reflect selection changes
         setActive(active - 1)
         setActive(active)
-      } else if (Action.isConfirm(key)) {
+      } else if (action.isConfirm(key)) {
         let result = null
 
         if (multiple) {
@@ -175,7 +179,7 @@ export function fileSelector(
 
         setStatus(Status.Done)
         done(result)
-      } else if (Action.isCancel(key)) {
+      } else if (action.isCancel(key)) {
         if (!allowCancel) return
 
         setStatus(Status.Canceled)
