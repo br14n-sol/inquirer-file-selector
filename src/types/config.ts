@@ -1,7 +1,7 @@
 import type { Theme } from '@inquirer/core'
 import type { PartialDeep, Prettify } from '@inquirer/type'
 import type { defaultKeybinds } from '#consts'
-import type { Item } from '#types/item'
+import type { Item, ItemTypeUnion } from '#types/item'
 import type { PromptTheme } from '#types/theme'
 
 /** Keybinds type based on the default keybinds. */
@@ -19,7 +19,7 @@ export interface PromptConfig {
    * Allowed item type.
    * If omitted, all items are valid.
    */
-  type?: 'file' | 'directory'
+  type?: ItemTypeUnion
   /**
    * Indicates if multiple items can be selected.
    * @default false

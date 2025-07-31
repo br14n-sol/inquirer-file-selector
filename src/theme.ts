@@ -1,5 +1,6 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
+import { ItemType } from '#consts'
 import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type {
@@ -77,8 +78,8 @@ export const baseTheme: PromptTheme = {
 
       if (
         !context.type ||
-        (context.type === 'file' && !item.isDirectory) ||
-        (context.type === 'directory' && item.isDirectory)
+        (context.type === ItemType.File && !item.isDirectory) ||
+        (context.type === ItemType.Directory && item.isDirectory)
       ) {
         context.multiple
           ? hints.push(this.labels.hints.toggle)
@@ -109,8 +110,8 @@ export const baseTheme: PromptTheme = {
       } else if (
         context.isActive &&
         (!context.type ||
-          (context.type === 'file' && !item.isDirectory) ||
-          (context.type === 'directory' && item.isDirectory))
+          (context.type === ItemType.File && !item.isDirectory) ||
+          (context.type === ItemType.Directory && item.isDirectory))
       ) {
         line += ` ${figures.radioOff}`
       }

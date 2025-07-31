@@ -9,7 +9,7 @@ import {
   useRef,
   useState
 } from '@inquirer/core'
-import { ANSI_HIDE_CURSOR, defaultKeybinds, Status } from '#consts'
+import { ANSI_HIDE_CURSOR, defaultKeybinds, ItemType, Status } from '#consts'
 import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
 import type { Item, RawItem } from '#types/item'
@@ -88,7 +88,7 @@ export function fileSelector(
         .filter(rawItem => showExcluded || !rawItem.isDisabled)
       sortRawItems(rawItems)
 
-      if (config.type !== 'file') {
+      if (config.type !== ItemType.File) {
         const cwd = createRawItem(currentDir)
         cwd.displayName = ensurePathSeparator('.')
         cwd.isCwd = cwd.path === currentDir
@@ -147,8 +147,9 @@ export function fileSelector(
         setActive(bounds.first)
       } else if (action.isToggle(key)) {
         if (!multiple) return
-        if (config.type === 'file' && activeItem.isDirectory) return
-        if (config.type === 'directory' && !activeItem.isDirectory) return
+        if (config.type === ItemType.File && activeItem.isDirectory) return
+        if (config.type === ItemType.Directory && !activeItem.isDirectory)
+          return
 
         const index = selections.current.findIndex(
           item => item.path === activeItem.path
@@ -171,8 +172,9 @@ export function fileSelector(
         if (multiple) {
           result = selections.current.map(i => stripInternalProps(i))
         } else {
-          if (config.type === 'file' && activeItem.isDirectory) return
-          if (config.type === 'directory' && !activeItem.isDirectory) return
+          if (config.type === ItemType.File && activeItem.isDirectory) return
+          if (config.type === ItemType.Directory && !activeItem.isDirectory)
+            return
 
           result = stripInternalProps(activeItem)
         }
