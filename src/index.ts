@@ -12,7 +12,7 @@ import {
 import { ANSI_HIDE_CURSOR, defaultKeybinds, ItemType, Status } from '#consts'
 import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
-import type { Item, RawItem } from '#types/item'
+import type { Item, ItemTypeUnion, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type {
   PromptTheme,
@@ -219,13 +219,14 @@ export function fileSelector(
   })(config)
 }
 
-export { Status }
+export { Status, ItemType }
 
 export type {
   StatusType,
   PromptConfig,
   Item,
   RawItem,
+  ItemTypeUnion,
   PromptTheme,
   RenderHelpContext,
   RenderItemContext
