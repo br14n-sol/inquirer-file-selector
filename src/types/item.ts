@@ -19,5 +19,5 @@ export type RawItem = Item & {
   isSelected: boolean
 }
 
-/** Type representing the types of elements available. */
+/** Type representing the types of items available. */
 export type ItemTypeUnion = (typeof ItemType)[keyof typeof ItemType]

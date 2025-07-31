@@ -8,7 +8,7 @@ export const Status = {
   Canceled: 'canceled'
 } as const
 
-/** Enum of available element types. */
+/** Enum of available item types. */
 export const ItemType = {
   File: 'file',
   Directory: 'directory'
