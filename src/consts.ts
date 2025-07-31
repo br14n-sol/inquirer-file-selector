@@ -8,6 +8,12 @@ export const Status = {
   Canceled: 'canceled'
 } as const
 
+/** Enum of available item types. */
+export const ItemType = {
+  File: 'file',
+  Directory: 'directory'
+} as const
+
 /** Default keybinds used in the prompt. */
 export const defaultKeybinds = {
   up: ['up', 'w'],

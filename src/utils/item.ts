@@ -1,6 +1,7 @@
 import { readdirSync, statSync } from 'node:fs'
 import { basename, join, sep } from 'node:path'
-import type { Item, RawItem } from '#types/item'
+import { ItemType } from '#consts'
+import type { Item, ItemTypeUnion, RawItem } from '#types/item'
 
 /** Appends the system-specific path separator to the end of the path if missing. */
 export function ensurePathSeparator(path: string): string {
@@ -68,4 +69,12 @@ export function sortRawItems(items: RawItem[]): void {
 export function stripInternalProps(raw: RawItem): Item {
   const { displayName, isDisabled, isCwd, isSelected, ...item } = raw
   return item
+}
+
+/** Checks if the item matches the expected type. */
+export function isValidItemType(item: RawItem, type?: ItemTypeUnion): boolean {
+  return (
+    (type === ItemType.File && !item.isDirectory) ||
+    (type === ItemType.Directory && item.isDirectory)
+  )
 }

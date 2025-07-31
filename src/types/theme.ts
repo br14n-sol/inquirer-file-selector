@@ -1,11 +1,9 @@
-import type { RawItem } from '#types/item'
+import type { ItemTypeUnion, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
-
-// TODO: Move `type` property to dedicated type and reuse it in `PromptConfig`
 
 export type RenderHelpContext = {
   /** Indicates the type of item expected. */
-  type: 'file' | 'directory' | undefined
+  type?: ItemTypeUnion
   /** Indicates if multiple items can be selected. */
   multiple: boolean
   /** Indicates if canceling is allowed. */
@@ -16,7 +14,7 @@ export type RenderItemContext = {
   /** Items to render. */
   items: RawItem[]
   /** Indicates the type of item expected. */
-  type: 'file' | 'directory' | undefined
+  type?: ItemTypeUnion
   /** Indicates if multiple items can be selected. */
   multiple: boolean
   /** Indicates if the list is displayed in loop mode. */

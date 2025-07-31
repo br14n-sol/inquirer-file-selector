@@ -7,6 +7,7 @@ import type {
   RenderHelpContext,
   RenderItemContext
 } from '#types/theme'
+import { isValidItemType } from '#utils/item'
 
 export const baseTheme: PromptTheme = {
   prefix: {
@@ -75,11 +76,7 @@ export const baseTheme: PromptTheme = {
         hints.push(this.labels.hints.goForward)
       }
 
-      if (
-        !context.type ||
-        (context.type === 'file' && !item.isDirectory) ||
-        (context.type === 'directory' && item.isDirectory)
-      ) {
+      if (!context.type || isValidItemType(item, context.type)) {
         context.multiple
           ? hints.push(this.labels.hints.toggle)
           : hints.push(this.labels.hints.confirm)
@@ -108,9 +105,7 @@ export const baseTheme: PromptTheme = {
         line += ` ${figures.radioOn}`
       } else if (
         context.isActive &&
-        (!context.type ||
-          (context.type === 'file' && !item.isDirectory) ||
-          (context.type === 'directory' && item.isDirectory))
+        (!context.type || isValidItemType(item, context.type))
       ) {
         line += ` ${figures.radioOff}`
       }

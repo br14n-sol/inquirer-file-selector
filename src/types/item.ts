@@ -1,3 +1,5 @@
+import type { ItemType } from '#consts'
+
 export type Item = {
   name: string
   path: string
@@ -16,3 +18,6 @@ export type RawItem = Item & {
   isCwd: boolean
   isSelected: boolean
 }
+
+/** Type representing the types of items available. */
+export type ItemTypeUnion = (typeof ItemType)[keyof typeof ItemType]

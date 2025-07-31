@@ -9,10 +9,10 @@ import {
   useRef,
   useState
 } from '@inquirer/core'
-import { ANSI_HIDE_CURSOR, defaultKeybinds, Status } from '#consts'
+import { ANSI_HIDE_CURSOR, defaultKeybinds, ItemType, Status } from '#consts'
 import { baseTheme } from '#theme'
 import type { PromptConfig } from '#types/config'
-import type { Item, RawItem } from '#types/item'
+import type { Item, ItemTypeUnion, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type {
   PromptTheme,
@@ -23,6 +23,7 @@ import { createActionChecks } from '#utils/actions'
 import {
   createRawItem,
   ensurePathSeparator,
+  isValidItemType,
   readRawItems,
   sortRawItems,
   stripInternalProps
@@ -88,7 +89,7 @@ export function fileSelector(
         .filter(rawItem => showExcluded || !rawItem.isDisabled)
       sortRawItems(rawItems)
 
-      if (config.type !== 'file') {
+      if (config.type !== ItemType.File) {
         const cwd = createRawItem(currentDir)
         cwd.displayName = ensurePathSeparator('.')
         cwd.isCwd = cwd.path === currentDir
@@ -147,8 +148,7 @@ export function fileSelector(
         setActive(bounds.first)
       } else if (action.isToggle(key)) {
         if (!multiple) return
-        if (config.type === 'file' && activeItem.isDirectory) return
-        if (config.type === 'directory' && !activeItem.isDirectory) return
+        if (!isValidItemType(activeItem, config.type)) return
 
         const index = selections.current.findIndex(
           item => item.path === activeItem.path
@@ -171,8 +171,7 @@ export function fileSelector(
         if (multiple) {
           result = selections.current.map(i => stripInternalProps(i))
         } else {
-          if (config.type === 'file' && activeItem.isDirectory) return
-          if (config.type === 'directory' && !activeItem.isDirectory) return
+          if (!isValidItemType(activeItem, config.type)) return
 
           result = stripInternalProps(activeItem)
         }
@@ -220,13 +219,14 @@ export function fileSelector(
   })(config)
 }
 
-export { Status }
+export { Status, ItemType }
 
 export type {
   StatusType,
   PromptConfig,
   Item,
   RawItem,
+  ItemTypeUnion,
   PromptTheme,
   RenderHelpContext,
   RenderItemContext
