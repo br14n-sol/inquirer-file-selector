@@ -74,6 +74,7 @@ export function stripInternalProps(raw: RawItem): Item {
 /** Checks if the item matches the expected type. */
 export function isValidItemType(item: RawItem, type?: ItemTypeUnion): boolean {
   return (
+    !type ||
     (type === ItemType.File && !item.isDirectory) ||
     (type === ItemType.Directory && item.isDirectory)
   )
