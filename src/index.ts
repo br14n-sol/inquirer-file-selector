@@ -23,6 +23,7 @@ import { createActionChecks } from '#utils/actions'
 import {
   createRawItem,
   ensurePathSeparator,
+  isValidItemType,
   readRawItems,
   sortRawItems,
   stripInternalProps
@@ -147,9 +148,7 @@ export function fileSelector(
         setActive(bounds.first)
       } else if (action.isToggle(key)) {
         if (!multiple) return
-        if (config.type === ItemType.File && activeItem.isDirectory) return
-        if (config.type === ItemType.Directory && !activeItem.isDirectory)
-          return
+        if (!isValidItemType(activeItem, config.type)) return
 
         const index = selections.current.findIndex(
           item => item.path === activeItem.path
@@ -172,9 +171,7 @@ export function fileSelector(
         if (multiple) {
           result = selections.current.map(i => stripInternalProps(i))
         } else {
-          if (config.type === ItemType.File && activeItem.isDirectory) return
-          if (config.type === ItemType.Directory && !activeItem.isDirectory)
-            return
+          if (!isValidItemType(activeItem, config.type)) return
 
           result = stripInternalProps(activeItem)
         }

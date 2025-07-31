@@ -1,6 +1,5 @@
 import figures from '@inquirer/figures'
 import chalk from 'chalk'
-import { ItemType } from '#consts'
 import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type {
@@ -8,6 +7,7 @@ import type {
   RenderHelpContext,
   RenderItemContext
 } from '#types/theme'
+import { isValidItemType } from '#utils/item'
 
 export const baseTheme: PromptTheme = {
   prefix: {
@@ -76,11 +76,7 @@ export const baseTheme: PromptTheme = {
         hints.push(this.labels.hints.goForward)
       }
 
-      if (
-        !context.type ||
-        (context.type === ItemType.File && !item.isDirectory) ||
-        (context.type === ItemType.Directory && item.isDirectory)
-      ) {
+      if (!context.type || isValidItemType(item, context.type)) {
         context.multiple
           ? hints.push(this.labels.hints.toggle)
           : hints.push(this.labels.hints.confirm)
@@ -109,9 +105,7 @@ export const baseTheme: PromptTheme = {
         line += ` ${figures.radioOn}`
       } else if (
         context.isActive &&
-        (!context.type ||
-          (context.type === ItemType.File && !item.isDirectory) ||
-          (context.type === ItemType.Directory && item.isDirectory))
+        (!context.type || isValidItemType(item, context.type))
       ) {
         line += ` ${figures.radioOff}`
       }
