@@ -76,7 +76,7 @@ export const baseTheme: PromptTheme = {
         hints.push(this.labels.hints.goForward)
       }
 
-      if (!context.type || isValidItemType(item, context.type)) {
+      if (isValidItemType(item, context.type)) {
         context.multiple
           ? hints.push(this.labels.hints.toggle)
           : hints.push(this.labels.hints.confirm)
@@ -103,10 +103,7 @@ export const baseTheme: PromptTheme = {
     if (context.multiple) {
       if (item.isSelected) {
         line += ` ${figures.radioOn}`
-      } else if (
-        context.isActive &&
-        (!context.type || isValidItemType(item, context.type))
-      ) {
+      } else if (context.isActive && isValidItemType(item, context.type)) {
         line += ` ${figures.radioOff}`
       }
     }
