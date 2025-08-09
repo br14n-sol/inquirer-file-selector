@@ -166,6 +166,8 @@ export function fileSelector(
         setActive(active - 1)
         setActive(active)
       } else if (action.isConfirm(key)) {
+        if (!activeItem) return
+
         let result = null
 
         if (multiple) {
