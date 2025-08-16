@@ -27,9 +27,6 @@ export default [
       file: types,
       format: 'esm'
     },
-    plugins: [
-      nodeExternals(),
-      dts({ compilerOptions: { paths: compilerOptions.paths } })
-    ]
+    plugins: [dts({ compilerOptions: { paths: compilerOptions.paths } })]
   })
 ]
