@@ -2,10 +2,11 @@ import typescript from '@rollup/plugin-typescript'
 import type { RollupOptions } from 'rollup'
 import { dts } from 'rollup-plugin-dts'
 import nodeExternals from 'rollup-plugin-node-externals'
-import tsConfigPaths from 'rollup-plugin-tsconfig-paths'
 import pkg from './package.json' with { type: 'json' }
+import tsConfig from './tsconfig.json' with { type: 'json' }
 
 const { main, types } = pkg
+const { compilerOptions } = tsConfig
 
 const bundle = (options: RollupOptions): RollupOptions => ({
   ...options,
@@ -26,6 +27,9 @@ export default [
       file: types,
       format: 'esm'
     },
-    plugins: [nodeExternals(), tsConfigPaths(), dts()]
+    plugins: [
+      nodeExternals(),
+      dts({ compilerOptions: { paths: compilerOptions.paths } })
+    ]
   })
 ]

@@ -36,7 +36,6 @@
     "rollup": "4.45.0",
     "rollup-plugin-dts": "6.2.1",
     "rollup-plugin-node-externals": "8.0.1",
-    "rollup-plugin-tsconfig-paths": "1.5.2",
     "tslib": "2.8.1",
     "typescript": "5.6.3"
   },
