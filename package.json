@@ -14,7 +14,7 @@
     "lint:fix": "biome check --write",
     "clean": "rimraf dist",
     "prebuild": "pnpm clean && pnpm lint",
-    "build": "rollup -c"
+    "build": "rollup -c --configPlugin typescript"
   },
   "nano-staged": {
     "*.{ts,json}": "biome check --write --no-errors-on-unmatched"
