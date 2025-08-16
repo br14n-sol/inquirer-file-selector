@@ -23,7 +23,7 @@
     "@inquirer/core": "^10.1.14",
     "@inquirer/figures": "^1.0.12",
     "@inquirer/type": "^3.0.7",
-    "chalk": "^5.4.1"
+    "chalk": "^5.5.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
