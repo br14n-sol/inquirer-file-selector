@@ -89,17 +89,5 @@
   },
   "files": {
     "includes": ["**/*.js", "**/*.ts", "**/*.json"]
-  },
-  "overrides": [
-    {
-      "includes": ["rollup.config.js"],
-      "linter": {
-        "rules": {
-          "style": {
-            "noDefaultExport": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }
