@@ -12,6 +12,7 @@ const bundle = (options: RollupOptions): RollupOptions => ({
   input: 'src/index.ts'
 })
 
+// biome-ignore lint/style/noDefaultExport: Rollup expects a default export
 export default [
   bundle({
     output: {
