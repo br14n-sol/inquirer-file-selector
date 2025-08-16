@@ -14,7 +14,7 @@
     "lint:fix": "biome check --write",
     "clean": "rimraf dist",
     "prebuild": "pnpm clean && pnpm lint",
-    "build": "rollup -c --configPlugin typescript"
+    "build": "rollup -c --configPlugin typescript --configImportAttributesKey with"
   },
   "nano-staged": {
     "*.{ts,json}": "biome check --write --no-errors-on-unmatched"
@@ -29,7 +29,6 @@
     "@biomejs/biome": "2.1.1",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
-    "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.4",
     "husky": "9.1.7",
     "nano-staged": "0.8.0",
@@ -37,7 +36,6 @@
     "rollup": "4.45.0",
     "rollup-plugin-dts": "6.2.1",
     "rollup-plugin-node-externals": "8.0.1",
-    "rollup-plugin-tsconfig-paths": "1.5.2",
     "tslib": "2.8.1",
     "typescript": "5.6.3"
   },
