@@ -12,18 +12,12 @@ const { compilerOptions } = tsConfig
 export default defineConfig([
   {
     input: 'src/index.ts',
-    output: {
-      file: main,
-      format: 'esm'
-    },
+    output: { file: main, format: 'esm' },
     plugins: [nodeExternals(), typescript({ removeComments: true })]
   },
   {
     input: 'src/index.ts',
-    output: {
-      file: types,
-      format: 'esm'
-    },
+    output: { file: types, format: 'esm' },
     plugins: [dts({ compilerOptions: { paths: compilerOptions.paths } })]
   }
 ])
