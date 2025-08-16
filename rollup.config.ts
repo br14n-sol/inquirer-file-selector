@@ -1,4 +1,3 @@
-import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 import type { RollupOptions } from 'rollup'
 import { dts } from 'rollup-plugin-dts'
@@ -19,7 +18,7 @@ export default [
       file: main,
       format: 'esm'
     },
-    plugins: [nodeExternals(), typescript(), terser()]
+    plugins: [nodeExternals(), typescript({ removeComments: true })]
   }),
   bundle({
     output: {
