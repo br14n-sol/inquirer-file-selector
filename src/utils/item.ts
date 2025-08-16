@@ -1,4 +1,4 @@
-import { readdirSync, statSync } from 'node:fs'
+import { readdir, stat } from 'node:fs/promises'
 import { basename, join, sep } from 'node:path'
 import { ItemType } from '#consts'
 import type { Item, ItemTypeUnion, RawItem } from '#types/item'
@@ -9,8 +9,8 @@ export function ensurePathSeparator(path: string): string {
 }
 
 /** Creates a `RawItem` from a given filesystem path. */
-export function createRawItem(path: string): RawItem {
-  const stats = statSync(path)
+export async function createRawItem(path: string): Promise<RawItem> {
+  const stats = await stat(path)
   const name = basename(path)
   const isDirectory = stats.isDirectory()
   const displayName = isDirectory ? ensurePathSeparator(name) : name
@@ -30,18 +30,19 @@ export function createRawItem(path: string): RawItem {
 }
 
 /** Reads all entries in the directory and returns them as `RawItem[]`. */
-export function readRawItems(path: string): RawItem[] {
-  return readdirSync(path)
-    .map(fileName => {
+export async function readRawItems(path: string): Promise<RawItem[]> {
+  const dirContents = await readdir(path)
+  const items = await Promise.all(
+    dirContents.map(async fileName => {
       const filePath = join(path, fileName)
-      try {
-        return createRawItem(filePath)
-      } catch {
-        // Skip missing or inaccessible files/directories
-        return null
-      }
+
+      // Attempt to create a `RawItem` for each file.
+      // If it fails (e.g., due to permissions), return `null`.
+      return createRawItem(filePath).catch(() => null)
     })
-    .filter((item): item is RawItem => item !== null)
+  )
+
+  return items.filter(item => item !== null)
 }
 
 /**
