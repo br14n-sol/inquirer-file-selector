@@ -2,6 +2,7 @@ import path from 'node:path'
 import {
   createPrompt,
   makeTheme,
+  useEffect,
   useKeypress,
   useMemo,
   usePagination,
@@ -80,35 +81,40 @@ export function fileSelector(
       path.resolve(process.cwd(), config.basePath || '.')
     )
 
-    const items = useMemo(() => {
-      const rawItems = readRawItems(currentDir)
-        .map(rawItem => {
-          const strippedItem = stripInternalProps(rawItem)
-          return { ...rawItem, isDisabled: !filter(strippedItem) }
-        })
-        .filter(rawItem => showExcluded || !rawItem.isDisabled)
-      sortRawItems(rawItems)
+    const [items, setItems] = useState<RawItem[]>([])
 
-      if (config.type !== ItemType.File) {
-        const cwd = createRawItem(currentDir)
-        cwd.displayName = ensurePathSeparator('.')
-        cwd.isCwd = cwd.path === currentDir
+    useEffect(() => {
+      ;(async () => {
+        const rawItems = (await readRawItems(currentDir))
+          .map(rawItem => {
+            const strippedItem = stripInternalProps(rawItem)
+            return { ...rawItem, isDisabled: !filter(strippedItem) }
+          })
+          .filter(rawItem => showExcluded || !rawItem.isDisabled)
+        sortRawItems(rawItems)
 
-        rawItems.unshift(cwd)
-      }
+        if (config.type !== ItemType.File) {
+          const cwd = await createRawItem(currentDir)
+          cwd.displayName = ensurePathSeparator('.')
+          cwd.isCwd = cwd.path === currentDir
 
-      // Mark selected items
-      // TODO: Check if is possible optimize this
-      if (multiple) {
-        for (const rawItem of rawItems) {
-          const index = selections.current.findIndex(
-            item => item.path === rawItem.path
-          )
-          rawItem.isSelected = index !== -1
+          rawItems.unshift(cwd)
         }
-      }
 
-      return rawItems
+        // Mark selected items
+        // TODO: Check if is possible optimize this
+        if (multiple) {
+          for (const rawItem of rawItems) {
+            const index = selections.current.findIndex(
+              item => item.path === rawItem.path
+            )
+            rawItem.isSelected = index !== -1
+          }
+        }
+
+        setItems(rawItems)
+        setActive(0)
+      })()
     }, [currentDir])
 
     const bounds = useMemo(() => {
@@ -140,12 +146,10 @@ export function fileSelector(
         setActive(next)
       } else if (action.isBack(key)) {
         setCurrentDir(path.resolve(currentDir, '..'))
-        setActive(bounds.first)
       } else if (action.isForward(key)) {
         if (!activeItem.isDirectory) return
 
         setCurrentDir(activeItem.path)
-        setActive(bounds.first)
       } else if (action.isToggle(key)) {
         if (!multiple) return
         if (!isValidItemType(activeItem, config.type)) return
