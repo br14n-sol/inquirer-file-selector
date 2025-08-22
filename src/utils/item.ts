@@ -1,4 +1,4 @@
-import { readdir, stat } from 'node:fs/promises'
+import { access, constants, readdir, stat } from 'node:fs/promises'
 import { basename, join, sep } from 'node:path'
 import { ItemType } from '#consts'
 import type { Item, ItemTypeUnion, RawItem } from '#types/item'
@@ -14,6 +14,9 @@ export async function createRawItem(path: string): Promise<RawItem> {
   const name = basename(path)
   const isDirectory = stats.isDirectory()
   const displayName = isDirectory ? ensurePathSeparator(name) : name
+
+  // Check if the file or directory is readable; if not, the operation will fail.
+  await access(path, constants.R_OK)
 
   return {
     displayName,
