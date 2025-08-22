@@ -112,10 +112,13 @@ export function fileSelector(
           }
         }
 
-        setItems(rawItems)
+        return rawItems
       }
 
-      generateDirTree()
+      generateDirTree().then(result => {
+        setItems(result)
+        setActive(0)
+      })
     }, [currentDir])
 
     const bounds = useMemo(() => {
@@ -147,12 +150,10 @@ export function fileSelector(
         setActive(next)
       } else if (action.isBack(key)) {
         setCurrentDir(path.resolve(currentDir, '..'))
-        setActive(bounds.first)
       } else if (action.isForward(key)) {
         if (!activeItem.isDirectory) return
 
         setCurrentDir(activeItem.path)
-        setActive(bounds.first)
       } else if (action.isToggle(key)) {
         if (!multiple) return
         if (!isValidItemType(activeItem, config.type)) return
