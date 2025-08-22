@@ -84,7 +84,7 @@ export function fileSelector(
     const [items, setItems] = useState<RawItem[]>([])
 
     useEffect(() => {
-      const generateDirTree = async () => {
+      ;(async () => {
         const rawItems = (await readRawItems(currentDir))
           .map(rawItem => {
             const strippedItem = stripInternalProps(rawItem)
@@ -112,13 +112,9 @@ export function fileSelector(
           }
         }
 
-        return rawItems
-      }
-
-      generateDirTree().then(result => {
-        setItems(result)
+        setItems(rawItems)
         setActive(0)
-      })
+      })()
     }, [currentDir])
 
     const bounds = useMemo(() => {
