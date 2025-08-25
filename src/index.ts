@@ -74,7 +74,7 @@ export function fileSelector(
     }, [])
 
     const prefix = usePrefix({ status, theme })
-    const selections = useRef<RawItem[]>([])
+    const selections = useRef<Map<string, RawItem>>(new Map())
 
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.basePath || '.')
@@ -98,14 +98,11 @@ export function fileSelector(
       }
 
       // Mark selected items
-      // TODO: Check if is possible optimize this
       if (multiple) {
-        for (const rawItem of rawItems) {
-          const index = selections.current.findIndex(
-            item => item.path === rawItem.path
-          )
-          rawItem.isSelected = index !== -1
-        }
+        return rawItems.map(rawItem => ({
+          ...rawItem,
+          isSelected: selections.current.has(rawItem.path)
+        }))
       }
 
       return rawItems
@@ -150,17 +147,13 @@ export function fileSelector(
         if (!multiple) return
         if (!isValidItemType(activeItem, config.type)) return
 
-        const index = selections.current.findIndex(
-          item => item.path === activeItem.path
-        )
-
-        if (index === -1) {
-          activeItem.isSelected = true
-          selections.current.push(activeItem)
-        } else {
-          activeItem.isSelected = false
-          selections.current.splice(index, 1)
-        }
+        // In this case, we can trust the value of `activeItem.isSelected`
+        // because we have already marked the selected items when reading them,
+        // and we only ever modify `activeItem.isSelected` here.
+        activeItem.isSelected = !activeItem.isSelected
+        activeItem.isSelected
+          ? selections.current.set(activeItem.path, activeItem)
+          : selections.current.delete(activeItem.path)
 
         // Force re-render to reflect selection changes
         setActive(active - 1)
@@ -171,7 +164,9 @@ export function fileSelector(
         let result = null
 
         if (multiple) {
-          result = selections.current.map(i => stripInternalProps(i))
+          result = [...selections.current.values()].map(i =>
+            stripInternalProps(i)
+          )
         } else {
           if (!isValidItemType(activeItem, config.type)) return
 
