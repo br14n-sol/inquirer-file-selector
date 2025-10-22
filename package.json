@@ -27,8 +27,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
-    "@commitlint/cli": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1",
     "@rollup/plugin-typescript": "12.1.4",
     "husky": "9.1.7",
     "nano-staged": "0.8.0",

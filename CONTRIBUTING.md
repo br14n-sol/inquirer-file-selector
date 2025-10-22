@@ -21,7 +21,6 @@ This project uses the following tools to maintain code quality and consistency:
 - [Biome](https://biomejs.dev/) for formatting and linting
 - [husky](https://github.com/typicode/husky) for managing Git hooks
 - [nano-staged](https://github.com/usmanyunusov/nano-staged) for running linters on staged files
-- [commitlint](https://commitlint.js.org/) for enforcing commit message conventions
 
 ## Getting Started
 
@@ -41,9 +40,9 @@ This project uses the following tools to maintain code quality and consistency:
 
 ## Submitting Changes
 
-1. **Commit your changes** with clear and concise messages following [Conventional Commits](https://www.conventionalcommits.org/):
+1. **Commit your changes** with clear and concise messages:
    ```sh
-   git commit -m "feat(<scope>): add support for XYZ"
+   git commit -m "Add support for XYZ"
    ```
 2. **Push to your fork**:
    ```sh
