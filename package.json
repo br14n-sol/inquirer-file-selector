@@ -20,22 +20,22 @@
     "*.{ts,json}": "biome check --write --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@inquirer/core": "^10.1.15",
-    "@inquirer/figures": "^1.0.13",
-    "@inquirer/type": "^3.0.8",
-    "chalk": "^5.5.0"
+    "@inquirer/core": "^10.3.0",
+    "@inquirer/figures": "^1.0.14",
+    "@inquirer/type": "^3.0.9",
+    "chalk": "^5.6.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "2.2.6",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@rollup/plugin-typescript": "12.1.4",
     "husky": "9.1.7",
     "nano-staged": "0.8.0",
     "rimraf": "6.0.1",
-    "rollup": "4.46.2",
+    "rollup": "4.52.5",
     "rollup-plugin-dts": "6.2.3",
-    "rollup-plugin-node-externals": "8.0.1",
+    "rollup-plugin-node-externals": "8.1.1",
     "tslib": "2.8.1",
     "typescript": "5.6.3"
   },
@@ -50,7 +50,7 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748",
+  "packageManager": "pnpm@10.19.0+sha512.c9fc7236e92adf5c8af42fd5bf1612df99c2ceb62f27047032f4720b33f8eacdde311865e91c411f2774f618d82f320808ecb51718bfa82c060c4ba7c76a32b8",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/br14n-sol/inquirer-file-selector.git"
