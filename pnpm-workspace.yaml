@@ -1,0 +1,2 @@
+# See: https://pnpm.io/settings#minimumreleaseage
+minimumReleaseAge: 4320 # in minutes (3 day)
