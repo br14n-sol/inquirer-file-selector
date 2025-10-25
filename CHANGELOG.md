@@ -31,6 +31,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 
 
+## [0.6.2] 2025-03-01
+
+### Changed
+
+- Update `@inquirer/core` to version 10.1.7.
+- Update `@inquirer/figures` to version 1.0.10.
+- Update `chalk` to version 5.4.1.
+
+### Fixed
+
+- Wrong symbol in file tree when `config.loop` is `true`.
+
+## [0.6.1] 2024-12-01
+
+### Added
+
+- Support selecting the current directory (`./`) in the explorer when `config.type` is `'directory'` or `'file+directory'`. This allows quicker selection of the current directory. Thanks to [@pastacolsugo](https://github.com/pastacolsugo).
+
+### Changed
+
+- Update `@inquirer/core` to version 10.1.0.
+- Update `@inquirer/figures` to version 1.0.8.
+
+## [0.6.0] 2024-10-30
+
+### Added
+
+- Support for selecting directories.
+
+### Changed
+
+- Update `@inquirer/core` to version 10.0.1.
+- Update `@inquirer/figures` to version 1.0.7.
+- Open directories with `Space` key instead of `Enter`. The `Enter` key now only selects the focused item.
+
+### Removed
+
+- Previously deprecated `config.match`, `config.hideNonMatch` and `FileStats.isDir`.
+
 ## [0.5.0] 2024-10-22
 
 ### Added
