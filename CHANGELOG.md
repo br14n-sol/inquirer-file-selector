@@ -68,7 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for selecting directories.
+- Ability to select directories.
+- `config.type` to decide what item type is selectable, this options has three possible values: `'file'`, `'directory'` and `'file+directory'`. Defaults to `'file'`.
 
 ### Changed
 
