@@ -5,31 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-
-- 
+## [1.0.1] 2025-08-10
 
 ### Changed
 
-- 
+- Version bumped to publish on npm, no functional changes.
 
-### Deprecated
+## [1.0.0] 2025-08-09 (Could not be published)
 
-- 
+### Added
 
-### Removed
+- `config.multiple` boolean to support multiple selection.
+- `config.keybinds` to customize all key actions.
+- Make all help hints fully customizable on the theme with dynamic display.
+- Exports for types: `StatusType`, `PromptConfig`, `Item`, `RawItem`, `ItemTypeUnion`, `PromptTheme`, `RenderHelpContext`, `RenderItemContext` and `Keybinds`.
 
-- 
+### Changed
+
+- Move `@inquirer/type` from dev dependency to regular dependency.
+- Update `@inquirer/core` to version 10.1.14.
+- Update `@inquirer/figures` to version 1.0.12.
+- Update `@inquirer/type` to version 3.0.7.
+- Enhance prompt signature with conditional return types.
+- Return an `Item` object instead of just a path.
+- Return `null` instead of `'canceled'` when the prompt is canceled.
+- Replace default export with named export `fileSelector`.
+- Make files and directories selectable by default.
+- Drop support for Node.js 18; now requires Node.js 20.
+- Move all logic of rendering items to the theme, and make other small changes.
+- Move `config.cancelText` and `config.emptyText` to `theme.labels.messages`.
 
 ### Fixed
 
-- 
-
-### Security
-
-- 
+- Visibility issues in light color schemes.
+- Errors caused by permission-denied files. Thanks to [@justind000](https://github.com/justind000).
+- Crash occurring on confirming selection in empty directory with `config.type` set to `'file'`. Thanks to [@jrsun](https://github.com/jrsun).
 
 ## [0.6.2] 2025-03-01
 
