@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- No longer publishing minified code to enable better stacktrace interpretation during error debugging.
+- Update `@inquirer/core` to version 10.3.0.
+- Update `@inquirer/figures` to version 1.0.14.
+- Update `@inquirer/type` to version 3.0.9.
+- Update `chalk` to version 5.6.2.
+
 ## [1.0.1] 2025-08-10
 
 ### Changed
@@ -189,6 +199,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - This is the initial version.
 
+[unreleased]: https://github.com/br14n-sol/inquirer-file-selector/compare/v1.0.1...HEAD
 [1.0.1]: https://github.com/br14n-sol/inquirer-file-selector/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/br14n-sol/inquirer-file-selector/compare/v0.6.2...v1.0.0
 [0.6.2]: https://github.com/br14n-sol/inquirer-file-selector/compare/v0.6.1...v0.6.2
