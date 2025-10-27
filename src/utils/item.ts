@@ -15,8 +15,8 @@ export function createRawItem(path: string): RawItem {
   const isDirectory = stats.isDirectory()
   const displayName = isDirectory ? ensurePathSeparator(name) : name
 
-  // Check if the file or directory is readable; if not, the operation will fail.
-  accessSync(path, constants.R_OK)
+  // If the path is a directory, check if it is readable; otherwise, the operation will fail.
+  isDirectory && accessSync(path, constants.R_OK)
 
   return {
     displayName,
