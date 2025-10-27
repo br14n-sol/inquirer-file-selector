@@ -1,4 +1,4 @@
-import { readdirSync, statSync } from 'node:fs'
+import { accessSync, constants, readdirSync, statSync } from 'node:fs'
 import { basename, join, sep } from 'node:path'
 import { ItemType } from '#consts'
 import type { Item, ItemTypeUnion, RawItem } from '#types/item'
@@ -14,6 +14,9 @@ export function createRawItem(path: string): RawItem {
   const name = basename(path)
   const isDirectory = stats.isDirectory()
   const displayName = isDirectory ? ensurePathSeparator(name) : name
+
+  // If the path is a directory, check if it is readable; otherwise, the operation will fail.
+  isDirectory && accessSync(path, constants.R_OK)
 
   return {
     displayName,
