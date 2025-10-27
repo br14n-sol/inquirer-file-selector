@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Visibility issues in light color schemes.
-- Errors caused by permission-denied files. Thanks to [@justind000](https://github.com/justind000).
+- Permission-denied errors during stat calls on restricted files. Thanks to [@justind000](https://github.com/justind000).
 - Crash occurring on confirming selection in empty directory with `config.type` set to `'file'`. Thanks to [@jrsun](https://github.com/jrsun).
 
 ## [0.6.2] 2025-03-01
