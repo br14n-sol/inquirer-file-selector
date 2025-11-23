@@ -30,7 +30,7 @@
     "@rollup/plugin-typescript": "12.1.4",
     "husky": "9.1.7",
     "nano-staged": "0.8.0",
-    "rimraf": "6.0.1",
+    "rimraf": "6.1.2",
     "rollup": "4.52.5",
     "rollup-plugin-dts": "6.2.3",
     "rollup-plugin-node-externals": "8.1.1",
