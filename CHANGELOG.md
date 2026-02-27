@@ -11,9 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set minimum Node.js version to 20.12.0.
 - No longer publishing minified code to enable better stacktrace interpretation during error debugging.
-- Update `@inquirer/core` to version 11.0.1.
-- Update `@inquirer/figures` to version 2.0.1.
-- Update `@inquirer/type` to version 4.0.1.
+- Update `@inquirer/core` to version 11.1.5.
+- Update `@inquirer/figures` to version 2.0.3.
+- Update `@inquirer/type` to version 4.0.3.
 - Update `chalk` to version 5.6.2.
 
 ### Fixed
