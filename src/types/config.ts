@@ -51,6 +51,11 @@ export interface PromptConfig {
    */
   allowCancel?: boolean
   /**
+   * Indicates if the directory to move back to is allowed.
+   * @param backDir - Directory to move back to
+   */
+  allowBack?: (backDir: string) => boolean
+  /**
    * Keybinds for actions.
    * If omitted, default keybinds are used.
    */
