@@ -56,7 +56,8 @@ export function fileSelector(
       loop = false,
       filter = () => true,
       showExcluded = false,
-      allowCancel = false
+      allowCancel = false,
+      allowBack = () => true
     } = config
 
     const [status, setStatus] = useState<StatusType>(Status.Idle)
@@ -93,8 +94,11 @@ export function fileSelector(
         const cwd = createRawItem(currentDir)
         cwd.displayName = ensurePathSeparator('.')
         cwd.isCwd = cwd.path === currentDir
-
-        rawItems.unshift(cwd)
+        const strippedItem = stripInternalProps(cwd)
+        cwd.isDisabled = !filter(strippedItem)
+        if (showExcluded || !cwd.isDisabled) {
+          rawItems.unshift(cwd)
+        }
       }
 
       // Mark selected items
@@ -136,7 +140,10 @@ export function fileSelector(
 
         setActive(next)
       } else if (action.isBack(key)) {
-        setCurrentDir(path.resolve(currentDir, '..'))
+        const backDir = path.resolve(currentDir, '..')
+        if (!allowBack(backDir)) return
+
+        setCurrentDir(backDir)
         setActive(bounds.first)
       } else if (action.isForward(key)) {
         if (!activeItem.isDirectory) return
