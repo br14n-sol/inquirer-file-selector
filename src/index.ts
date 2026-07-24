@@ -216,16 +216,15 @@ export function fileSelector(
   })(config)
 }
 
-export { Status, ItemType }
-
 export type {
-  StatusType,
-  PromptConfig,
   Item,
-  RawItem,
   ItemTypeUnion,
+  Keybinds,
+  PromptConfig,
   PromptTheme,
+  RawItem,
   RenderHelpContext,
   RenderItemContext,
-  Keybinds
+  StatusType
 }
+export { ItemType, Status }
