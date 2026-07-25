@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support `config.allowBack` to optionally prevent navigating back to the parent directory. Thanks to [@JordanW9232](https://github.com/JordanW9232).
+
 ### Changed
 
 - Set minimum Node.js version to 20.12.0.
