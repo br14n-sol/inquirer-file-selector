@@ -94,11 +94,8 @@ export function fileSelector(
         const cwd = createRawItem(currentDir)
         cwd.displayName = ensurePathSeparator('.')
         cwd.isCwd = cwd.path === currentDir
-        const strippedItem = stripInternalProps(cwd)
-        cwd.isDisabled = !filter(strippedItem)
-        if (showExcluded || !cwd.isDisabled) {
-          rawItems.unshift(cwd)
-        }
+
+        rawItems.unshift(cwd)
       }
 
       // Mark selected items
