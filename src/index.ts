@@ -56,7 +56,8 @@ export function fileSelector(
       loop = false,
       filter = () => true,
       showExcluded = false,
-      allowCancel = false
+      allowCancel = false,
+      allowBack = () => true
     } = config
 
     const [status, setStatus] = useState<StatusType>(Status.Idle)
@@ -79,6 +80,9 @@ export function fileSelector(
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.basePath || '.')
     )
+    // Memoize the back directory and its validity to avoid re-computing on every render
+    const backDir = useMemo(() => path.resolve(currentDir, '..'), [currentDir])
+    const canGoBack = useMemo(() => allowBack(backDir), [backDir])
 
     const items = useMemo(() => {
       const rawItems = readRawItems(currentDir)
@@ -136,7 +140,9 @@ export function fileSelector(
 
         setActive(next)
       } else if (action.isBack(key)) {
-        setCurrentDir(path.resolve(currentDir, '..'))
+        if (!canGoBack) return
+
+        setCurrentDir(backDir)
         setActive(bounds.first)
       } else if (action.isForward(key)) {
         if (!activeItem.isDirectory) return
