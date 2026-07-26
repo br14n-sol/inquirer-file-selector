@@ -96,7 +96,7 @@ export function fileSelector(
       if (config.type !== ItemType.File) {
         const cwd = createRawItem(currentDir)
         cwd.displayName = ensurePathSeparator('.')
-        cwd.isCwd = cwd.path === currentDir
+        cwd.isCwd = true
 
         rawItems.unshift(cwd)
       }
