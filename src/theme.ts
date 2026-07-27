@@ -1,5 +1,5 @@
+import { styleText } from 'node:util'
 import figures from '@inquirer/figures'
-import chalk from 'chalk'
 import type { RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type {
@@ -11,23 +11,23 @@ import { isValidItemType } from '#utils/item'
 
 export const baseTheme: PromptTheme = {
   prefix: {
-    idle: chalk.cyan('?'),
-    done: chalk.green(figures.tick),
-    canceled: chalk.red(figures.cross)
+    idle: styleText('cyan', '?'),
+    done: styleText('green', figures.tick),
+    canceled: styleText('red', figures.cross)
   },
   style: {
     disabled: (linePrefix: string, text: string) =>
-      chalk.gray(`${linePrefix} ${chalk.strikethrough(text)}`),
-    active: (text: string) => chalk.cyan(text),
-    directory: (text: string) => chalk.yellowBright(text),
+      styleText('gray', `${linePrefix} ${styleText('strikethrough', text)}`),
+    active: (text: string) => styleText('cyan', text),
+    directory: (text: string) => styleText('yellowBright', text),
     file: (text: string) => text,
-    currentDir: (text: string) => chalk.magentaBright(text),
-    message: (text: string, _status: StatusType) => chalk.bold(text),
-    help: (text: string) => chalk.gray(text),
-    key: (text: string) => chalk.bgGray.white(` ${text} `),
+    currentDir: (text: string) => styleText('magentaBright', text),
+    message: (text: string, _status: StatusType) => styleText('bold', text),
+    help: (text: string) => styleText('gray', text),
+    key: (text: string) => styleText(['bgGray', 'white'], ` ${text} `),
     messages: {
-      cancel: (text: string) => chalk.red(text),
-      empty: (text: string) => chalk.red(text)
+      cancel: (text: string) => styleText('red', text),
+      empty: (text: string) => styleText('red', text)
     }
   },
   hierarchySymbols: {
