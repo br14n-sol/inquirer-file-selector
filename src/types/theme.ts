@@ -1,3 +1,4 @@
+import type { Prettify } from '@inquirer/type'
 import type { ItemTypeUnion, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 
@@ -26,23 +27,11 @@ export type RenderItemContext = {
 }
 
 export interface PromptTheme {
-  prefix: {
-    /**
-     * The prefix displayed when the prompt is idle.
-     * @default styleText('cyan', '?')
-     */
-    idle: string
-    /**
-     * The prefix displayed when the prompt is done.
-     * @default styleText('green', '✔')
-     */
-    done: string
-    /**
-     * The prefix displayed when the prompt is canceled.
-     * @default styleText('red', '✘')
-     */
-    canceled: string
-  }
+  /**
+   * Prefix displayed before the prompt message.
+   * Maps each `StatusType` to its corresponding prefix string.
+   */
+  prefix: Prettify<Record<StatusType, string>>
   style: {
     /**
      * Defines the style for disabled items.
