@@ -4,8 +4,8 @@ I'm really glad you're reading this! If you're interested in contributing to `in
 
 ## Prerequisites
 
-- **Node.js 20.19.0** (Ensure it's installed: `node -v`)
-  - Using a version manager like [fnm](https://github.com/Schniz/fnm) is recommended to easily switch between Node.js versions.
+- **Node.js 22.13.0** (Ensure it's installed: `node -v`)
+  - Using a version manager like [mise](https://mise.jdx.dev/) is recommended to easily switch between Node.js versions.
 - **pnpm 10.8.1** (Used for managing dependencies)
    - It's recommended to enable [pnpm](https://pnpm.io/) via [corepack](https://github.com/nodejs/corepack):
      ```sh
