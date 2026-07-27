@@ -29,34 +29,34 @@ export interface PromptTheme {
   prefix: {
     /**
      * The prefix displayed when the prompt is idle.
-     * @default chalk.cyan('?')
+     * @default styleText('cyan', '?')
      */
     idle: string
     /**
      * The prefix displayed when the prompt is done.
-     * @default chalk.green(figures.tick)
+     * @default styleText('green', '✔')
      */
     done: string
     /**
      * The prefix displayed when the prompt is canceled.
-     * @default chalk.red(figures.cross)
+     * @default styleText('red', '✘')
      */
     canceled: string
   }
   style: {
     /**
      * Defines the style for disabled items.
-     * @default chalk.strikethrough.gray
+     * @default styleText('gray', `${linePrefix} ${styleText('strikethrough', text)}`)
      */
     disabled: (linePrefix: string, text: string) => string
     /**
      * Defines the style for the active item.
-     * @default chalk.cyan
+     * @default styleText('cyan', text)
      */
     active: (text: string) => string
     /**
      * Defines the style for items of type `'directory'`.
-     * @default chalk.yellowBright
+     * @default styleText('yellowBright', text)
      */
     directory: (text: string) => string
     /**
@@ -66,22 +66,22 @@ export interface PromptTheme {
     file: (text: string) => string
     /**
      * Defines the style for the current directory header.
-     * @default chalk.magentaBright
+     * @default styleText('magentaBright', text)
      */
     currentDir: (text: string) => string
     /**
      * Defines the style applied to the main message, defined in `config.message`.
-     * @default chalk.bold
+     * @default styleText('bold', text)
      */
     message: (text: string, status: StatusType) => string
     /**
      * Defines the style for help messages.
-     * @default chalk.italic.gray
+     * @default styleText(['italic', 'gray'], text)
      */
     help: (text: string) => string
     /**
      * Defines the style for key labels used in hints.
-     * @default chalk.bgGray.white
+     * @default styleText(['bgGray', 'white'], ` ${text} `)
      */
     key: (text: string) => string
     /**
@@ -90,12 +90,12 @@ export interface PromptTheme {
     messages: {
       /**
        * Defines the style for the cancel message.
-       * @default chalk.red
+       * @default styleText('red', text)
        */
       cancel: (text: string) => string
       /**
        * Defines the style for the empty directory message.
-       * @default chalk.red
+       * @default styleText('red', text)
        */
       empty: (text: string) => string
     }
