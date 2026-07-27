@@ -18,7 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update `@inquirer/core` to version 11.2.1.
 - Update `@inquirer/figures` to version 2.0.7.
 - Update `@inquirer/type` to version 4.0.7.
-- Update `chalk` to version 5.6.2.
+
+### Removed
+
+- `chalk` dependency, replaced with Node.js built-in `styleText` utility.
 
 ### Fixed
 
