@@ -16,8 +16,6 @@ export const baseTheme: PromptTheme = {
     canceled: styleText('red', figures.cross)
   },
   style: {
-    disabled: (linePrefix: string, text: string) =>
-      styleText('gray', `${linePrefix} ${styleText('strikethrough', text)}`),
     active: (text: string) => styleText('cyan', text),
     directory: (text: string) => styleText('yellowBright', text),
     file: (text: string) => text,
@@ -91,11 +89,6 @@ export const baseTheme: PromptTheme = {
       isLast && !context.loop
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
-
-    if (item.isDisabled) {
-      return this.style.disabled(linePrefix, item.displayName)
-    }
-
     const baseColor = item.isDirectory ? this.style.directory : this.style.file
     const color = context.isActive ? this.style.active : baseColor
     let line = color(`${linePrefix} ${item.displayName}`)

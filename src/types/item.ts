@@ -14,7 +14,6 @@ export type Item = {
 
 export type RawItem = Item & {
   displayName: string
-  isDisabled: boolean
   isCwd: boolean
   isSelected: boolean
 }

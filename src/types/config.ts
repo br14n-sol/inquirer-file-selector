@@ -41,11 +41,6 @@ export interface PromptConfig {
    */
   filter?: (item: Readonly<Item>) => boolean
   /**
-   * Indicates if items excluded by `filter` are visible.
-   * @default false
-   */
-  showExcluded?: boolean
-  /**
    * Indicates if canceling is allowed.
    * @default false
    */
