@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `chalk` dependency, replaced with Node.js built-in `styleText` utility.
 - `PromptConfig.showExcluded` option. Entries excluded by `PromptConfig.filter` are now always hidden, which was previously the default behavior.
+- `PromptTheme.style.disabled` style. Disabled entries are no longer rendered.
 
 ### Fixed
 
