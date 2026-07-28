@@ -174,7 +174,7 @@ export interface PromptTheme {
      */
     branch: string
     /**
-     * Symbol representing a leaf, marking the end of a the tree hierarchy.
+     * Symbol representing a leaf, marking the end of the tree hierarchy.
      */
     leaf: string
   }
