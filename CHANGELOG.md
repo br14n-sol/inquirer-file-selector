@@ -207,7 +207,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- If `config.extensions` is an empty array or not provided, all files in the selector are disabled.
+- If config option `extensions` is an empty array or not provided, all files in the selector are disabled.
 
 ## [0.1.0] 2024-07-27
 
