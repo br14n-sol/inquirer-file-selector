@@ -16,8 +16,6 @@ export const baseTheme: PromptTheme = {
     canceled: styleText('red', figures.cross)
   },
   style: {
-    disabled: (linePrefix: string, text: string) =>
-      styleText('gray', `${linePrefix} ${styleText('strikethrough', text)}`),
     active: (text: string) => styleText('cyan', text),
     directory: (text: string) => styleText('yellowBright', text),
     file: (text: string) => text,

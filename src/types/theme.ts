@@ -39,8 +39,6 @@ export interface PromptTheme {
    */
   prefix: Prettify<Record<StatusType, string>>
   style: {
-    /** Style applied to disabled items. */
-    disabled: (linePrefix: string, text: string) => string
     /** Style applied to the active item. */
     active: (text: string) => string
     /** Style applied to items of type `'directory'`. */
