@@ -28,9 +28,9 @@ export type RenderItemContext = {
 }
 
 /**
- * Defines the complete prompt theme.
+ * Theme configuration for the prompt.
  *
- * Default values can be found in the default theme implementation.
+ * Default values are defined internally by the prompt theme implementation.
  */
 export interface PromptTheme {
   /**
@@ -40,44 +40,44 @@ export interface PromptTheme {
   prefix: Prettify<Record<StatusType, string>>
   style: {
     /**
-     * Defines the style for disabled items.
+     * Style applied to disabled items.
      */
     disabled: (linePrefix: string, text: string) => string
     /**
-     * Defines the style for the active item.
+     * Style applied to the active item.
      */
     active: (text: string) => string
     /**
-     * Defines the style for items of type `'directory'`.
+     * Style applied to items of type `'directory'`.
      */
     directory: (text: string) => string
     /**
-     * Defines the style for items of type `'file'`.
+     * Style applied to items of type `'file'`.
      */
     file: (text: string) => string
     /**
-     * Defines the style for the current directory header.
+     * Style applied to the current directory header.
      */
     currentDir: (text: string) => string
     /**
-     * Defines the style applied to the main message, defined in `config.message`.
+     * Style applied to the main message.
      */
     message: (text: string, status: StatusType) => string
     /**
-     * Defines the style for help messages.
+     * Style applied to help messages.
      */
     help: (text: string) => string
     /**
-     * Defines the style for key labels used in hints.
+     * Style applied to key labels used in hints.
      */
     key: (text: string) => string
     messages: {
       /**
-       * Defines the style for the cancel message.
+       * Style applied to the cancel message.
        */
       cancel: (text: string) => string
       /**
-       * Defines the style for the empty directory message.
+       * Style applied to the empty directory message.
        */
       empty: (text: string) => string
     }
@@ -90,7 +90,7 @@ export interface PromptTheme {
     keys: Prettify<Record<keyof typeof defaultKeybinds, string>>
     /**
      * Hint messages shown to the user, describing available actions.
-     * The texts can contain placeholders like `{{up}}`, `{{down}}`, etc.,
+     * Strings can contain placeholders like `{{up}}`, `{{down}}`, etc.,
      * which will be replaced by the corresponding values from `labels.keys`.
      */
     hints: {
@@ -124,7 +124,7 @@ export interface PromptTheme {
      */
     messages: {
       /**
-       * Message displayed when the selection is canceled.
+       * Message displayed when the prompt is canceled.
        */
       cancel: string
       /**
@@ -144,13 +144,13 @@ export interface PromptTheme {
     leaf: string
   }
   /**
-   * Renders the help message in the header section.
+   * Renders the header help message.
    * @param type - Help type, `'header'`.
    * @param context - Additional context for rendering the help message.
    */
   renderHelp(type: 'header', context: Partial<RenderHelpContext>): string
   /**
-   * Renders the help message inline for a specific item.
+   * Renders the inline help message for an item.
    * @param type - Help type, `'inline'`.
    * @param item - The item for which to render the help message.
    * @param context - Additional context for rendering the help message.
@@ -161,7 +161,7 @@ export interface PromptTheme {
     context: Partial<RenderHelpContext>
   ): string
   /**
-   * Renders an item in the list.
+   * Renders a single item in the list.
    * @param item - The item to render.
    * @param context - Additional context about the item.
    */
