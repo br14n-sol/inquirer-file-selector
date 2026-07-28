@@ -1,4 +1,5 @@
 import type { Prettify } from '@inquirer/type'
+import type { defaultKeybinds } from '#consts'
 import type { ItemTypeUnion, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 
@@ -89,39 +90,10 @@ export interface PromptTheme {
    */
   labels: {
     /**
-     * Labels used to represent navigation keys.
+     * Labels corresponding to each keybind.
      * `style.key` is automatically applied to these values.
      */
-    keys: {
-      /**
-       * Label for the "up" navigation key.
-       */
-      up: string
-      /**
-       * Label for the "down" navigation key.
-       */
-      down: string
-      /**
-       * Label for the "back" navigation key.
-       */
-      back: string
-      /**
-       * Label for the "forward" navigation key.
-       */
-      forward: string
-      /**
-       * Label for the "toggle selection" key.
-       */
-      toggle: string
-      /**
-       * Label for the "confirm" key.
-       */
-      confirm: string
-      /**
-       * Label for the "cancel" key.
-       */
-      cancel: string
-    }
+    keys: Prettify<Record<keyof typeof defaultKeybinds, string>>
     /**
      * Hint messages shown to the user, describing available actions.
      * The texts can contain placeholders like `{{up}}`, `{{down}}`, etc.,
