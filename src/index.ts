@@ -84,12 +84,10 @@ export function fileSelector(
     const canGoBack = useMemo(() => allowBack(backDir), [backDir])
 
     const items = useMemo(() => {
-      const rawItems = readRawItems(currentDir)
-        .map(rawItem => {
-          const strippedItem = stripInternalProps(rawItem)
-          return { ...rawItem, isDisabled: !filter(strippedItem) }
-        })
-        .filter(rawItem => !rawItem.isDisabled)
+      const rawItems = readRawItems(currentDir).filter(rawItem => {
+        const strippedItem = stripInternalProps(rawItem)
+        return filter(strippedItem)
+      })
       sortRawItems(rawItems)
 
       if (config.type !== ItemType.File) {
@@ -112,12 +110,8 @@ export function fileSelector(
     }, [currentDir])
 
     const bounds = useMemo(() => {
-      const first = items.findIndex(rawItem => !rawItem.isDisabled)
-      const last = items.findLastIndex(rawItem => !rawItem.isDisabled)
-
-      if (first === -1) {
-        return { first: 0, last: 0 }
-      }
+      const first = items.length > 0 ? 0 : -1
+      const last = items.length > 0 ? items.length - 1 : -1
 
       return { first, last }
     }, [items])
@@ -131,11 +125,7 @@ export function fileSelector(
         if (!loop && action.isDown(key) && active === bounds.last) return
 
         const offset = action.isUp(key) ? -1 : 1
-        let next = active
-
-        do {
-          next = (next + offset + items.length) % items.length
-        } while (items[next].isDisabled)
+        const next = (active + offset + items.length) % items.length
 
         setActive(next)
       } else if (action.isBack(key)) {

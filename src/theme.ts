@@ -91,11 +91,6 @@ export const baseTheme: PromptTheme = {
       isLast && !context.loop
         ? this.hierarchySymbols.leaf
         : this.hierarchySymbols.branch
-
-    if (item.isDisabled) {
-      return this.style.disabled(linePrefix, item.displayName)
-    }
-
     const baseColor = item.isDirectory ? this.style.directory : this.style.file
     const color = context.isActive ? this.style.active : baseColor
     let line = color(`${linePrefix} ${item.displayName}`)

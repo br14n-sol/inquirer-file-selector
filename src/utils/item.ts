@@ -25,7 +25,6 @@ export function createRawItem(path: string): RawItem {
     size: stats.size,
     createdMs: stats.birthtimeMs,
     lastModifiedMs: stats.mtimeMs,
-    isDisabled: false,
     isDirectory,
     isCwd: false,
     isSelected: false
@@ -49,16 +48,15 @@ export function readRawItems(path: string): RawItem[] {
 
 /**
  * Sorts the given array of `RawItem`s by the following criteria:
- * 1. Enabled items before disabled ones.
- * 2. Directories before files.
- * 3. Alphabetical order (by name) if priorities match.
+ * 1. Directories before files.
+ * 2. Alphabetical order (by name) if priorities match.
  *
  * Mutates the original array.
  */
 export function sortRawItems(items: RawItem[]): void {
   items.sort((a, b) => {
-    const aPriority = (a.isDisabled ? 2 : 0) + (a.isDirectory ? -1 : 0)
-    const bPriority = (b.isDisabled ? 2 : 0) + (b.isDirectory ? -1 : 0)
+    const aPriority = a.isDirectory ? -1 : 0
+    const bPriority = b.isDirectory ? -1 : 0
 
     if (aPriority !== bPriority) {
       return aPriority - bPriority
@@ -70,7 +68,7 @@ export function sortRawItems(items: RawItem[]): void {
 
 /** Removes internal-only properties from a `RawItem`. */
 export function stripInternalProps(raw: RawItem): Item {
-  const { displayName, isDisabled, isCwd, isSelected, ...item } = raw
+  const { displayName, isCwd, isSelected, ...item } = raw
   return item
 }
 
