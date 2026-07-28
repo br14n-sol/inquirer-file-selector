@@ -71,9 +71,6 @@ export interface PromptTheme {
      * Defines the style for key labels used in hints.
      */
     key: (text: string) => string
-    /**
-     * Defines the style for messages displayed in the prompt.
-     */
     messages: {
       /**
        * Defines the style for the cancel message.
@@ -85,9 +82,6 @@ export interface PromptTheme {
       empty: (text: string) => string
     }
   }
-  /**
-   * Labels used throughout the prompt.
-   */
   labels: {
     /**
      * Labels corresponding to each keybind.
@@ -126,8 +120,7 @@ export interface PromptTheme {
       cancel: string
     }
     /**
-     * Messages displayed in the prompt.
-     * `style.messages` is automatically applied to these values.
+     * Values are automatically styled using `style.messages`.
      */
     messages: {
       /**
