@@ -55,7 +55,6 @@ export function fileSelector(
       pageSize = 10,
       loop = false,
       filter = () => true,
-      showExcluded = false,
       allowCancel = false,
       allowBack = () => true
     } = config
@@ -90,7 +89,7 @@ export function fileSelector(
           const strippedItem = stripInternalProps(rawItem)
           return { ...rawItem, isDisabled: !filter(strippedItem) }
         })
-        .filter(rawItem => showExcluded || !rawItem.isDisabled)
+        .filter(rawItem => !rawItem.isDisabled)
       sortRawItems(rawItems)
 
       if (config.type !== ItemType.File) {
