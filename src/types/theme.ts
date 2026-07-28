@@ -26,6 +26,11 @@ export type RenderItemContext = {
   isActive: boolean
 }
 
+/**
+ * Defines the complete prompt theme.
+ *
+ * Default values can be found in the default theme implementation.
+ */
 export interface PromptTheme {
   /**
    * Prefix displayed before the prompt message.
@@ -35,42 +40,34 @@ export interface PromptTheme {
   style: {
     /**
      * Defines the style for disabled items.
-     * @default styleText('gray', `${linePrefix} ${styleText('strikethrough', text)}`)
      */
     disabled: (linePrefix: string, text: string) => string
     /**
      * Defines the style for the active item.
-     * @default styleText('cyan', text)
      */
     active: (text: string) => string
     /**
      * Defines the style for items of type `'directory'`.
-     * @default styleText('yellowBright', text)
      */
     directory: (text: string) => string
     /**
      * Defines the style for items of type `'file'`.
-     * @default No style applied
      */
     file: (text: string) => string
     /**
      * Defines the style for the current directory header.
-     * @default styleText('magentaBright', text)
      */
     currentDir: (text: string) => string
     /**
      * Defines the style applied to the main message, defined in `config.message`.
-     * @default styleText('bold', text)
      */
     message: (text: string, status: StatusType) => string
     /**
      * Defines the style for help messages.
-     * @default styleText(['italic', 'gray'], text)
      */
     help: (text: string) => string
     /**
      * Defines the style for key labels used in hints.
-     * @default styleText(['bgGray', 'white'], ` ${text} `)
      */
     key: (text: string) => string
     /**
@@ -79,12 +76,10 @@ export interface PromptTheme {
     messages: {
       /**
        * Defines the style for the cancel message.
-       * @default styleText('red', text)
        */
       cancel: (text: string) => string
       /**
        * Defines the style for the empty directory message.
-       * @default styleText('red', text)
        */
       empty: (text: string) => string
     }
@@ -100,37 +95,30 @@ export interface PromptTheme {
     keys: {
       /**
        * Label for the "up" navigation key.
-       * @default '↑/w'
        */
       up: string
       /**
        * Label for the "down" navigation key.
-       * @default '↓/s'
        */
       down: string
       /**
        * Label for the "back" navigation key.
-       * @default '←/a'
        */
       back: string
       /**
        * Label for the "forward" navigation key.
-       * @default '→/d'
        */
       forward: string
       /**
        * Label for the "toggle selection" key.
-       * @default '␣'
        */
       toggle: string
       /**
        * Label for the "confirm" key.
-       * @default '↵'
        */
       confirm: string
       /**
        * Label for the "cancel" key.
-       * @default 'Esc'
        */
       cancel: string
     }
@@ -142,32 +130,26 @@ export interface PromptTheme {
     hints: {
       /**
        * Hint for navigation actions.
-       * @default '{{up}} or {{down}} to navigate'
        */
       navigate: string
       /**
        * Hint for going back.
-       * @default '{{back}} to go back'
        */
       goBack: string
       /**
        * Hint for going forward (open directory).
-       * @default '{{forward}} to open'
        */
       goForward: string
       /**
        * Hint for toggling selection.
-       * @default '{{toggle}} to select'
        */
       toggle: string
       /**
        * Hint for confirming the selection.
-       * @default '{{confirm}} to confirm'
        */
       confirm: string
       /**
        * Hint for canceling the prompt.
-       * @default '{{cancel}} to cancel'
        */
       cancel: string
     }
@@ -178,12 +160,10 @@ export interface PromptTheme {
     messages: {
       /**
        * Message displayed when the selection is canceled.
-       * @default 'Canceled.'
        */
       cancel: string
       /**
        * Message displayed when the directory is empty.
-       * @default 'Directory is empty.'
        */
       empty: string
     }
@@ -191,12 +171,10 @@ export interface PromptTheme {
   hierarchySymbols: {
     /**
      * Symbol representing a branch in the tree hierarchy.
-     * @default '├─'
      */
     branch: string
     /**
      * Symbol representing a leaf, marking the end of a the tree hierarchy.
-     * @default '└─'
      */
     leaf: string
   }
