@@ -196,12 +196,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update `@inquirer/core` to version 9.0.6.
 - Replace `yoctocolors` with `chalk`.
+- Update `@inquirer/core` to version 9.0.6.
 
 ### Removed
 
-- Supersedes `ansi-escapes` dependency with an internal constant to hide the cursor.
+- `ansi-escapes` dependency, replaced with an internal constant to hide the cursor.
 
 ## [0.1.1] 2024-07-28
 
