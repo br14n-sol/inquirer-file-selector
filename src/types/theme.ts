@@ -39,46 +39,26 @@ export interface PromptTheme {
    */
   prefix: Prettify<Record<StatusType, string>>
   style: {
-    /**
-     * Style applied to disabled items.
-     */
+    /** Style applied to disabled items. */
     disabled: (linePrefix: string, text: string) => string
-    /**
-     * Style applied to the active item.
-     */
+    /** Style applied to the active item. */
     active: (text: string) => string
-    /**
-     * Style applied to items of type `'directory'`.
-     */
+    /** Style applied to items of type `'directory'`. */
     directory: (text: string) => string
-    /**
-     * Style applied to items of type `'file'`.
-     */
+    /** Style applied to items of type `'file'`. */
     file: (text: string) => string
-    /**
-     * Style applied to the current directory header.
-     */
+    /** Style applied to the current directory header. */
     currentDir: (text: string) => string
-    /**
-     * Style applied to the main message.
-     */
+    /** Style applied to the main message. */
     message: (text: string, status: StatusType) => string
-    /**
-     * Style applied to help messages.
-     */
+    /** Style applied to help messages. */
     help: (text: string) => string
-    /**
-     * Style applied to key labels used in hints.
-     */
+    /** Style applied to key labels used in hints. */
     key: (text: string) => string
     messages: {
-      /**
-       * Style applied to the cancel message.
-       */
+      /** Style applied to the cancel message. */
       cancel: (text: string) => string
-      /**
-       * Style applied to the empty directory message.
-       */
+      /** Style applied to the empty directory message. */
       empty: (text: string) => string
     }
   }
@@ -94,53 +74,31 @@ export interface PromptTheme {
      * which will be replaced by the corresponding values from `labels.keys`.
      */
     hints: {
-      /**
-       * Hint for navigation actions.
-       */
+      /** Hint for navigation actions. */
       navigate: string
-      /**
-       * Hint for going back.
-       */
+      /** Hint for going back. */
       goBack: string
-      /**
-       * Hint for going forward (open directory).
-       */
+      /** Hint for going forward (open directory). */
       goForward: string
-      /**
-       * Hint for toggling selection.
-       */
+      /** Hint for toggling selection. */
       toggle: string
-      /**
-       * Hint for confirming the selection.
-       */
+      /** Hint for confirming the selection. */
       confirm: string
-      /**
-       * Hint for canceling the prompt.
-       */
+      /** Hint for canceling the prompt. */
       cancel: string
     }
-    /**
-     * Values are automatically styled using `style.messages`.
-     */
+    /** Values are automatically styled using `style.messages`. */
     messages: {
-      /**
-       * Message displayed when the prompt is canceled.
-       */
+      /** Message displayed when the prompt is canceled. */
       cancel: string
-      /**
-       * Message displayed when the directory is empty.
-       */
+      /** Message displayed when the directory is empty. */
       empty: string
     }
   }
   hierarchySymbols: {
-    /**
-     * Symbol representing a branch in the tree hierarchy.
-     */
+    /** Symbol representing a branch in the tree hierarchy. */
     branch: string
-    /**
-     * Symbol representing a leaf, marking the end of the tree hierarchy.
-     */
+    /** Symbol representing a leaf, marking the end of the tree hierarchy. */
     leaf: string
   }
   /**
