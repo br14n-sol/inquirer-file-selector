@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support `config.allowBack` to optionally prevent navigating back to the parent directory. Thanks to [@JordanW9232](https://github.com/JordanW9232).
+- Config option `allowBack` to optionally prevent navigating back to the parent directory. Thanks to [@JordanW9232](https://github.com/JordanW9232).
 
 ### Changed
 
 - Drop support for Node.js 20; now requires Node.js 22.19.0 or newer.
-- No longer publishing minified code to enable better stacktrace interpretation during error debugging.
+- No longer publish minified code to improve stack trace readability during error debugging.
 - Update `@inquirer/core` to version 11.2.1.
 - Update `@inquirer/figures` to version 2.0.7.
 - Update `@inquirer/type` to version 4.0.7.
@@ -22,8 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - `chalk` dependency, replaced with Node.js built-in `styleText` utility.
-- `PromptConfig.showExcluded` option. Entries excluded by `PromptConfig.filter` are now always hidden, which was previously the default behavior.
-- `PromptTheme.style.disabled` style. Disabled entries are no longer rendered.
+- Config option `showExcluded`. Entries excluded by the `filter` callback are now always hidden, which was previously the default behavior.
+- Theme style `disabled`. Disabled entries are no longer rendered.
 
 ### Fixed
 
