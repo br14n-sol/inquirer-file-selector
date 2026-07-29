@@ -165,18 +165,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `config.match` to extends filtering capabilities, superseding `config.extensions`. Works like `[].filter`.
-- `config.hideNonMatch` boolean to hide files that do not match `config.extensions` or `config.match`. Defaults to `false`.
-- `config.allowCancel` boolean to allow canceling the selection by pressing the `Esc` key. Returns the string `'canceled'`. Defaults to `false`.
+- Config option `match` to extend filtering capabilities, superseding config option `extensions`. Works like `[].filter`.
+- Config option `hideNonMatch` to hide files that do not match config options `extensions` or `match`. Defaults to `false`.
+- Config option `allowCancel` to allow canceling the selection by pressing the `Esc` key. Returns the string `'canceled'`. Defaults to `false`.
 
 ### Changed
 
-- Update `@inquirer/core` to version 9.0.10.
 - Navigate to parent directory with `Backspace` key instead of `Esc`.
+- Update `@inquirer/core` to version 9.0.10.
 
 ### Deprecated
 
-- `config.extensions` is deprecated and will be removed in version 0.4.0.
+- Config option `extensions` is deprecated and will be removed in version 0.4.0.
 
 ## [0.2.1] 2024-08-04
 
