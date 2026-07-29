@@ -39,31 +39,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `config.multiple` boolean to support multiple selection.
-- `config.keybinds` to customize all key actions.
-- Make all help hints fully customizable on the theme with dynamic display.
-- Exports for types: `StatusType`, `PromptConfig`, `Item`, `RawItem`, `ItemTypeUnion`, `PromptTheme`, `RenderHelpContext`, `RenderItemContext` and `Keybinds`.
+- Config option `multiple` to support multiple selection.
+- Config option `keybinds` to customize all key actions.
+- Make all help hints fully customizable in the theme with dynamic display.
+- Export types: `StatusType`, `PromptConfig`, `Item`, `RawItem`, `ItemTypeUnion`, `PromptTheme`, `RenderHelpContext`, `RenderItemContext` and `Keybinds`.
 
 ### Changed
 
+- Drop support for Node.js 18; now requires Node.js 20.
+- Replace default export with named export `fileSelector`.
+- Return an `Item` object instead of just a path.
+- Return `null` instead of `'canceled'` when the prompt is canceled.
+- Make files and directories selectable by default.
+- Enhance prompt signature with conditional return type support.
+- Move `cancelText` and `emptyText` config options to the theme's labels messages section.
+- Move all logic of rendering items to the theme, and make other small changes.
 - Move `@inquirer/type` from dev dependency to regular dependency.
 - Update `@inquirer/core` to version 10.1.14.
 - Update `@inquirer/figures` to version 1.0.12.
 - Update `@inquirer/type` to version 3.0.7.
-- Enhance prompt signature with conditional return types.
-- Return an `Item` object instead of just a path.
-- Return `null` instead of `'canceled'` when the prompt is canceled.
-- Replace default export with named export `fileSelector`.
-- Make files and directories selectable by default.
-- Drop support for Node.js 18; now requires Node.js 20.
-- Move all logic of rendering items to the theme, and make other small changes.
-- Move `config.cancelText` and `config.emptyText` to `theme.labels.messages`.
 
 ### Fixed
 
 - Visibility issues in light color schemes.
 - Permission-denied errors during stat calls on restricted files. Thanks to [@justind000](https://github.com/justind000).
-- Crash occurring on confirming selection in empty directory with `config.type` set to `'file'`. Thanks to [@jrsun](https://github.com/jrsun).
+- Crash occurring on confirming selection in empty directory when config option `type` is set to `'file'`. Thanks to [@jrsun](https://github.com/jrsun).
 
 ## [0.6.2] 2025-03-01
 
