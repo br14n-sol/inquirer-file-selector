@@ -133,9 +133,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `config.basePath` to supersede `config.path`. Works the same.
-- `config.cancelText` to supersede `config.canceledLabel` and add missing theme option `theme.cancelText`. Works the same.
-- `config.emptyText` to supersede `config.noFilesFound` and `theme.emptyText` to supersede `theme.noFilesFound`. Works the same.
+- Config option `basePath` to supersede config option `path`. Works the same.
+- Config option `cancelText` to supersede config option `canceledLabel` and add missing theme option `cancelText`. Works the same.
+- Config option `emptyText` to supersede config option `noFilesFound`, and theme option `emptyText` to supersede theme option `noFilesFound`. Works the same.
 
 ### Changed
 
@@ -143,17 +143,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
-- `config.path` is deprecated and will be removed in version 0.5.0.
-- `config.canceledLabel` is deprecated and will be removed in version 0.5.0.
-- `config.noFilesFound` and `theme.noFilesFound` are deprecated and will be removed in version 0.5.0.
+- Config option `path` is deprecated and will be removed in version 0.5.0.
+- Config option `canceledLabel` is deprecated and will be removed in version 0.5.0.
+- Config option `noFilesFound` and theme option `noFilesFound` are deprecated and will be removed in version 0.5.0.
 
 ### Removed
 
-- Previously deprecated `config.extensions`.
+- Previously deprecated config option `extensions`.
 
 ### Fixed
 
-- In node versions >= 18 and < 18.20.0, `dirent.parentPath` does not exist.
+- Compatibility issue with Node.js versions >= 18 and < 18.20.0, where `dirent.parentPath` does not exist.
 
 ## [0.3.1] 2024-08-11
 
