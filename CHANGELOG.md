@@ -109,10 +109,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `config.filter` to supersede `config.match`. Works similarly, with the added ability to filter directories.
-- `config.showExcluded` boolean to supersede `config.hideNonMatch`. Works in the opposite way.
+- Config option `filter` to supersede config option `match`. Works similarly, with the added ability to filter directories.
+- Config option `showExcluded` to supersede config option `hideNonMatch`. Works in the opposite way.
 - Support for a custom prefix based on prompt status.
-- `config.loop` boolean to allow looping through the list of files.
+- Config option `loop` to allow looping through the list of files.
 
 ### Changed
 
@@ -121,13 +121,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
-- `config.match` is deprecated and will be removed in version 0.6.0.
-- `config.hideNonMatch` is deprecated and will be removed in version 0.6.0.
-- `FileStats.isDir` is deprecated and will be removed in version 0.6.0. Use `FileStats.isDirectory()` instead.
+- Config option `match` is deprecated and will be removed in version 0.6.0.
+- Config option `hideNonMatch` is deprecated and will be removed in version 0.6.0.
+- `isDir` property in the config option `filter` callback is deprecated and will be removed in version 0.6.0. Use `isDirectory()` instead.
 
 ### Removed
 
-- Previously deprecated `config.path`, `config.canceledLabel`, `config.noFilesFound` and `theme.noFilesFound`.
+- Previously deprecated config options `path`, `canceledLabel` and `noFilesFound`, and theme option `noFilesFound`.
 
 ## [0.4.0] 2024-08-20
 
