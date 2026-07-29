@@ -75,7 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Wrong symbol in file tree when `config.loop` is `true`.
+- Wrong symbol in file tree when config option `loop` is `true`.
 
 ## [0.6.1] 2024-12-01
 
