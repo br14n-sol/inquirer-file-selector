@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support `config.allowBack` to optionally prevent navigating back to the parent directory. Thanks to [@JordanW9232](https://github.com/JordanW9232).
+- Config option `allowBack` to optionally prevent navigating back to the parent directory. Thanks to [@JordanW9232](https://github.com/JordanW9232).
 
 ### Changed
 
 - Drop support for Node.js 20; now requires Node.js 22.19.0 or newer.
-- No longer publishing minified code to enable better stacktrace interpretation during error debugging.
+- No longer publish minified code to improve stack trace readability during error debugging.
 - Update `@inquirer/core` to version 11.2.1.
 - Update `@inquirer/figures` to version 2.0.7.
 - Update `@inquirer/type` to version 4.0.7.
@@ -22,8 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - `chalk` dependency, replaced with Node.js built-in `styleText` utility.
-- `PromptConfig.showExcluded` option. Entries excluded by `PromptConfig.filter` are now always hidden, which was previously the default behavior.
-- `PromptTheme.style.disabled` style. Disabled entries are no longer rendered.
+- Config option `showExcluded`. Entries excluded by the `filter` callback are now always hidden, which was previously the default behavior.
+- Theme style `disabled`. Disabled entries are no longer rendered.
 
 ### Fixed
 
@@ -33,37 +33,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Version bumped to publish on npm, no functional changes.
+- Bump version to publish the package on npm. No functional changes.
 
 ## [1.0.0] 2025-08-09 (Could not be published)
 
 ### Added
 
-- `config.multiple` boolean to support multiple selection.
-- `config.keybinds` to customize all key actions.
-- Make all help hints fully customizable on the theme with dynamic display.
-- Exports for types: `StatusType`, `PromptConfig`, `Item`, `RawItem`, `ItemTypeUnion`, `PromptTheme`, `RenderHelpContext`, `RenderItemContext` and `Keybinds`.
+- Config option `multiple` to support multiple selection.
+- Config option `keybinds` to customize all key actions.
+- Make all help hints fully customizable in the theme with dynamic display.
+- Export types: `StatusType`, `PromptConfig`, `Item`, `RawItem`, `ItemTypeUnion`, `PromptTheme`, `RenderHelpContext`, `RenderItemContext` and `Keybinds`.
 
 ### Changed
 
+- Drop support for Node.js 18; now requires Node.js 20.
+- Replace default export with named export `fileSelector`.
+- Return an `Item` object instead of just a path.
+- Return `null` instead of `'canceled'` when the prompt is canceled.
+- Make files and directories selectable by default.
+- Enhance prompt signature with conditional return type support.
+- Move `cancelText` and `emptyText` config options to the theme's labels messages section.
+- Move all logic of rendering items to the theme, and make other small changes.
 - Move `@inquirer/type` from dev dependency to regular dependency.
 - Update `@inquirer/core` to version 10.1.14.
 - Update `@inquirer/figures` to version 1.0.12.
 - Update `@inquirer/type` to version 3.0.7.
-- Enhance prompt signature with conditional return types.
-- Return an `Item` object instead of just a path.
-- Return `null` instead of `'canceled'` when the prompt is canceled.
-- Replace default export with named export `fileSelector`.
-- Make files and directories selectable by default.
-- Drop support for Node.js 18; now requires Node.js 20.
-- Move all logic of rendering items to the theme, and make other small changes.
-- Move `config.cancelText` and `config.emptyText` to `theme.labels.messages`.
 
 ### Fixed
 
 - Visibility issues in light color schemes.
 - Permission-denied errors during stat calls on restricted files. Thanks to [@justind000](https://github.com/justind000).
-- Crash occurring on confirming selection in empty directory with `config.type` set to `'file'`. Thanks to [@jrsun](https://github.com/jrsun).
+- Crash occurring on confirming selection in empty directory when config option `type` is set to `'file'`. Thanks to [@jrsun](https://github.com/jrsun).
 
 ## [0.6.2] 2025-03-01
 
@@ -75,13 +75,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Wrong symbol in file tree when `config.loop` is `true`.
+- Wrong symbol in file tree when config option `loop` is `true`.
 
 ## [0.6.1] 2024-12-01
 
 ### Added
 
-- Support selecting the current directory (`./`) in the explorer when `config.type` is `'directory'` or `'file+directory'`. This allows quicker selection of the current directory. Thanks to [@pastacolsugo](https://github.com/pastacolsugo).
+- Support selecting the current directory (`./`) in the explorer when config option `type` is `'directory'` or `'file+directory'`. This allows quicker selection of the current directory. Thanks to [@pastacolsugo](https://github.com/pastacolsugo).
 
 ### Changed
 
@@ -93,26 +93,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Ability to select directories.
-- `config.type` to decide what item type is selectable, this options has three possible values: `'file'`, `'directory'` and `'file+directory'`. Defaults to `'file'`.
+- Config option `type` to decide what item type is selectable. This option has three possible values: `'file'`, `'directory'` and `'file+directory'`. Defaults to `'file'`.
 
 ### Changed
 
+- Open directories with the `Space` key instead of `Enter`. The `Enter` key now only selects the focused item.
 - Update `@inquirer/core` to version 10.0.1.
 - Update `@inquirer/figures` to version 1.0.7.
-- Open directories with `Space` key instead of `Enter`. The `Enter` key now only selects the focused item.
 
 ### Removed
 
-- Previously deprecated `config.match`, `config.hideNonMatch` and `FileStats.isDir`.
+- Previously deprecated config options `match` and `hideNonMatch`, and `isDir` property from the `filter` callback.
 
 ## [0.5.0] 2024-10-22
 
 ### Added
 
-- `config.filter` to supersede `config.match`. Works similarly, with the added ability to filter directories.
-- `config.showExcluded` boolean to supersede `config.hideNonMatch`. Works in the opposite way.
+- Config option `filter` to supersede config option `match`. Works similarly, with the added ability to filter directories.
+- Config option `showExcluded` to supersede config option `hideNonMatch`. Works in the opposite way.
 - Support for a custom prefix based on prompt status.
-- `config.loop` boolean to allow looping through the list of files.
+- Config option `loop` to allow looping through the list of files.
 
 ### Changed
 
@@ -121,21 +121,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
-- `config.match` is deprecated and will be removed in version 0.6.0.
-- `config.hideNonMatch` is deprecated and will be removed in version 0.6.0.
-- `FileStats.isDir` is deprecated and will be removed in version 0.6.0. Use `FileStats.isDirectory()` instead.
+- Config option `match` is deprecated and will be removed in version 0.6.0.
+- Config option `hideNonMatch` is deprecated and will be removed in version 0.6.0.
+- `isDir` property in the config option `filter` callback is deprecated and will be removed in version 0.6.0. Use `isDirectory()` instead.
 
 ### Removed
 
-- Previously deprecated `config.path`, `config.canceledLabel`, `config.noFilesFound` and `theme.noFilesFound`.
+- Previously deprecated config options `path`, `canceledLabel` and `noFilesFound`, and theme option `noFilesFound`.
 
 ## [0.4.0] 2024-08-20
 
 ### Added
 
-- `config.basePath` to supersede `config.path`. Works the same.
-- `config.cancelText` to supersede `config.canceledLabel` and add missing theme option `theme.cancelText`. Works the same.
-- `config.emptyText` to supersede `config.noFilesFound` and `theme.emptyText` to supersede `theme.noFilesFound`. Works the same.
+- Config option `basePath` to supersede config option `path`. Works the same.
+- Config option `cancelText` to supersede config option `canceledLabel` and add missing theme option `cancelText`. Works the same.
+- Config option `emptyText` to supersede config option `noFilesFound`, and theme option `emptyText` to supersede theme option `noFilesFound`. Works the same.
 
 ### Changed
 
@@ -143,40 +143,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
-- `config.path` is deprecated and will be removed in version 0.5.0.
-- `config.canceledLabel` is deprecated and will be removed in version 0.5.0.
-- `config.noFilesFound` and `theme.noFilesFound` are deprecated and will be removed in version 0.5.0.
+- Config option `path` is deprecated and will be removed in version 0.5.0.
+- Config option `canceledLabel` is deprecated and will be removed in version 0.5.0.
+- Config option `noFilesFound` and theme option `noFilesFound` are deprecated and will be removed in version 0.5.0.
 
 ### Removed
 
-- Previously deprecated `config.extensions`.
+- Previously deprecated config option `extensions`.
 
 ### Fixed
 
-- In node versions >= 18 and < 18.20.0, `dirent.parentPath` does not exist.
+- Compatibility issue with Node.js versions >= 18 and < 18.20.0, where `dirent.parentPath` does not exist.
 
 ## [0.3.1] 2024-08-11
 
 ### Fixed
 
-- Loss of focus on the active item occurs when `config.hideNonMatch` is `false` and the first item in the list is disabled.
+- Loss of focus on the active item when config option `hideNonMatch` is `false` and the first item in the list is disabled.
 
 ## [0.3.0] 2024-08-08
 
 ### Added
 
-- `config.match` to extends filtering capabilities, superseding `config.extensions`. Works like `[].filter`.
-- `config.hideNonMatch` boolean to hide files that do not match `config.extensions` or `config.match`. Defaults to `false`.
-- `config.allowCancel` boolean to allow canceling the selection by pressing the `Esc` key. Returns the string `'canceled'`. Defaults to `false`.
+- Config option `match` to extend filtering capabilities, superseding config option `extensions`. Works like `[].filter`.
+- Config option `hideNonMatch` to hide files that do not match config options `extensions` or `match`. Defaults to `false`.
+- Config option `allowCancel` to allow canceling the selection by pressing the `Esc` key. Returns the string `'canceled'`. Defaults to `false`.
 
 ### Changed
 
-- Update `@inquirer/core` to version 9.0.10.
 - Navigate to parent directory with `Backspace` key instead of `Esc`.
+- Update `@inquirer/core` to version 9.0.10.
 
 ### Deprecated
 
-- `config.extensions` is deprecated and will be removed in version 0.4.0.
+- Config option `extensions` is deprecated and will be removed in version 0.4.0.
 
 ## [0.2.1] 2024-08-04
 
@@ -186,7 +186,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Inaccurate types.
+- Incorrect TypeScript type definitions generated during compilation.
 
 ## [0.2.0] 2024-07-29
 
@@ -196,18 +196,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update `@inquirer/core` to version 9.0.6.
 - Replace `yoctocolors` with `chalk`.
+- Update `@inquirer/core` to version 9.0.6.
 
 ### Removed
 
-- Supersedes `ansi-escapes` dependency with an internal constant to hide the cursor.
+- `ansi-escapes` dependency, replaced with an internal constant to hide the cursor.
 
 ## [0.1.1] 2024-07-28
 
 ### Fixed
 
-- If `config.extensions` is an empty array or not provided, all files in the selector are disabled.
+- If config option `extensions` is an empty array or not provided, all files in the selector are disabled.
 
 ## [0.1.0] 2024-07-27
 
