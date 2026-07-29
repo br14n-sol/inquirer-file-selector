@@ -159,7 +159,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Loss of focus on the active item occurs when `config.hideNonMatch` is `false` and the first item in the list is disabled.
+- Loss of focus on the active item when config option `hideNonMatch` is `false` and the first item in the list is disabled.
 
 ## [0.3.0] 2024-08-08
 
