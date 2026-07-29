@@ -93,17 +93,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Ability to select directories.
-- `config.type` to decide what item type is selectable, this options has three possible values: `'file'`, `'directory'` and `'file+directory'`. Defaults to `'file'`.
+- Config option `type` to decide what item type is selectable. This option has three possible values: `'file'`, `'directory'` and `'file+directory'`. Defaults to `'file'`.
 
 ### Changed
 
+- Open directories with the `Space` key instead of `Enter`. The `Enter` key now only selects the focused item.
 - Update `@inquirer/core` to version 10.0.1.
 - Update `@inquirer/figures` to version 1.0.7.
-- Open directories with `Space` key instead of `Enter`. The `Enter` key now only selects the focused item.
 
 ### Removed
 
-- Previously deprecated `config.match`, `config.hideNonMatch` and `FileStats.isDir`.
+- Previously deprecated config options `match` and `hideNonMatch`, and `isDir` property from the `filter` callback.
 
 ## [0.5.0] 2024-10-22
 
