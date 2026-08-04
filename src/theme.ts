@@ -1,12 +1,7 @@
 import { styleText } from 'node:util'
 import figures from '@inquirer/figures'
 import type { RawItem } from '#types/item'
-import type { StatusType } from '#types/status'
-import type {
-  PromptTheme,
-  RenderHelpContext,
-  RenderItemContext
-} from '#types/theme'
+import type { PromptTheme, RenderHelpContext } from '#types/theme'
 import { isValidItemType } from '#utils/item'
 
 export const baseTheme: PromptTheme = {
@@ -16,16 +11,16 @@ export const baseTheme: PromptTheme = {
     canceled: styleText('red', figures.cross)
   },
   style: {
-    active: (text: string) => styleText('cyan', text),
-    directory: (text: string) => styleText('yellowBright', text),
-    file: (text: string) => text,
-    currentDir: (text: string) => styleText('magentaBright', text),
-    message: (text: string, _status: StatusType) => styleText('bold', text),
-    help: (text: string) => styleText('gray', text),
-    key: (text: string) => styleText(['bgGray', 'white'], ` ${text} `),
+    active: text => styleText('cyan', text),
+    directory: text => styleText('yellowBright', text),
+    file: text => text,
+    currentDir: text => styleText('magentaBright', text),
+    message: (text, _status) => styleText('bold', text),
+    help: text => styleText('gray', text),
+    key: text => styleText(['bgGray', 'white'], ` ${text} `),
     messages: {
-      cancel: (text: string) => styleText('red', text),
-      empty: (text: string) => styleText('red', text)
+      cancel: text => styleText('red', text),
+      empty: text => styleText('red', text)
     }
   },
   hierarchySymbols: {
@@ -55,7 +50,7 @@ export const baseTheme: PromptTheme = {
       empty: 'Directory is empty.'
     }
   },
-  renderHelp(type: 'inline' | 'header', arg1?: unknown, arg2?: unknown) {
+  renderHelp(type, arg1?, arg2?) {
     const hints = []
 
     if (type === 'header') {
@@ -83,7 +78,7 @@ export const baseTheme: PromptTheme = {
 
     return hints.length ? this.style.help(`(Press ${hints.join(', ')})`) : ''
   },
-  renderItem(item: RawItem, context: RenderItemContext) {
+  renderItem(item, context) {
     const isLast = context.index === context.items.length - 1
     const linePrefix =
       isLast && !context.loop
