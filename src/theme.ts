@@ -1,7 +1,6 @@
 import { styleText } from 'node:util'
 import figures from '@inquirer/figures'
-import type { RawItem } from '#types/item'
-import type { PromptTheme, RenderHelpContext } from '#types/theme'
+import type { PromptTheme } from '#types/theme'
 import { isValidItemType } from '#utils/item'
 
 export const baseTheme: PromptTheme = {
@@ -50,26 +49,21 @@ export const baseTheme: PromptTheme = {
       empty: 'Directory is empty.'
     }
   },
-  renderHelp(type, arg1?, arg2?) {
+  renderHelp({ type, context }) {
     const hints = []
 
     if (type === 'header') {
-      const context = arg1 as Partial<RenderHelpContext>
-
       hints.push(this.labels.hints.navigate)
       hints.push(this.labels.hints.goBack)
 
       context.multiple && hints.push(this.labels.hints.confirm)
       context.allowCancel && hints.push(this.labels.hints.cancel)
     } else if (type === 'inline') {
-      const item = arg1 as RawItem
-      const context = arg2 as Partial<RenderHelpContext>
-
-      if (!item.isCwd && item.isDirectory) {
+      if (!context.item.isCwd && context.item.isDirectory) {
         hints.push(this.labels.hints.goForward)
       }
 
-      if (isValidItemType(item, context.type)) {
+      if (isValidItemType(context.item, context.type)) {
         context.multiple
           ? hints.push(this.labels.hints.toggle)
           : hints.push(this.labels.hints.confirm)
@@ -97,9 +91,9 @@ export const baseTheme: PromptTheme = {
     }
 
     if (context.isActive) {
-      const helpMessage = this.renderHelp('inline', item, {
-        type: context.type,
-        multiple: context.multiple
+      const helpMessage = this.renderHelp({
+        type: 'inline',
+        context: { type: context.type, multiple: context.multiple, item }
       })
       line += ` ${helpMessage}`
     }

@@ -3,14 +3,31 @@ import type { defaultKeybinds } from '#consts'
 import type { ItemTypeUnion, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 
-export type RenderHelpContext = {
-  /** Indicates the type of item expected. */
-  type?: ItemTypeUnion
+export type HeaderHelpContext = {
   /** Indicates if multiple items can be selected. */
   multiple: boolean
   /** Indicates if canceling is allowed. */
   allowCancel: boolean
 }
+
+export type InlineHelpContext = {
+  /** Indicates the type of item expected. */
+  type?: ItemTypeUnion
+  /** Indicates if multiple items can be selected. */
+  multiple: boolean
+  /** The item associated with the help message. */
+  item: RawItem
+}
+
+export type RenderHelpOptions =
+  | {
+      type: 'header'
+      context: HeaderHelpContext
+    }
+  | {
+      type: 'inline'
+      context: InlineHelpContext
+    }
 
 export type RenderItemContext = {
   /** Items to render. */
@@ -100,22 +117,10 @@ export interface PromptTheme {
     leaf: string
   }
   /**
-   * Renders the header help message.
-   * @param type - Help type, `'header'`.
-   * @param context - Additional context for rendering the help message.
+   * Renders the help message based on the provided options.
+   * @param options - Options for rendering the help message.
    */
-  renderHelp(type: 'header', context: Partial<RenderHelpContext>): string
-  /**
-   * Renders the inline help message for an item.
-   * @param type - Help type, `'inline'`.
-   * @param item - The item for which to render the help message.
-   * @param context - Additional context for rendering the help message.
-   */
-  renderHelp(
-    type: 'inline',
-    item: RawItem,
-    context: Partial<RenderHelpContext>
-  ): string
+  renderHelp(options: RenderHelpOptions): string
   /**
    * Renders a single item in the list.
    * @param item - The item to render.
