@@ -43,7 +43,7 @@ export function readRawItems(path: string): RawItem[] {
         return null
       }
     })
-    .filter((item): item is RawItem => item !== null)
+    .filter(item => item !== null)
 }
 
 /**
