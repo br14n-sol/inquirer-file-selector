@@ -73,27 +73,28 @@ export const baseTheme: PromptTheme = {
     return hints.length ? this.style.help(`(Press ${hints.join(', ')})`) : ''
   },
   renderItem(item, context) {
-    const isLast = context.index === context.items.length - 1
-    const linePrefix =
-      isLast && !context.loop
-        ? this.hierarchySymbols.leaf
-        : this.hierarchySymbols.branch
+    const { items, type, multiple, loop, index, isActive } = context
+
+    const isLastItem = index === items.length - 1
+    const linePrefixKey = isLastItem && !loop ? 'leaf' : 'branch'
+    const linePrefix = this.hierarchySymbols[linePrefixKey]
+
     const baseColor = item.isDirectory ? this.style.directory : this.style.file
-    const color = context.isActive ? this.style.active : baseColor
+    const color = isActive ? this.style.active : baseColor
     let line = color(`${linePrefix} ${item.displayName}`)
 
-    if (context.multiple) {
+    if (multiple) {
       if (item.isSelected) {
         line += ` ${figures.radioOn}`
-      } else if (context.isActive && isValidItemType(item, context.type)) {
+      } else if (isActive && isValidItemType(item, type)) {
         line += ` ${figures.radioOff}`
       }
     }
 
-    if (context.isActive) {
+    if (isActive) {
       const helpMessage = this.renderHelp({
         type: 'inline',
-        context: { type: context.type, multiple: context.multiple, item }
+        context: { type, multiple, item }
       })
       line += ` ${helpMessage}`
     }
