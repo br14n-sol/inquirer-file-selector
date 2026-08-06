@@ -44,7 +44,6 @@ import {
 // Types
 import type {
   PromptConfig,
-  Keybinds,
   PromptTheme,
 
   RenderHelpContext,
