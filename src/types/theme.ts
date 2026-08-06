@@ -20,14 +20,8 @@ export type InlineHelpContext = {
 }
 
 export type RenderHelpOptions =
-  | {
-      type: 'header'
-      context: HeaderHelpContext
-    }
-  | {
-      type: 'inline'
-      context: InlineHelpContext
-    }
+  | { type: 'header'; context: HeaderHelpContext }
+  | { type: 'inline'; context: InlineHelpContext }
 
 export type RenderItemContext = {
   /** Items to render. */
