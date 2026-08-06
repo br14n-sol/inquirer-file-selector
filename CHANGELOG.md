@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `chalk` dependency, replaced with Node.js built-in `styleText` utility.
 - Config option `showExcluded`. Entries excluded by the `filter` callback are now always hidden, which was previously the default behavior.
 - Theme style `disabled`. Disabled entries are no longer rendered.
+- Exported types: `StatusType`, `RawItem`, `ItemTypeUnion` and `Keybinds`.
 
 ### Fixed
 
