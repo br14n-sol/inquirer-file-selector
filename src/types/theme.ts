@@ -1,5 +1,5 @@
 import type { Prettify } from '@inquirer/type'
-import type { defaultKeybinds } from '#consts'
+import type { Keybinds } from '#types/config'
 import type { ItemTypeUnion, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 
@@ -46,7 +46,7 @@ export type RenderItemContext = {
 export interface PromptTheme {
   /**
    * Prefix displayed before the prompt message.
-   * Maps each `StatusType` to its corresponding prefix string.
+   * Maps each prompt status to its corresponding prefix string.
    */
   prefix: Prettify<Record<StatusType, string>>
   style: {
@@ -76,7 +76,7 @@ export interface PromptTheme {
      * Labels corresponding to each keybind.
      * `style.key` is automatically applied to these values.
      */
-    keys: Prettify<Record<keyof typeof defaultKeybinds, string>>
+    keys: Prettify<Record<keyof Keybinds, string>>
     /**
      * Hint messages shown to the user, describing available actions.
      * Strings can contain placeholders like `{{up}}`, `{{down}}`, etc.,

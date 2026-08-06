@@ -44,16 +44,12 @@ import {
 // Types
 import type {
   PromptConfig,
-  ItemTypeUnion, // Union type of `ItemType` enum
-  Keybinds,
   PromptTheme,
 
-  StatusType, // Union type of `Status` enum
   RenderHelpContext,
   RenderItemContext,
 
   Item, // Resulting item type after selection
-  RawItem // Raw item type before processing
 } from 'inquirer-file-selector'
 ```
 

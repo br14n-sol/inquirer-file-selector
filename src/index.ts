@@ -11,8 +11,8 @@ import {
 } from '@inquirer/core'
 import { ANSI_HIDE_CURSOR, defaultKeybinds, ItemType, Status } from '#consts'
 import { baseTheme } from '#theme'
-import type { Keybinds, PromptConfig } from '#types/config'
-import type { Item, ItemTypeUnion, RawItem } from '#types/item'
+import type { PromptConfig } from '#types/config'
+import type { Item, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type {
   HeaderHelpContext,
@@ -219,14 +219,10 @@ export type {
   HeaderHelpContext,
   InlineHelpContext,
   Item,
-  ItemTypeUnion,
-  Keybinds,
   PromptConfig,
   PromptTheme,
-  RawItem,
   RenderHelpOptions,
-  RenderItemContext,
-  StatusType
+  RenderItemContext
 }
 
 export { ItemType, Status }
