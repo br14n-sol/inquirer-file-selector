@@ -225,8 +225,7 @@ export type {
   PromptTheme,
   RawItem,
   RenderHelpOptions,
-  RenderItemContext,
-  StatusType
+  RenderItemContext
 }
 
 export { ItemType, Status }

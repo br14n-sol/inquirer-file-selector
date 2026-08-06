@@ -48,7 +48,6 @@ import type {
   Keybinds,
   PromptTheme,
 
-  StatusType, // Union type of `Status` enum
   RenderHelpContext,
   RenderItemContext,
 

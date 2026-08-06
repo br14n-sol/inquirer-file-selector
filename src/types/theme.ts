@@ -46,7 +46,7 @@ export type RenderItemContext = {
 export interface PromptTheme {
   /**
    * Prefix displayed before the prompt message.
-   * Maps each `StatusType` to its corresponding prefix string.
+   * Maps each prompt status to its corresponding prefix string.
    */
   prefix: Prettify<Record<StatusType, string>>
   style: {
