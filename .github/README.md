@@ -52,7 +52,6 @@ import type {
   RenderItemContext,
 
   Item, // Resulting item type after selection
-  RawItem // Raw item type before processing
 } from 'inquirer-file-selector'
 ```
 

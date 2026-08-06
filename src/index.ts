@@ -223,7 +223,6 @@ export type {
   Keybinds,
   PromptConfig,
   PromptTheme,
-  RawItem,
   RenderHelpOptions,
   RenderItemContext
 }
