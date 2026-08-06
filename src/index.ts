@@ -15,8 +15,10 @@ import type { Keybinds, PromptConfig } from '#types/config'
 import type { Item, ItemTypeUnion, RawItem } from '#types/item'
 import type { StatusType } from '#types/status'
 import type {
+  HeaderHelpContext,
+  InlineHelpContext,
   PromptTheme,
-  RenderHelpContext,
+  RenderHelpOptions,
   RenderItemContext
 } from '#types/theme'
 import { createActionChecks } from '#utils/actions'
@@ -204,7 +206,10 @@ export function fileSelector(
       return `${prefix} ${message} ${theme.style.answer(activeItem.path)}`
     }
 
-    const helpTop = theme.renderHelp('header', { allowCancel, multiple })
+    const helpTop = theme.renderHelp({
+      type: 'header',
+      context: { allowCancel, multiple }
+    })
     const header = theme.style.currentDir(ensurePathSeparator(currentDir))
 
     return `${prefix} ${message} ${helpTop}\n${header}\n${!page.length ? theme.labels.messages.empty : page}${ANSI_HIDE_CURSOR}`
@@ -212,13 +217,15 @@ export function fileSelector(
 }
 
 export type {
+  HeaderHelpContext,
+  InlineHelpContext,
   Item,
   ItemTypeUnion,
   Keybinds,
   PromptConfig,
   PromptTheme,
   RawItem,
-  RenderHelpContext,
+  RenderHelpOptions,
   RenderItemContext,
   StatusType
 }

@@ -1,7 +1,6 @@
 import { styleText } from 'node:util'
 import figures from '@inquirer/figures'
-import type { RawItem } from '#types/item'
-import type { PromptTheme, RenderHelpContext } from '#types/theme'
+import type { PromptTheme } from '#types/theme'
 import { isValidItemType } from '#utils/item'
 
 export const baseTheme: PromptTheme = {
@@ -50,26 +49,21 @@ export const baseTheme: PromptTheme = {
       empty: 'Directory is empty.'
     }
   },
-  renderHelp(type, arg1?, arg2?) {
+  renderHelp({ type, context }) {
     const hints = []
 
     if (type === 'header') {
-      const context = arg1 as Partial<RenderHelpContext>
-
       hints.push(this.labels.hints.navigate)
       hints.push(this.labels.hints.goBack)
 
       context.multiple && hints.push(this.labels.hints.confirm)
       context.allowCancel && hints.push(this.labels.hints.cancel)
     } else if (type === 'inline') {
-      const item = arg1 as RawItem
-      const context = arg2 as Partial<RenderHelpContext>
-
-      if (!item.isCwd && item.isDirectory) {
+      if (!context.item.isCwd && context.item.isDirectory) {
         hints.push(this.labels.hints.goForward)
       }
 
-      if (isValidItemType(item, context.type)) {
+      if (isValidItemType(context.item, context.type)) {
         context.multiple
           ? hints.push(this.labels.hints.toggle)
           : hints.push(this.labels.hints.confirm)
@@ -79,27 +73,28 @@ export const baseTheme: PromptTheme = {
     return hints.length ? this.style.help(`(Press ${hints.join(', ')})`) : ''
   },
   renderItem(item, context) {
-    const isLast = context.index === context.items.length - 1
-    const linePrefix =
-      isLast && !context.loop
-        ? this.hierarchySymbols.leaf
-        : this.hierarchySymbols.branch
+    const { items, type, multiple, loop, index, isActive } = context
+
+    const isLastItem = index === items.length - 1
+    const linePrefixKey = isLastItem && !loop ? 'leaf' : 'branch'
+    const linePrefix = this.hierarchySymbols[linePrefixKey]
+
     const baseColor = item.isDirectory ? this.style.directory : this.style.file
-    const color = context.isActive ? this.style.active : baseColor
+    const color = isActive ? this.style.active : baseColor
     let line = color(`${linePrefix} ${item.displayName}`)
 
-    if (context.multiple) {
+    if (multiple) {
       if (item.isSelected) {
         line += ` ${figures.radioOn}`
-      } else if (context.isActive && isValidItemType(item, context.type)) {
+      } else if (isActive && isValidItemType(item, type)) {
         line += ` ${figures.radioOff}`
       }
     }
 
-    if (context.isActive) {
-      const helpMessage = this.renderHelp('inline', item, {
-        type: context.type,
-        multiple: context.multiple
+    if (isActive) {
+      const helpMessage = this.renderHelp({
+        type: 'inline',
+        context: { type, multiple, item }
       })
       line += ` ${helpMessage}`
     }
