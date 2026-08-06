@@ -44,7 +44,6 @@ import {
 // Types
 import type {
   PromptConfig,
-  ItemTypeUnion, // Union type of `ItemType` enum
   Keybinds,
   PromptTheme,
 
