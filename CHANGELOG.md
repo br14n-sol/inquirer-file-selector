@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Drop support for Node.js 20; now requires Node.js 22.19.0 or newer.
 - No longer publish minified code to improve stack trace readability during error debugging.
+- Theme function `renderHelp` now uses a single overload with a `RenderHelpOptions` object.
+- Replace exported type `RenderHelpContext` with `HeaderHelpContext`, `InlineHelpContext` and `RenderHelpOptions`.
 - Update `@inquirer/core` to version 11.2.1.
 - Update `@inquirer/figures` to version 2.0.7.
 - Update `@inquirer/type` to version 4.0.7.
