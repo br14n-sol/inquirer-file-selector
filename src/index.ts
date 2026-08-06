@@ -81,6 +81,7 @@ export function fileSelector(
     const [currentDir, setCurrentDir] = useState(
       path.resolve(process.cwd(), config.basePath || '.')
     )
+
     // Memoize the back directory and its validity to avoid re-computing on every render
     const backDir = useMemo(() => path.resolve(currentDir, '..'), [currentDir])
     const canGoBack = useMemo(() => allowBack(backDir), [backDir])
@@ -161,9 +162,7 @@ export function fileSelector(
         let result = null
 
         if (multiple) {
-          result = [...selections.current.values()].map(i =>
-            stripInternalProps(i)
-          )
+          result = Array.from(selections.current.values(), stripInternalProps)
         } else {
           if (!isValidItemType(activeItem, config.type)) return
 
@@ -229,4 +228,5 @@ export type {
   RenderItemContext,
   StatusType
 }
+
 export { ItemType, Status }
