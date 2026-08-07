@@ -1,23 +1,22 @@
 # inquirer-file-selector
 
-A prompt implementation for [Inquirer.js](https://github.com/SBoudrias/Inquirer.js) that allows users to interactively select files or directories in the terminal.
+A file selector prompt for [Inquirer.js](https://github.com/SBoudrias/Inquirer.js) that allows users to interactively select files or directories from the terminal.
 
 ## Features
 
-- Selection of files and directories
-- Multi-select capability
+- File and directory selection
+- Multi-select support
+- Custom filters to show only specific file types
+- Restrict back navigation to a specific parent directory
+- Cancel selection with a key press (configurable)
+- Fully customizable keybinds
 - Fully customizable theme
-- Custom filters for show only specific file types
-- Keybinds are fully customizable
 
 ## Installation
 
 ```sh
 pnpm add inquirer-file-selector
-# npm install inquirer-file-selector
 ```
-
-> NOTE: From version 1.0.0, this package requires Node.js 20 or higher. If you need use Node.js 18, please use an 0.x.x version of this package.
 
 ## Basic Usage
 
@@ -27,8 +26,15 @@ import { fileSelector } from 'inquirer-file-selector'
 const selection = await fileSelector({
   message: 'Select a file or directory:'
 })
+console.log(selection)
 ```
 
 ## Advanced Usage
 
-See the full documentation and examples in [.github/README.md](.github/README.md).
+See the full documentation and examples in GitHub [README.md](.github/README.md).
+
+## Copyright & License
+
+© 2024 [Brian Fernandez](https://github.com/br14n-sol) (main maintainer) and contributors.
+
+This project is licensed under the [MIT License](./LICENSE).
